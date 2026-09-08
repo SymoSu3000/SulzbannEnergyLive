@@ -11,7 +11,7 @@
     --battery: #23b8c7;
 
     --text: #202020;
-    --text-muted: rgba(32, 32, 32, 0.62);
+    --text-muted: rgba(32, 32, 32, 0.68);
 
     --line: rgba(110, 110, 110, 0.30);
     --circle: rgba(110, 110, 110, 0.46);
@@ -37,7 +37,7 @@
 
     :root {
         --text: #f2f2f2;
-        --text-muted: rgba(242, 242, 242, 0.68);
+        --text-muted: rgba(242, 242, 242, 0.76);
 
         --line: rgba(220, 220, 220, 0.28);
         --circle: rgba(220, 220, 220, 0.48);
@@ -65,7 +65,6 @@ body {
     overflow: hidden;
 
     background: transparent;
-
     color: var(--text);
 
     font-family:
@@ -130,7 +129,7 @@ body {
 .labelBlock {
     position: absolute;
 
-    width: 120px;
+    width: 125px;
 
     transform: translateX(-50%);
 
@@ -140,18 +139,15 @@ body {
 }
 
 
-/*
- * PV-Text deutlich weiter nach oben.
- * Damit bleibt zwischen Status und PV-Kreis Luft.
- */
+/* PV Text */
 
 #pvText {
     position: absolute;
 
     left: 50%;
-    top: 50px;
+    top: 47px;
 
-    width: 130px;
+    width: 135px;
 
     transform: translateX(-50%);
 
@@ -161,7 +157,7 @@ body {
 }
 
 
-/* Untere Beschriftungen */
+/* Untere Texte */
 
 #gridText {
     left: var(--grid-x);
@@ -171,7 +167,7 @@ body {
         +
         (var(--icon-size) / 2)
         +
-        8px
+        9px
     );
 }
 
@@ -183,7 +179,7 @@ body {
         +
         (var(--house-size) / 2)
         +
-        8px
+        9px
     );
 }
 
@@ -195,7 +191,7 @@ body {
         +
         (var(--icon-size) / 2)
         +
-        8px
+        9px
     );
 }
 
@@ -267,17 +263,18 @@ body {
 .nodeTitle {
     margin-top: 0;
 
-    font-size: 11px;
+    font-size: 12px;
+    line-height: 1.2;
+
     font-weight: 500;
 
     color: var(--text-muted);
 }
 
 .nodeValue {
-    margin-top: 1px;
+    margin-top: 2px;
 
     font-size: 19px;
-
     line-height: 1.15;
 
     font-weight: 650;
@@ -288,13 +285,12 @@ body {
 }
 
 .nodeStatus {
-    min-height: 14px;
+    min-height: 15px;
 
-    margin-top: 3px;
+    margin-top: 4px;
 
-    font-size: 9px;
-
-    line-height: 1.15;
+    font-size: 10px;
+    line-height: 1.2;
 
     color: var(--text-muted);
 }
@@ -445,7 +441,9 @@ body {
 }
 
 
-/* PV-Punkt */
+/* =========================================================
+   PV-PUNKT
+   ========================================================= */
 
 #dotPV {
     left: calc(
@@ -498,7 +496,9 @@ body {
 }
 
 
-/* Netz-Punkt */
+/* =========================================================
+   NETZ-PUNKT
+   ========================================================= */
 
 #dotGrid {
     top: calc(
@@ -571,7 +571,9 @@ body {
 }
 
 
-/* Batterie-Punkt */
+/* =========================================================
+   BATTERIE-PUNKT
+   ========================================================= */
 
 #dotBattery {
     top: calc(
@@ -649,9 +651,9 @@ body {
    ========================================================= */
 
 .socRow {
-    width: 78px;
+    width: 80px;
 
-    margin: 5px auto 0;
+    margin: 6px auto 0;
 }
 
 .socTrack {
@@ -677,9 +679,9 @@ body {
 }
 
 #socValue {
-    margin-top: 3px;
+    margin-top: 4px;
 
-    font-size: 9px;
+    font-size: 10px;
 
     color: var(--text-muted);
 }
@@ -703,7 +705,7 @@ body {
 
 
 /* =========================================================
-   TABLET
+   MITTLERE KACHEL
    ========================================================= */
 
 @media (max-width: 700px) {
@@ -712,24 +714,24 @@ body {
         --icon-size: 58px;
         --house-size: 64px;
 
-        --pv-center-y: 126px;
-        --main-center-y: 260px;
+        --pv-center-y: 122px;
+        --main-center-y: 248px;
 
         --grid-x: 19%;
         --battery-x: 81%;
     }
 
     .energy {
-        min-height: 320px;
+        min-height: 300px;
     }
 
     #pvText {
-        top: 42px;
-        width: 115px;
+        top: 38px;
+        width: 120px;
     }
 
     .labelBlock {
-        width: 105px;
+        width: 108px;
     }
 
     .iconCircle svg {
@@ -737,16 +739,16 @@ body {
         height: 25px;
     }
 
-    .nodeValue {
-        font-size: 17px;
+    .nodeTitle {
+        font-size: 11px;
     }
 
-    .nodeTitle {
-        font-size: 10px;
+    .nodeValue {
+        font-size: 18px;
     }
 
     .nodeStatus {
-        font-size: 8px;
+        font-size: 10px;
     }
 
     .houseHalo {
@@ -766,56 +768,71 @@ body {
         --icon-size: 50px;
         --house-size: 56px;
 
-        --pv-center-y: 112px;
-        --main-center-y: 228px;
+        /*
+         * Wesentlich kompakter:
+         * damit die unteren Texte IN der Kachel bleiben.
+         */
+        --pv-center-y: 96px;
+        --main-center-y: 194px;
 
         --grid-x: 19%;
         --battery-x: 81%;
     }
 
     .energy {
-        min-height: 285px;
+        min-height: 250px;
     }
 
     #pvText {
-        top: 37px;
-        width: 100px;
+        top: 15px;
+        width: 110px;
     }
 
     .labelBlock {
-        width: 88px;
+        width: 98px;
     }
 
     .iconCircle svg {
-        width: 22px;
-        height: 22px;
-    }
-
-    .nodeValue {
-        font-size: 15px;
+        width: 23px;
+        height: 23px;
     }
 
     .nodeTitle {
-        font-size: 9px;
+        font-size: 11px;
+        line-height: 1.15;
+    }
+
+    .nodeValue {
+        margin-top: 2px;
+
+        font-size: 17px;
     }
 
     .nodeStatus {
-        font-size: 8px;
+        margin-top: 3px;
+
+        font-size: 10px;
+        line-height: 1.15;
     }
 
     .socRow {
-        width: 58px;
+        width: 66px;
+        margin-top: 5px;
+    }
+
+    #socValue {
+        font-size: 10px;
     }
 
     .houseHalo {
-        width: 70px;
-        height: 70px;
+        width: 68px;
+        height: 68px;
     }
 }
 
 
 /* =========================================================
-   SEHR SCHMAL
+   SEHR SCHMALES NATEL
    ========================================================= */
 
 @media (max-width: 350px) {
@@ -824,41 +841,41 @@ body {
         --icon-size: 46px;
         --house-size: 52px;
 
-        --pv-center-y: 104px;
-        --main-center-y: 215px;
+        --pv-center-y: 90px;
+        --main-center-y: 184px;
 
         --grid-x: 20%;
         --battery-x: 80%;
     }
 
-    #pvText {
-        top: 34px;
-        width: 90px;
+    .energy {
+        min-height: 238px;
     }
 
-    .energy {
-        min-height: 270px;
+    #pvText {
+        top: 12px;
+        width: 100px;
     }
 
     .labelBlock {
-        width: 76px;
-    }
-
-    .nodeValue {
-        font-size: 14px;
+        width: 86px;
     }
 
     .nodeTitle {
-        font-size: 8px;
+        font-size: 10px;
+    }
+
+    .nodeValue {
+        font-size: 16px;
     }
 
     .nodeStatus {
-        font-size: 7px;
+        font-size: 9px;
     }
 
     .iconCircle svg {
-        width: 20px;
-        height: 20px;
+        width: 21px;
+        height: 21px;
     }
 }
 
@@ -896,17 +913,11 @@ body {
             PV-Anlage
         </div>
 
-        <div
-            class="nodeValue"
-            id="pvValue"
-        >
+        <div class="nodeValue" id="pvValue">
             -- kW
         </div>
 
-        <div
-            class="nodeStatus"
-            id="pvStatus"
-        >
+        <div class="nodeStatus" id="pvStatus">
             -
         </div>
 
@@ -915,20 +926,13 @@ body {
 
     <!-- PV KREIS -->
 
-    <div
-        class="circleNode"
-        id="pvCircleNode"
-    >
+    <div class="circleNode" id="pvCircleNode">
 
         <div class="iconCircle iconPV">
 
             <svg viewBox="0 0 24 24">
 
-                <circle
-                    cx="12"
-                    cy="12"
-                    r="4"
-                ></circle>
+                <circle cx="12" cy="12" r="4"></circle>
 
                 <path d="M12 2v2"></path>
                 <path d="M12 20v2"></path>
@@ -951,10 +955,7 @@ body {
 
     <!-- NETZ KREIS -->
 
-    <div
-        class="circleNode"
-        id="gridCircleNode"
-    >
+    <div class="circleNode" id="gridCircleNode">
 
         <div class="iconCircle iconGrid">
 
@@ -975,26 +976,17 @@ body {
 
     <!-- NETZ TEXT -->
 
-    <div
-        class="labelBlock"
-        id="gridText"
-    >
+    <div class="labelBlock" id="gridText">
 
         <div class="nodeTitle">
             Stromnetz
         </div>
 
-        <div
-            class="nodeValue"
-            id="gridValue"
-        >
+        <div class="nodeValue" id="gridValue">
             -- kW
         </div>
 
-        <div
-            class="nodeStatus"
-            id="gridMode"
-        >
+        <div class="nodeStatus" id="gridMode">
             -
         </div>
 
@@ -1003,10 +995,7 @@ body {
 
     <!-- HAUS KREIS -->
 
-    <div
-        class="circleNode"
-        id="houseCircleNode"
-    >
+    <div class="circleNode" id="houseCircleNode">
 
         <div class="iconCircle iconHouse">
 
@@ -1027,19 +1016,13 @@ body {
 
     <!-- HAUS TEXT -->
 
-    <div
-        class="labelBlock"
-        id="houseText"
-    >
+    <div class="labelBlock" id="houseText">
 
         <div class="nodeTitle">
             Haus
         </div>
 
-        <div
-            class="nodeValue"
-            id="houseValue"
-        >
+        <div class="nodeValue" id="houseValue">
             -- kW
         </div>
 
@@ -1052,10 +1035,7 @@ body {
 
     <!-- BATTERIE KREIS -->
 
-    <div
-        class="circleNode"
-        id="batteryCircleNode"
-    >
+    <div class="circleNode" id="batteryCircleNode">
 
         <div class="iconCircle iconBattery">
 
@@ -1082,26 +1062,17 @@ body {
 
     <!-- BATTERIE TEXT -->
 
-    <div
-        class="labelBlock"
-        id="batteryText"
-    >
+    <div class="labelBlock" id="batteryText">
 
         <div class="nodeTitle">
             Batterie
         </div>
 
-        <div
-            class="nodeValue"
-            id="batteryValue"
-        >
+        <div class="nodeValue" id="batteryValue">
             -- kW
         </div>
 
-        <div
-            class="nodeStatus"
-            id="batteryMode"
-        >
+        <div class="nodeStatus" id="batteryMode">
             -
         </div>
 
@@ -1140,12 +1111,7 @@ function handleMessage(data)
     if (typeof data === "string") {
 
         try {
-
-            data =
-                JSON.parse(
-                    data
-                );
-
+            data = JSON.parse(data);
         } catch (error) {
 
             console.error(
