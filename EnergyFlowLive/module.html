@@ -16,6 +16,15 @@
     --line: rgba(110, 110, 110, 0.30);
     --circle: rgba(110, 110, 110, 0.46);
     --halo: rgba(110, 110, 110, 0.04);
+
+    /*
+     * Desktop:
+     * bewusst etwas ruhiger / kleiner
+     */
+    --font-title: 12px;
+    --font-value: 19px;
+    --font-status: 10px;
+    --font-soc: 10px;
 }
 
 
@@ -27,7 +36,7 @@
 
     :root {
         --text: #f2f2f2;
-        --text-muted: rgba(242, 242, 242, 0.78);
+        --text-muted: rgba(242, 242, 242, 0.80);
 
         --line: rgba(220, 220, 220, 0.30);
         --circle: rgba(220, 220, 220, 0.50);
@@ -70,11 +79,6 @@ body {
    VIEWPORT
    ========================================================= */
 
-/*
- * Diese Fläche entspricht immer der tatsächlich verfügbaren
- * Fläche innerhalb der Symcon-Kachel.
- */
-
 #energyViewport {
     position: relative;
 
@@ -90,23 +94,6 @@ body {
 /* =========================================================
    FESTES KOORDINATENSYSTEM
    ========================================================= */
-
-/*
- * Die komplette Energie-Grafik wird in einem festen
- * 600 x 340 Koordinatensystem gezeichnet.
- *
- * JavaScript skaliert anschließend die GANZE Grafik
- * automatisch passend zur Kachel.
- *
- * Dadurch bleiben:
- *
- * - Kreise
- * - Linien
- * - Punkte
- * - Texte
- *
- * immer exakt zueinander ausgerichtet.
- */
 
 #energyStage {
     position: absolute;
@@ -135,40 +122,20 @@ body {
     z-index: 10;
 }
 
-
-/*
- * PV
- */
-
 #pvCircleNode {
     left: 300px;
     top: 105px;
 }
-
-
-/*
- * Stromnetz
- */
 
 #gridCircleNode {
     left: 120px;
     top: 235px;
 }
 
-
-/*
- * Haus
- */
-
 #houseCircleNode {
     left: 300px;
     top: 235px;
 }
-
-
-/*
- * Batterie
- */
 
 #batteryCircleNode {
     left: 480px;
@@ -191,14 +158,10 @@ body {
 
     border-radius: 50%;
 
-    border:
-        2px solid
-        var(--circle);
+    border: 2px solid var(--circle);
 
-    background:
-        var(--halo);
+    background: var(--halo);
 }
-
 
 .iconCircle svg {
     width: 30px;
@@ -214,30 +177,20 @@ body {
     stroke-linejoin: round;
 }
 
-
 .iconPV {
     color: var(--pv);
-
-    border-color:
-        var(--pv);
+    border-color: var(--pv);
 }
-
 
 .iconGrid {
     color: var(--grid);
-
-    border-color:
-        var(--grid);
+    border-color: var(--grid);
 }
-
 
 .iconBattery {
     color: var(--battery);
-
-    border-color:
-        var(--battery);
+    border-color: var(--battery);
 }
-
 
 .iconHouse {
     width: 72px;
@@ -245,11 +198,9 @@ body {
 
     color: var(--text);
 
-    border-color:
-        var(--circle);
+    border-color: var(--circle);
 
-    background:
-        var(--halo);
+    background: var(--halo);
 }
 
 
@@ -266,16 +217,11 @@ body {
     width: 92px;
     height: 92px;
 
-    transform:
-        translate(
-            -50%,
-            -50%
-        );
+    transform: translate(-50%, -50%);
 
     border-radius: 50%;
 
-    background:
-        var(--halo);
+    background: var(--halo);
 
     z-index: 0;
 }
@@ -290,42 +236,27 @@ body {
 
     width: 150px;
 
-    transform:
-        translateX(
-            -50%
-        );
+    transform: translateX(-50%);
 
     text-align: center;
 
     z-index: 20;
 }
 
-
-/*
- * PV-Beschriftung
- */
-
 #pvText {
     left: 300px;
     top: 18px;
 }
-
-
-/*
- * Untere Beschriftungen
- */
 
 #gridText {
     left: 120px;
     top: 276px;
 }
 
-
 #houseText {
     left: 300px;
     top: 279px;
 }
-
 
 #batteryText {
     left: 480px;
@@ -334,51 +265,42 @@ body {
 
 
 /* =========================================================
-   TEXTGRÖSSEN
+   SCHRIFTEN
    ========================================================= */
-
-/*
- * Bewusst größer als bisher.
- */
 
 .nodeTitle {
     margin: 0;
 
-    font-size: 14px;
+    font-size: var(--font-title);
     line-height: 1.2;
 
     font-weight: 500;
 
-    color:
-        var(--text-muted);
+    color: var(--text-muted);
 }
-
 
 .nodeValue {
     margin-top: 2px;
 
-    font-size: 22px;
+    font-size: var(--font-value);
     line-height: 1.1;
 
     font-weight: 650;
 
     white-space: nowrap;
 
-    color:
-        var(--text);
+    color: var(--text);
 }
-
 
 .nodeStatus {
     min-height: 16px;
 
     margin-top: 4px;
 
-    font-size: 12px;
+    font-size: var(--font-status);
     line-height: 1.15;
 
-    color:
-        var(--text-muted);
+    color: var(--text-muted);
 }
 
 
@@ -387,23 +309,15 @@ body {
    ========================================================= */
 
 .statusPV {
-    color:
-        var(--pv)
-        !important;
+    color: var(--pv) !important;
 }
-
 
 .statusGrid {
-    color:
-        var(--grid)
-        !important;
+    color: var(--grid) !important;
 }
 
-
 .statusBattery {
-    color:
-        var(--battery)
-        !important;
+    color: var(--battery) !important;
 }
 
 
@@ -412,12 +326,10 @@ body {
    ========================================================= */
 
 .socRow {
-    width: 86px;
+    width: 90px;
 
-    margin:
-        7px auto 0;
+    margin: 7px auto 0;
 }
-
 
 .socTrack {
     width: 100%;
@@ -427,10 +339,8 @@ body {
 
     border-radius: 20px;
 
-    background:
-        var(--line);
+    background: var(--line);
 }
-
 
 #batteryFill {
     width: 0;
@@ -438,23 +348,20 @@ body {
 
     border-radius: 20px;
 
-    background:
-        var(--battery);
+    background: var(--battery);
 
-    transition:
-        width
-        0.4s
-        ease;
+    transition: width 0.4s ease;
 }
 
-
 #socValue {
-    margin-top: 4px;
+    margin-top: 5px;
 
-    font-size: 11px;
+    font-size: var(--font-soc);
+    line-height: 1.2;
 
-    color:
-        var(--text-muted);
+    font-weight: 600;
+
+    color: var(--text);
 }
 
 
@@ -469,26 +376,8 @@ body {
 
     border-radius: 20px;
 
-    background:
-        var(--line);
+    background: var(--line);
 }
-
-
-/*
- * PV -> Haus
- *
- * PV-Kreis:
- * Mittelpunkt y = 105
- * Radius = 33
- *
- * Start = 138
- *
- * Haus-Kreis:
- * Mittelpunkt y = 235
- * Radius = 36
- *
- * Ende = 199
- */
 
 #linePV {
     left: 298px;
@@ -498,17 +387,6 @@ body {
     height: 61px;
 }
 
-
-/*
- * Stromnetz -> Haus
- *
- * Netz rechts:
- * 120 + 33 = 153
- *
- * Haus links:
- * 300 - 36 = 264
- */
-
 #lineGrid {
     left: 153px;
     top: 233px;
@@ -516,17 +394,6 @@ body {
     width: 111px;
     height: 4px;
 }
-
-
-/*
- * Haus -> Batterie
- *
- * Haus rechts:
- * 300 + 36 = 336
- *
- * Batterie links:
- * 480 - 33 = 447
- */
 
 #lineBattery {
     left: 336px;
@@ -560,7 +427,6 @@ body {
         0 0 14px currentColor;
 }
 
-
 .flowDot.active {
     opacity: 1;
 }
@@ -578,7 +444,6 @@ body {
     background: var(--pv);
 }
 
-
 #dotPV.active {
     animation:
         pvFlow
@@ -586,7 +451,6 @@ body {
         linear
         infinite;
 }
-
 
 @keyframes pvFlow {
 
@@ -608,7 +472,6 @@ body {
     top: 229.5px;
 }
 
-
 #dotGrid.import {
     animation:
         gridImport
@@ -617,7 +480,6 @@ body {
         infinite;
 }
 
-
 #dotGrid.export {
     animation:
         gridExport
@@ -625,7 +487,6 @@ body {
         linear
         infinite;
 }
-
 
 @keyframes gridImport {
 
@@ -637,7 +498,6 @@ body {
         left: 259px;
     }
 }
-
 
 @keyframes gridExport {
 
@@ -659,7 +519,6 @@ body {
     top: 229.5px;
 }
 
-
 #dotBattery.charge {
     animation:
         batteryCharge
@@ -668,7 +527,6 @@ body {
         infinite;
 }
 
-
 #dotBattery.discharge {
     animation:
         batteryDischarge
@@ -676,7 +534,6 @@ body {
         linear
         infinite;
 }
-
 
 @keyframes batteryCharge {
 
@@ -689,7 +546,6 @@ body {
     }
 }
 
-
 @keyframes batteryDischarge {
 
     from {
@@ -698,6 +554,62 @@ body {
 
     to {
         left: 331px;
+    }
+}
+
+
+/* =========================================================
+   NATEL / SCHMALE KACHELN
+   ========================================================= */
+
+/*
+ * Wichtig:
+ *
+ * Die Grafik selbst wird weiterhin proportional skaliert.
+ * Zusätzlich werden die Ausgangsschriften größer gemacht,
+ * damit sie nach dem Herunterskalieren auf dem Natel
+ * noch gut lesbar bleiben.
+ */
+
+@media (max-width: 480px) {
+
+    :root {
+        --font-title: 16px;
+        --font-value: 25px;
+        --font-status: 14px;
+        --font-soc: 15px;
+    }
+
+
+    .socRow {
+        width: 96px;
+    }
+
+
+    .socTrack {
+        height: 8px;
+    }
+
+
+    #socValue {
+        margin-top: 6px;
+
+        font-weight: 650;
+    }
+}
+
+
+/* =========================================================
+   SEHR SCHMALE NATELS
+   ========================================================= */
+
+@media (max-width: 360px) {
+
+    :root {
+        --font-title: 17px;
+        --font-value: 26px;
+        --font-status: 15px;
+        --font-soc: 16px;
     }
 }
 
@@ -712,54 +624,24 @@ body {
     <div id="energyStage">
 
 
-        <!-- =================================================
-             GRAUE ENERGIEWEGE
-             ================================================= -->
+        <!-- LINIEN -->
 
-        <div
-            class="flowLine"
-            id="linePV"
-        ></div>
-
-        <div
-            class="flowLine"
-            id="lineGrid"
-        ></div>
-
-        <div
-            class="flowLine"
-            id="lineBattery"
-        ></div>
+        <div class="flowLine" id="linePV"></div>
+        <div class="flowLine" id="lineGrid"></div>
+        <div class="flowLine" id="lineBattery"></div>
 
 
-        <!-- =================================================
-             FARBIGE ENERGIEPUNKTE
-             ================================================= -->
+        <!-- PUNKTE -->
 
-        <div
-            class="flowDot"
-            id="dotPV"
-        ></div>
+        <div class="flowDot" id="dotPV"></div>
+        <div class="flowDot" id="dotGrid"></div>
+        <div class="flowDot" id="dotBattery"></div>
 
-        <div
-            class="flowDot"
-            id="dotGrid"
-        ></div>
-
-        <div
-            class="flowDot"
-            id="dotBattery"
-        ></div>
-
-
-        <!-- HALO -->
 
         <div class="houseHalo"></div>
 
 
-        <!-- =================================================
-             PV TEXT
-             ================================================= -->
+        <!-- PV TEXT -->
 
         <div
             class="labelBlock"
@@ -787,9 +669,7 @@ body {
         </div>
 
 
-        <!-- =================================================
-             PV KREIS
-             ================================================= -->
+        <!-- PV KREIS -->
 
         <div
             class="circleNode"
@@ -825,9 +705,7 @@ body {
         </div>
 
 
-        <!-- =================================================
-             NETZ KREIS
-             ================================================= -->
+        <!-- NETZ KREIS -->
 
         <div
             class="circleNode"
@@ -879,9 +757,7 @@ body {
         </div>
 
 
-        <!-- =================================================
-             HAUS KREIS
-             ================================================= -->
+        <!-- HAUS KREIS -->
 
         <div
             class="circleNode"
@@ -930,9 +806,7 @@ body {
         </div>
 
 
-        <!-- =================================================
-             BATTERIE KREIS
-             ================================================= -->
+        <!-- BATTERIE KREIS -->
 
         <div
             class="circleNode"
@@ -1048,13 +922,6 @@ function resizeEnergyStage()
         viewport.clientHeight;
 
 
-    /*
-     * Kleine Sicherheitsabstände:
-     *
-     * horizontal 12 px
-     * vertikal   10 px
-     */
-
     const scaleX =
         Math.max(
             0.1,
@@ -1081,10 +948,6 @@ function resizeEnergyStage()
         );
 
 
-    /*
-     * Ganze Grafik proportional skalieren.
-     */
-
     let scale =
         Math.min(
             scaleX,
@@ -1093,13 +956,14 @@ function resizeEnergyStage()
 
 
     /*
-     * Auf großen Kacheln nicht extrem aufblasen.
+     * PC:
+     * nicht zu groß aufblasen
      */
 
     scale =
         Math.min(
             scale,
-            1.20
+            1.08
         );
 
 
@@ -1112,10 +976,9 @@ function resizeEnergyStage()
 }
 
 
-/*
- * Reagiert automatisch auf Größenänderungen
- * der Symcon-Kachel.
- */
+/* =========================================================
+   RESIZE
+   ========================================================= */
 
 const resizeObserver =
     new ResizeObserver(
@@ -1137,6 +1000,7 @@ window.addEventListener(
 
 
         if (viewport) {
+
             resizeObserver.observe(
                 viewport
             );
@@ -1171,7 +1035,7 @@ function kw(value)
 
 
 /* =========================================================
-   LIVE-WERTE
+   LIVE-DATEN
    ========================================================= */
 
 function handleMessage(data)
@@ -1248,7 +1112,7 @@ function handleMessage(data)
 
 
     /* =====================================================
-       HAUPTWERTE
+       WERTE
        ===================================================== */
 
     document
