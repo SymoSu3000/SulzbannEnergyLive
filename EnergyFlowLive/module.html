@@ -16,6 +16,29 @@
     --line: rgba(110, 110, 110, 0.30);
     --circle: rgba(110, 110, 110, 0.46);
     --halo: rgba(110, 110, 110, 0.04);
+
+    /*
+     * Diese Werte werden von JavaScript
+     * passend zur Kachel gesetzt.
+     */
+    --safe-top: 58px;
+
+    --pv-y: 145px;
+    --main-y: 285px;
+
+    --grid-x: 19%;
+    --house-x: 50%;
+    --battery-x: 81%;
+
+    --icon-size: 64px;
+    --house-size: 70px;
+
+    --label-width: 125px;
+
+    --font-title: 11px;
+    --font-value: 19px;
+    --font-status: 10px;
+    --font-soc: 14px;
 }
 
 
@@ -26,8 +49,8 @@
 @media (prefers-color-scheme: dark) {
 
     :root {
-        --text: #f2f2f2;
-        --text-muted: rgba(242, 242, 242, 0.80);
+        --text: #f4f4f4;
+        --text-muted: rgba(244, 244, 244, 0.82);
 
         --line: rgba(220, 220, 220, 0.30);
         --circle: rgba(220, 220, 220, 0.50);
@@ -55,6 +78,7 @@ body {
     overflow: hidden;
 
     background: transparent;
+
     color: var(--text);
 
     font-family:
@@ -66,10 +90,6 @@ body {
 }
 
 
-/* =========================================================
-   VIEWPORT
-   ========================================================= */
-
 #energyViewport {
     position: relative;
 
@@ -77,127 +97,9 @@ body {
     height: 100%;
 
     min-width: 0;
-    min-height: 250px;
+    min-height: 240px;
 
     overflow: hidden;
-
-    /*
-     * DESKTOP STANDARD
-     */
-
-    --safe-top: 58px;
-    --safe-bottom: 12px;
-    --side-padding: 18px;
-
-    --pv-y: 25%;
-    --main-y: 62%;
-
-    --grid-x: 18%;
-    --house-x: 50%;
-    --battery-x: 82%;
-
-    --icon-size: 64px;
-    --house-size: 70px;
-
-    --label-width: 130px;
-
-    --font-title: 11px;
-    --font-value: 18px;
-    --font-status: 10px;
-    --font-soc: 14px;
-}
-
-
-/* =========================================================
-   MOBILE LAYOUT
-   Wird durch ResizeObserver gesetzt
-   ========================================================= */
-
-#energyViewport[data-layout="mobile"] {
-
-    /*
-     * Mehr Abstand nach oben,
-     * damit der Symcon-Kacheltitel NICHT mit PV kollidiert.
-     */
-
-    --safe-top: 86px;
-
-    --safe-bottom: 10px;
-    --side-padding: 8px;
-
-    /*
-     * Vertikal kompakter,
-     * damit unten alle Beschriftungen Platz haben.
-     */
-
-    --pv-y: 27%;
-    --main-y: 58%;
-
-    /*
-     * Horizontal etwas weiter innen.
-     */
-
-    --grid-x: 20%;
-    --battery-x: 80%;
-
-    --icon-size: 58px;
-    --house-size: 64px;
-
-    --label-width: 118px;
-
-    /*
-     * Auf dem Natel bewusst GRÖSSER.
-     */
-
-    --font-title: 14px;
-    --font-value: 22px;
-    --font-status: 12px;
-    --font-soc: 16px;
-}
-
-
-/* =========================================================
-   SEHR SCHMALE KACHEL
-   ========================================================= */
-
-#energyViewport[data-layout="small"] {
-
-    --safe-top: 84px;
-    --safe-bottom: 8px;
-    --side-padding: 4px;
-
-    --pv-y: 27%;
-    --main-y: 57%;
-
-    --grid-x: 21%;
-    --battery-x: 79%;
-
-    --icon-size: 54px;
-    --house-size: 60px;
-
-    --label-width: 108px;
-
-    --font-title: 14px;
-    --font-value: 21px;
-    --font-status: 12px;
-    --font-soc: 16px;
-}
-
-
-/* =========================================================
-   DIAGRAMMFLÄCHE
-   ========================================================= */
-
-#diagram {
-    position: absolute;
-
-    left: var(--side-padding);
-    right: var(--side-padding);
-
-    top: var(--safe-top);
-    bottom: var(--safe-bottom);
-
-    overflow: visible;
 }
 
 
@@ -208,7 +110,11 @@ body {
 .circleNode {
     position: absolute;
 
-    transform: translate(-50%, -50%);
+    transform:
+        translate(
+            -50%,
+            -50%
+        );
 
     z-index: 10;
 }
@@ -247,14 +153,18 @@ body {
     height: var(--icon-size);
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
     border-radius: 50%;
 
-    border: 2px solid var(--circle);
+    border:
+        2px solid
+        var(--circle);
 
-    background: var(--halo);
+    background:
+        var(--halo);
 }
 
 
@@ -297,14 +207,16 @@ body {
 
     color: var(--text);
 
-    border-color: var(--circle);
+    border-color:
+        var(--circle);
 
-    background: var(--halo);
+    background:
+        var(--halo);
 }
 
 
 /* =========================================================
-   HAUS HALO
+   HAUS-HALO
    ========================================================= */
 
 .houseHalo {
@@ -313,21 +225,37 @@ body {
     left: var(--house-x);
     top: var(--main-y);
 
-    width: calc(var(--house-size) + 20px);
-    height: calc(var(--house-size) + 20px);
+    width:
+        calc(
+            var(--house-size)
+            +
+            20px
+        );
 
-    transform: translate(-50%, -50%);
+    height:
+        calc(
+            var(--house-size)
+            +
+            20px
+        );
+
+    transform:
+        translate(
+            -50%,
+            -50%
+        );
 
     border-radius: 50%;
 
-    background: var(--halo);
+    background:
+        var(--halo);
 
     z-index: 0;
 }
 
 
 /* =========================================================
-   TEXTE ALLGEMEIN
+   BESCHRIFTUNGEN
    ========================================================= */
 
 .labelBlock {
@@ -335,7 +263,10 @@ body {
 
     width: var(--label-width);
 
-    transform: translateX(-50%);
+    transform:
+        translateX(
+            -50%
+        );
 
     text-align: center;
 
@@ -343,15 +274,79 @@ body {
 }
 
 
+/*
+ * PV-Beschriftung:
+ * liegt bewusst unter dem reservierten
+ * Kacheltitelbereich.
+ */
+
+#pvText {
+    left: var(--house-x);
+    top: var(--safe-top);
+}
+
+
+/*
+ * Untere Beschriftungen
+ */
+
+#gridText {
+    left: var(--grid-x);
+
+    top:
+        calc(
+            var(--main-y)
+            +
+            (var(--icon-size) / 2)
+            +
+            8px
+        );
+}
+
+
+#houseText {
+    left: var(--house-x);
+
+    top:
+        calc(
+            var(--main-y)
+            +
+            (var(--house-size) / 2)
+            +
+            8px
+        );
+}
+
+
+#batteryText {
+    left: var(--battery-x);
+
+    top:
+        calc(
+            var(--main-y)
+            +
+            (var(--icon-size) / 2)
+            +
+            8px
+        );
+}
+
+
+/* =========================================================
+   SCHRIFTEN
+   ========================================================= */
+
 .nodeTitle {
     margin: 0;
 
     font-size: var(--font-title);
+
     line-height: 1.18;
 
     font-weight: 500;
 
-    color: var(--text-muted);
+    color:
+        var(--text-muted);
 }
 
 
@@ -359,84 +354,29 @@ body {
     margin-top: 2px;
 
     font-size: var(--font-value);
+
     line-height: 1.08;
 
     font-weight: 650;
 
     white-space: nowrap;
 
-    color: var(--text);
+    color:
+        var(--text);
 }
 
 
 .nodeStatus {
-    margin-top: 4px;
-
     min-height: 15px;
 
+    margin-top: 4px;
+
     font-size: var(--font-status);
+
     line-height: 1.15;
 
-    color: var(--text-muted);
-}
-
-
-/* =========================================================
-   PV TEXT
-   ========================================================= */
-
-/*
- * Komplett innerhalb der reservierten Diagrammfläche.
- * Dadurch keine Kollision mehr mit dem Symcon-Titel.
- */
-
-#pvText {
-    left: var(--house-x);
-
-    top: 0;
-}
-
-
-/* =========================================================
-   UNTERE TEXTE
-   ========================================================= */
-
-#gridText {
-    left: var(--grid-x);
-
-    top: calc(
-        var(--main-y)
-        +
-        (var(--icon-size) / 2)
-        +
-        8px
-    );
-}
-
-
-#houseText {
-    left: var(--house-x);
-
-    top: calc(
-        var(--main-y)
-        +
-        (var(--house-size) / 2)
-        +
-        8px
-    );
-}
-
-
-#batteryText {
-    left: var(--battery-x);
-
-    top: calc(
-        var(--main-y)
-        +
-        (var(--icon-size) / 2)
-        +
-        8px
-    );
+    color:
+        var(--text-muted);
 }
 
 
@@ -445,28 +385,35 @@ body {
    ========================================================= */
 
 .statusPV {
-    color: var(--pv) !important;
+    color:
+        var(--pv)
+        !important;
 }
 
 
 .statusGrid {
-    color: var(--grid) !important;
+    color:
+        var(--grid)
+        !important;
 }
 
 
 .statusBattery {
-    color: var(--battery) !important;
+    color:
+        var(--battery)
+        !important;
 }
 
 
 /* =========================================================
-   SOC
+   BATTERIE SOC
    ========================================================= */
 
 .socRow {
     width: 88px;
 
-    margin: 6px auto 0;
+    margin:
+        6px auto 0;
 }
 
 
@@ -478,7 +425,8 @@ body {
 
     border-radius: 20px;
 
-    background: var(--line);
+    background:
+        var(--line);
 }
 
 
@@ -488,26 +436,33 @@ body {
 
     border-radius: 20px;
 
-    background: var(--battery);
+    background:
+        var(--battery);
 
-    transition: width 0.4s ease;
+    transition:
+        width
+        0.4s
+        ease;
 }
 
 
 #socValue {
     margin-top: 5px;
 
-    font-size: var(--font-soc);
+    font-size:
+        var(--font-soc);
+
     line-height: 1.1;
 
     font-weight: 700;
 
-    color: var(--text);
+    color:
+        var(--text);
 }
 
 
 /* =========================================================
-   LINIEN
+   GRAUE LINIEN
    ========================================================= */
 
 .flowLine {
@@ -517,90 +472,105 @@ body {
 
     border-radius: 20px;
 
-    background: var(--line);
+    background:
+        var(--line);
 }
 
 
 /*
- * PV -> Haus
+ * PV -> HAUS
+ *
+ * beginnt exakt an Unterkante PV-Kreis
+ * endet exakt an Oberkante Haus-Kreis
  */
 
 #linePV {
     left: var(--house-x);
 
-    top: calc(
-        var(--pv-y)
-        +
-        (var(--icon-size) / 2)
-    );
+    top:
+        calc(
+            var(--pv-y)
+            +
+            (var(--icon-size) / 2)
+        );
 
     width: 4px;
 
-    height: calc(
-        var(--main-y)
-        -
-        (var(--house-size) / 2)
-        -
-        var(--pv-y)
-        -
-        (var(--icon-size) / 2)
-    );
+    height:
+        calc(
+            var(--main-y)
+            -
+            (var(--house-size) / 2)
+            -
+            var(--pv-y)
+            -
+            (var(--icon-size) / 2)
+        );
 
-    transform: translateX(-50%);
+    transform:
+        translateX(
+            -50%
+        );
 }
 
 
 /*
- * Netz -> Haus
+ * NETZ -> HAUS
  */
 
 #lineGrid {
-    top: calc(
-        var(--main-y)
-        -
-        2px
-    );
+    top:
+        calc(
+            var(--main-y)
+            -
+            2px
+        );
 
-    left: calc(
-        var(--grid-x)
-        +
-        (var(--icon-size) / 2)
-    );
+    left:
+        calc(
+            var(--grid-x)
+            +
+            (var(--icon-size) / 2)
+        );
 
-    right: calc(
-        50%
-        +
-        (var(--house-size) / 2)
-    );
+    right:
+        calc(
+            50%
+            +
+            (var(--house-size) / 2)
+        );
 
     height: 4px;
 }
 
 
 /*
- * Haus -> Batterie
+ * HAUS -> BATTERIE
  */
 
 #lineBattery {
-    top: calc(
-        var(--main-y)
-        -
-        2px
-    );
+    top:
+        calc(
+            var(--main-y)
+            -
+            2px
+        );
 
-    left: calc(
-        50%
-        +
-        (var(--house-size) / 2)
-    );
+    left:
+        calc(
+            50%
+            +
+            (var(--house-size) / 2)
+        );
 
-    right: calc(
-        100%
-        -
-        var(--battery-x)
-        +
-        (var(--icon-size) / 2)
-    );
+    right:
+        calc(
+            100%
+            -
+            var(--battery-x)
+            +
+            (var(--icon-size) / 2)
+        );
 
     height: 4px;
 }
@@ -640,19 +610,21 @@ body {
    ========================================================= */
 
 #dotPV {
-    left: calc(
-        50%
-        -
-        5.5px
-    );
+    left:
+        calc(
+            50%
+            -
+            5.5px
+        );
 
-    top: calc(
-        var(--pv-y)
-        +
-        (var(--icon-size) / 2)
-        -
-        5.5px
-    );
+    top:
+        calc(
+            var(--pv-y)
+            +
+            (var(--icon-size) / 2)
+            -
+            5.5px
+        );
 
     color: var(--pv);
     background: var(--pv);
@@ -671,23 +643,25 @@ body {
 @keyframes pvFlow {
 
     from {
-        top: calc(
-            var(--pv-y)
-            +
-            (var(--icon-size) / 2)
-            -
-            5.5px
-        );
+        top:
+            calc(
+                var(--pv-y)
+                +
+                (var(--icon-size) / 2)
+                -
+                5.5px
+            );
     }
 
     to {
-        top: calc(
-            var(--main-y)
-            -
-            (var(--house-size) / 2)
-            -
-            5.5px
-        );
+        top:
+            calc(
+                var(--main-y)
+                -
+                (var(--house-size) / 2)
+                -
+                5.5px
+            );
     }
 }
 
@@ -697,11 +671,12 @@ body {
    ========================================================= */
 
 #dotGrid {
-    top: calc(
-        var(--main-y)
-        -
-        5.5px
-    );
+    top:
+        calc(
+            var(--main-y)
+            -
+            5.5px
+        );
 }
 
 
@@ -726,23 +701,25 @@ body {
 @keyframes gridImport {
 
     from {
-        left: calc(
-            var(--grid-x)
-            +
-            (var(--icon-size) / 2)
-            -
-            5.5px
-        );
+        left:
+            calc(
+                var(--grid-x)
+                +
+                (var(--icon-size) / 2)
+                -
+                5.5px
+            );
     }
 
     to {
-        left: calc(
-            50%
-            -
-            (var(--house-size) / 2)
-            -
-            5.5px
-        );
+        left:
+            calc(
+                50%
+                -
+                (var(--house-size) / 2)
+                -
+                5.5px
+            );
     }
 }
 
@@ -750,23 +727,25 @@ body {
 @keyframes gridExport {
 
     from {
-        left: calc(
-            50%
-            -
-            (var(--house-size) / 2)
-            -
-            5.5px
-        );
+        left:
+            calc(
+                50%
+                -
+                (var(--house-size) / 2)
+                -
+                5.5px
+            );
     }
 
     to {
-        left: calc(
-            var(--grid-x)
-            +
-            (var(--icon-size) / 2)
-            -
-            5.5px
-        );
+        left:
+            calc(
+                var(--grid-x)
+                +
+                (var(--icon-size) / 2)
+                -
+                5.5px
+            );
     }
 }
 
@@ -776,11 +755,12 @@ body {
    ========================================================= */
 
 #dotBattery {
-    top: calc(
-        var(--main-y)
-        -
-        5.5px
-    );
+    top:
+        calc(
+            var(--main-y)
+            -
+            5.5px
+        );
 }
 
 
@@ -805,23 +785,25 @@ body {
 @keyframes batteryCharge {
 
     from {
-        left: calc(
-            50%
-            +
-            (var(--house-size) / 2)
-            -
-            5.5px
-        );
+        left:
+            calc(
+                50%
+                +
+                (var(--house-size) / 2)
+                -
+                5.5px
+            );
     }
 
     to {
-        left: calc(
-            var(--battery-x)
-            -
-            (var(--icon-size) / 2)
-            -
-            5.5px
-        );
+        left:
+            calc(
+                var(--battery-x)
+                -
+                (var(--icon-size) / 2)
+                -
+                5.5px
+            );
     }
 }
 
@@ -829,23 +811,25 @@ body {
 @keyframes batteryDischarge {
 
     from {
-        left: calc(
-            var(--battery-x)
-            -
-            (var(--icon-size) / 2)
-            -
-            5.5px
-        );
+        left:
+            calc(
+                var(--battery-x)
+                -
+                (var(--icon-size) / 2)
+                -
+                5.5px
+            );
     }
 
     to {
-        left: calc(
-            50%
-            +
-            (var(--house-size) / 2)
-            -
-            5.5px
-        );
+        left:
+            calc(
+                50%
+                +
+                (var(--house-size) / 2)
+                -
+                5.5px
+            );
     }
 }
 
@@ -857,261 +841,291 @@ body {
 
 <div id="energyViewport">
 
-    <div id="diagram">
+
+    <!-- GRAUE LINIEN -->
+
+    <div
+        class="flowLine"
+        id="linePV"
+    ></div>
+
+    <div
+        class="flowLine"
+        id="lineGrid"
+    ></div>
+
+    <div
+        class="flowLine"
+        id="lineBattery"
+    ></div>
 
 
-        <!-- LINIEN -->
+    <!-- FARBIGE PUNKTE -->
 
-        <div class="flowLine" id="linePV"></div>
-        <div class="flowLine" id="lineGrid"></div>
-        <div class="flowLine" id="lineBattery"></div>
+    <div
+        class="flowDot"
+        id="dotPV"
+    ></div>
+
+    <div
+        class="flowDot"
+        id="dotGrid"
+    ></div>
+
+    <div
+        class="flowDot"
+        id="dotBattery"
+    ></div>
 
 
-        <!-- PUNKTE -->
+    <!-- HAUS HALO -->
 
-        <div class="flowDot" id="dotPV"></div>
-        <div class="flowDot" id="dotGrid"></div>
-        <div class="flowDot" id="dotBattery"></div>
+    <div class="houseHalo"></div>
 
 
-        <div class="houseHalo"></div>
+    <!-- =====================================================
+         PV TEXT
+         ===================================================== -->
 
+    <div
+        class="labelBlock"
+        id="pvText"
+    >
 
-        <!-- PV TEXT -->
+        <div class="nodeTitle">
+            PV-Anlage
+        </div>
 
         <div
-            class="labelBlock"
-            id="pvText"
+            class="nodeValue"
+            id="pvValue"
         >
+            -- kW
+        </div>
 
-            <div class="nodeTitle">
-                PV-Anlage
-            </div>
+        <div
+            class="nodeStatus"
+            id="pvStatus"
+        >
+            -
+        </div>
 
-            <div
-                class="nodeValue"
-                id="pvValue"
-            >
-                -- kW
-            </div>
+    </div>
 
-            <div
-                class="nodeStatus"
-                id="pvStatus"
-            >
-                -
-            </div>
+
+    <!-- =====================================================
+         PV KREIS
+         ===================================================== -->
+
+    <div
+        class="circleNode"
+        id="pvCircleNode"
+    >
+
+        <div class="iconCircle iconPV">
+
+            <svg viewBox="0 0 24 24">
+
+                <circle
+                    cx="12"
+                    cy="12"
+                    r="4"
+                ></circle>
+
+                <path d="M12 2v2"></path>
+                <path d="M12 20v2"></path>
+
+                <path d="M4.93 4.93l1.41 1.41"></path>
+                <path d="M17.66 17.66l1.41 1.41"></path>
+
+                <path d="M2 12h2"></path>
+                <path d="M20 12h2"></path>
+
+                <path d="M4.93 19.07l1.41-1.41"></path>
+                <path d="M17.66 6.34l1.41-1.41"></path>
+
+            </svg>
 
         </div>
 
+    </div>
 
-        <!-- PV KREIS -->
 
-        <div
-            class="circleNode"
-            id="pvCircleNode"
-        >
+    <!-- =====================================================
+         NETZ KREIS
+         ===================================================== -->
 
-            <div class="iconCircle iconPV">
+    <div
+        class="circleNode"
+        id="gridCircleNode"
+    >
 
-                <svg viewBox="0 0 24 24">
+        <div class="iconCircle iconGrid">
 
-                    <circle
-                        cx="12"
-                        cy="12"
-                        r="4"
-                    ></circle>
+            <svg viewBox="0 0 24 24">
 
-                    <path d="M12 2v2"></path>
-                    <path d="M12 20v2"></path>
+                <path d="M4 9h16"></path>
+                <path d="M4 15h16"></path>
 
-                    <path d="M4.93 4.93l1.41 1.41"></path>
-                    <path d="M17.66 17.66l1.41 1.41"></path>
+                <path d="M7 6l-3 3 3 3"></path>
+                <path d="M17 12l3 3-3 3"></path>
 
-                    <path d="M2 12h2"></path>
-                    <path d="M20 12h2"></path>
-
-                    <path d="M4.93 19.07l1.41-1.41"></path>
-                    <path d="M17.66 6.34l1.41-1.41"></path>
-
-                </svg>
-
-            </div>
+            </svg>
 
         </div>
 
+    </div>
 
-        <!-- NETZ KREIS -->
+
+    <!-- NETZ TEXT -->
+
+    <div
+        class="labelBlock"
+        id="gridText"
+    >
+
+        <div class="nodeTitle">
+            Stromnetz
+        </div>
 
         <div
-            class="circleNode"
-            id="gridCircleNode"
+            class="nodeValue"
+            id="gridValue"
         >
+            -- kW
+        </div>
 
-            <div class="iconCircle iconGrid">
+        <div
+            class="nodeStatus"
+            id="gridMode"
+        >
+            -
+        </div>
 
-                <svg viewBox="0 0 24 24">
+    </div>
 
-                    <path d="M4 9h16"></path>
-                    <path d="M4 15h16"></path>
 
-                    <path d="M7 6l-3 3 3 3"></path>
-                    <path d="M17 12l3 3-3 3"></path>
+    <!-- =====================================================
+         HAUS KREIS
+         ===================================================== -->
 
-                </svg>
+    <div
+        class="circleNode"
+        id="houseCircleNode"
+    >
 
-            </div>
+        <div class="iconCircle iconHouse">
+
+            <svg viewBox="0 0 24 24">
+
+                <path d="M3 11.5L12 4l9 7.5"></path>
+
+                <path d="M5.5 10v9h13v-9"></path>
+
+                <path d="M9.5 19v-5h5v5"></path>
+
+            </svg>
 
         </div>
 
+    </div>
 
-        <!-- NETZ TEXT -->
+
+    <!-- HAUS TEXT -->
+
+    <div
+        class="labelBlock"
+        id="houseText"
+    >
+
+        <div class="nodeTitle">
+            Haus
+        </div>
 
         <div
-            class="labelBlock"
-            id="gridText"
+            class="nodeValue"
+            id="houseValue"
         >
+            -- kW
+        </div>
 
-            <div class="nodeTitle">
-                Stromnetz
-            </div>
+        <div class="nodeStatus">
+            Verbrauch
+        </div>
 
-            <div
-                class="nodeValue"
-                id="gridValue"
-            >
-                -- kW
-            </div>
+    </div>
 
-            <div
-                class="nodeStatus"
-                id="gridMode"
-            >
-                -
-            </div>
+
+    <!-- =====================================================
+         BATTERIE KREIS
+         ===================================================== -->
+
+    <div
+        class="circleNode"
+        id="batteryCircleNode"
+    >
+
+        <div class="iconCircle iconBattery">
+
+            <svg viewBox="0 0 24 24">
+
+                <rect
+                    x="4"
+                    y="7"
+                    width="15"
+                    height="10"
+                    rx="2"
+                ></rect>
+
+                <path d="M19 10h2v4h-2"></path>
+
+                <path d="M8 12h7"></path>
+
+            </svg>
 
         </div>
 
+    </div>
 
-        <!-- HAUS KREIS -->
+
+    <!-- BATTERIE TEXT -->
+
+    <div
+        class="labelBlock"
+        id="batteryText"
+    >
+
+        <div class="nodeTitle">
+            Batterie
+        </div>
 
         <div
-            class="circleNode"
-            id="houseCircleNode"
+            class="nodeValue"
+            id="batteryValue"
         >
+            -- kW
+        </div>
 
-            <div class="iconCircle iconHouse">
-
-                <svg viewBox="0 0 24 24">
-
-                    <path d="M3 11.5L12 4l9 7.5"></path>
-
-                    <path d="M5.5 10v9h13v-9"></path>
-
-                    <path d="M9.5 19v-5h5v5"></path>
-
-                </svg>
-
-            </div>
-
+        <div
+            class="nodeStatus"
+            id="batteryMode"
+        >
+            -
         </div>
 
 
-        <!-- HAUS TEXT -->
+        <div class="socRow">
 
-        <div
-            class="labelBlock"
-            id="houseText"
-        >
+            <div class="socTrack">
 
-            <div class="nodeTitle">
-                Haus
-            </div>
-
-            <div
-                class="nodeValue"
-                id="houseValue"
-            >
-                -- kW
-            </div>
-
-            <div class="nodeStatus">
-                Verbrauch
-            </div>
-
-        </div>
-
-
-        <!-- BATTERIE KREIS -->
-
-        <div
-            class="circleNode"
-            id="batteryCircleNode"
-        >
-
-            <div class="iconCircle iconBattery">
-
-                <svg viewBox="0 0 24 24">
-
-                    <rect
-                        x="4"
-                        y="7"
-                        width="15"
-                        height="10"
-                        rx="2"
-                    ></rect>
-
-                    <path d="M19 10h2v4h-2"></path>
-
-                    <path d="M8 12h7"></path>
-
-                </svg>
+                <div
+                    id="batteryFill"
+                ></div>
 
             </div>
 
-        </div>
-
-
-        <!-- BATTERIE TEXT -->
-
-        <div
-            class="labelBlock"
-            id="batteryText"
-        >
-
-            <div class="nodeTitle">
-                Batterie
-            </div>
-
-            <div
-                class="nodeValue"
-                id="batteryValue"
-            >
-                -- kW
-            </div>
-
-            <div
-                class="nodeStatus"
-                id="batteryMode"
-            >
-                -
-            </div>
-
-
-            <div class="socRow">
-
-                <div class="socTrack">
-
-                    <div
-                        id="batteryFill"
-                    ></div>
-
-                </div>
-
-                <div id="socValue">
-                    -- %
-                </div>
-
+            <div id="socValue">
+                -- %
             </div>
 
         </div>
@@ -1125,10 +1139,10 @@ body {
 
 
 /* =========================================================
-   RESPONSIVE KACHELGRÖSSE
+   RESPONSIVES LAYOUT
    ========================================================= */
 
-function updateLayout()
+function applyResponsiveLayout()
 {
     const viewport =
         document.getElementById(
@@ -1145,40 +1159,374 @@ function updateLayout()
         viewport.clientWidth;
 
 
+    const height =
+        viewport.clientHeight;
+
+
     /*
-     * Nicht "Handy erkennen",
-     * sondern die echte Kachelbreite auswerten.
-     *
-     * So funktioniert es auch:
-     * - PC kleine Kachel
-     * - PC große Kachel
-     * - Tablet
-     * - Natel
+     * Die KACHEL entscheidet.
+     * Nicht PC / Natel / Browser.
      */
 
-    if (width <= 350) {
+    const mobile =
+        width <= 520;
 
-        viewport.dataset.layout =
-            "small";
 
-    } else if (width <= 520) {
+    const verySmall =
+        width <= 360;
 
-        viewport.dataset.layout =
-            "mobile";
+
+    /*
+     * -------------------------------------------------------
+     * ICONS
+     * -------------------------------------------------------
+     */
+
+    let iconSize;
+    let houseSize;
+
+
+    if (verySmall) {
+
+        iconSize = 52;
+        houseSize = 58;
+
+    } else if (mobile) {
+
+        iconSize = 58;
+        houseSize = 64;
 
     } else {
 
-        viewport.dataset.layout =
-            "desktop";
+        iconSize = 64;
+        houseSize = 70;
     }
+
+
+    /*
+     * -------------------------------------------------------
+     * HORIZONTAL
+     * -------------------------------------------------------
+     */
+
+    let gridX;
+    let batteryX;
+
+
+    if (verySmall) {
+
+        gridX = 21;
+        batteryX = 79;
+
+    } else if (mobile) {
+
+        gridX = 20;
+        batteryX = 80;
+
+    } else {
+
+        gridX = 19;
+        batteryX = 81;
+    }
+
+
+    /*
+     * -------------------------------------------------------
+     * SCHRIFT
+     *
+     * Mobile absichtlich größer.
+     * PC absichtlich ruhiger.
+     * -------------------------------------------------------
+     */
+
+    let fontTitle;
+    let fontValue;
+    let fontStatus;
+    let fontSoc;
+
+
+    if (verySmall) {
+
+        fontTitle = 14;
+        fontValue = 22;
+        fontStatus = 12;
+        fontSoc = 17;
+
+    } else if (mobile) {
+
+        fontTitle = 14;
+        fontValue = 23;
+        fontStatus = 12;
+        fontSoc = 17;
+
+    } else {
+
+        fontTitle = 11;
+        fontValue = 19;
+        fontStatus = 10;
+        fontSoc = 15;
+    }
+
+
+    /*
+     * -------------------------------------------------------
+     * OBERER SICHERHEITSBEREICH
+     *
+     * Platz für Symcon-Kacheltitel.
+     * -------------------------------------------------------
+     */
+
+    const safeTop =
+        mobile
+        ? 92
+        : 58;
+
+
+    /*
+     * -------------------------------------------------------
+     * PV-KREIS
+     *
+     * Text sitzt bei safeTop.
+     * Darunter genügend Abstand zum Kreis.
+     * -------------------------------------------------------
+     */
+
+    const pvCenterY =
+        safeTop
+        +
+        (
+            mobile
+            ? 92
+            : 88
+        );
+
+
+    /*
+     * -------------------------------------------------------
+     * HAUPTACHSE
+     *
+     * Wichtig:
+     * Unterhalb muss genug Platz bleiben für:
+     *
+     * - Titel
+     * - Leistung
+     * - Status
+     * - SOC-Balken
+     * - SOC-Prozent
+     * -------------------------------------------------------
+     */
+
+    const bottomReserve =
+        mobile
+        ? 115
+        : 95;
+
+
+    const maximumMainY =
+        height
+        -
+        bottomReserve
+        -
+        (
+            iconSize
+            /
+            2
+        );
+
+
+    /*
+     * gewünschte Position:
+     * ungefähr 63 % der nutzbaren Höhe
+     */
+
+    const preferredMainY =
+        safeTop
+        +
+        (
+            (
+                height
+                -
+                safeTop
+            )
+            *
+            (
+                mobile
+                ? 0.62
+                : 0.64
+            )
+        );
+
+
+    /*
+     * Mindestabstand zwischen PV und Haus
+     */
+
+    const minimumMainY =
+        pvCenterY
+        +
+        (
+            iconSize
+            /
+            2
+        )
+        +
+        (
+            houseSize
+            /
+            2
+        )
+        +
+        40;
+
+
+    let mainCenterY =
+        Math.min(
+            preferredMainY,
+            maximumMainY
+        );
+
+
+    mainCenterY =
+        Math.max(
+            mainCenterY,
+            minimumMainY
+        );
+
+
+    /*
+     * Wenn die Kachel extrem niedrig ist,
+     * gewinnt der verfügbare Platz.
+     */
+
+    if (
+        mainCenterY
+        >
+        maximumMainY
+    ) {
+
+        mainCenterY =
+            maximumMainY;
+    }
+
+
+    /*
+     * -------------------------------------------------------
+     * CSS-VARIABLEN SETZEN
+     * -------------------------------------------------------
+     */
+
+    viewport.style.setProperty(
+        "--safe-top",
+        safeTop + "px"
+    );
+
+
+    viewport.style.setProperty(
+        "--pv-y",
+        pvCenterY + "px"
+    );
+
+
+    viewport.style.setProperty(
+        "--main-y",
+        mainCenterY + "px"
+    );
+
+
+    viewport.style.setProperty(
+        "--grid-x",
+        gridX + "%"
+    );
+
+
+    viewport.style.setProperty(
+        "--battery-x",
+        batteryX + "%"
+    );
+
+
+    viewport.style.setProperty(
+        "--icon-size",
+        iconSize + "px"
+    );
+
+
+    viewport.style.setProperty(
+        "--house-size",
+        houseSize + "px"
+    );
+
+
+    viewport.style.setProperty(
+        "--label-width",
+        (
+            mobile
+            ? 118
+            : 125
+        )
+        +
+        "px"
+    );
+
+
+    viewport.style.setProperty(
+        "--font-title",
+        fontTitle + "px"
+    );
+
+
+    viewport.style.setProperty(
+        "--font-value",
+        fontValue + "px"
+    );
+
+
+    viewport.style.setProperty(
+        "--font-status",
+        fontStatus + "px"
+    );
+
+
+    viewport.style.setProperty(
+        "--font-soc",
+        fontSoc + "px"
+    );
 }
 
 
-const layoutObserver =
+/* =========================================================
+   RESIZE OBSERVER
+   ========================================================= */
+
+let resizeFrame = null;
+
+
+const resizeObserver =
     new ResizeObserver(
         function ()
         {
-            updateLayout();
+            /*
+             * requestAnimationFrame verhindert unnötige
+             * ResizeObserver-Schleifen.
+             */
+
+            if (resizeFrame !== null) {
+
+                cancelAnimationFrame(
+                    resizeFrame
+                );
+            }
+
+
+            resizeFrame =
+                requestAnimationFrame(
+                    function ()
+                    {
+                        applyResponsiveLayout();
+
+                        resizeFrame = null;
+                    }
+                );
         }
     );
 
@@ -1200,7 +1548,7 @@ function kw(value)
 
 
 /* =========================================================
-   LIVE DATEN
+   LIVE-DATEN
    ========================================================= */
 
 function handleMessage(data)
@@ -1235,33 +1583,59 @@ function handleMessage(data)
 
 
     const pv =
-        Number(data.pv || 0);
+        Number(
+            data.pv || 0
+        );
+
 
     const house =
-        Number(data.house || 0);
+        Number(
+            data.house || 0
+        );
+
 
     const gridImport =
-        Number(data.gridImport || 0);
+        Number(
+            data.gridImport || 0
+        );
+
 
     const gridExport =
-        Number(data.gridExport || 0);
+        Number(
+            data.gridExport || 0
+        );
+
 
     const batteryCharge =
-        Number(data.batteryCharge || 0);
+        Number(
+            data.batteryCharge || 0
+        );
+
 
     const batteryDischarge =
-        Number(data.batteryDischarge || 0);
+        Number(
+            data.batteryDischarge || 0
+        );
+
 
     const soc =
-        Number(data.soc || 0);
+        Number(
+            data.soc || 0
+        );
 
+
+    /* =====================================================
+       WERTE
+       ===================================================== */
 
     document
         .getElementById(
             "pvValue"
         )
         .textContent =
-            kw(pv);
+            kw(
+                pv
+            );
 
 
     document
@@ -1269,7 +1643,9 @@ function handleMessage(data)
             "houseValue"
         )
         .textContent =
-            kw(house);
+            kw(
+                house
+            );
 
 
     document
@@ -1314,7 +1690,9 @@ function handleMessage(data)
         );
 
 
-    if (pv > 0.05) {
+    if (
+        pv > 0.05
+    ) {
 
         dotPV.style.background =
             "var(--pv)";
@@ -1372,10 +1750,14 @@ function handleMessage(data)
         );
 
 
-    if (gridImport > 0.05) {
+    if (
+        gridImport > 0.05
+    ) {
 
         gridValue.textContent =
-            kw(gridImport);
+            kw(
+                gridImport
+            );
 
 
         gridMode.textContent =
@@ -1399,10 +1781,14 @@ function handleMessage(data)
 
     }
 
-    else if (gridExport > 0.05) {
+    else if (
+        gridExport > 0.05
+    ) {
 
         gridValue.textContent =
-            kw(gridExport);
+            kw(
+                gridExport
+            );
 
 
         gridMode.textContent =
@@ -1467,10 +1853,14 @@ function handleMessage(data)
         );
 
 
-    if (batteryCharge > 0.05) {
+    if (
+        batteryCharge > 0.05
+    ) {
 
         batteryValue.textContent =
-            kw(batteryCharge);
+            kw(
+                batteryCharge
+            );
 
 
         batteryMode.textContent =
@@ -1494,10 +1884,14 @@ function handleMessage(data)
 
     }
 
-    else if (batteryDischarge > 0.05) {
+    else if (
+        batteryDischarge > 0.05
+    ) {
 
         batteryValue.textContent =
-            kw(batteryDischarge);
+            kw(
+                batteryDischarge
+            );
 
 
         batteryMode.textContent =
@@ -1555,12 +1949,12 @@ window.addEventListener(
             );
 
 
-        updateLayout();
+        applyResponsiveLayout();
 
 
         if (viewport) {
 
-            layoutObserver.observe(
+            resizeObserver.observe(
                 viewport
             );
         }
