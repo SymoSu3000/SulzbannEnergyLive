@@ -1,0 +1,13 @@
+{
+  "id": "{634509D7-50CC-474B-A0E8-D735C88BB093}",
+  "name": "Energy Flow Live",
+  "type": 3,
+  "vendor": "Sulzbann",
+  "aliases": [
+    "Energieflüsse Live"
+  ],
+  "parentRequirements": [],
+  "childRequirements": [],
+  "implemented": [],
+  "prefix": "SULZEF"
+}
