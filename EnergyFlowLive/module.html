@@ -20,10 +20,6 @@
     --icon-size: 64px;
     --house-size: 70px;
 
-    /*
-     * Feste Mittelpunkte.
-     * Alle Linien und Kreise hängen an diesen Werten.
-     */
     --pv-center-y: 145px;
     --main-center-y: 285px;
 
@@ -145,17 +141,15 @@ body {
 
 
 /*
- * PV-TEXT:
- *
- * bewusst NICHT mehr mit kompliziertem calc().
- * Er bekommt einen festen Abstand zum PV-Kreis.
+ * PV-Text deutlich weiter nach oben.
+ * Damit bleibt zwischen Status und PV-Kreis Luft.
  */
 
 #pvText {
     position: absolute;
 
     left: 50%;
-    top: 66px;
+    top: 50px;
 
     width: 130px;
 
@@ -344,12 +338,7 @@ body {
 }
 
 
-/*
- * PV -> HAUS
- *
- * beginnt exakt an der Unterkante PV-Kreis
- * endet exakt an der Oberkante Haus-Kreis
- */
+/* PV -> Haus */
 
 #linePV {
     width: 4px;
@@ -376,11 +365,7 @@ body {
 }
 
 
-/*
- * NETZ -> HAUS
- *
- * exakt durch die Kreismitten
- */
+/* Netz -> Haus */
 
 #lineGrid {
     height: 4px;
@@ -405,9 +390,7 @@ body {
 }
 
 
-/*
- * HAUS -> BATTERIE
- */
+/* Haus -> Batterie */
 
 #lineBattery {
     height: 4px;
@@ -462,9 +445,7 @@ body {
 }
 
 
-/* =========================================================
-   PV-PUNKT
-   ========================================================= */
+/* PV-Punkt */
 
 #dotPV {
     left: calc(
@@ -517,9 +498,7 @@ body {
 }
 
 
-/* =========================================================
-   NETZ-PUNKT
-   ========================================================= */
+/* Netz-Punkt */
 
 #dotGrid {
     top: calc(
@@ -592,9 +571,7 @@ body {
 }
 
 
-/* =========================================================
-   BATTERIE-PUNKT
-   ========================================================= */
+/* Batterie-Punkt */
 
 #dotBattery {
     top: calc(
@@ -726,7 +703,7 @@ body {
 
 
 /* =========================================================
-   TABLET / KLEINERE KACHEL
+   TABLET
    ========================================================= */
 
 @media (max-width: 700px) {
@@ -747,7 +724,7 @@ body {
     }
 
     #pvText {
-        top: 57px;
+        top: 42px;
         width: 115px;
     }
 
@@ -801,7 +778,7 @@ body {
     }
 
     #pvText {
-        top: 50px;
+        top: 37px;
         width: 100px;
     }
 
@@ -838,7 +815,7 @@ body {
 
 
 /* =========================================================
-   SEHR SCHMALES NATEL
+   SEHR SCHMAL
    ========================================================= */
 
 @media (max-width: 350px) {
@@ -855,7 +832,7 @@ body {
     }
 
     #pvText {
-        top: 46px;
+        top: 34px;
         width: 90px;
     }
 
@@ -894,48 +871,24 @@ body {
 <div class="energy">
 
 
-    <!-- GRAUE ENERGIEWEGE -->
+    <!-- LINIEN -->
 
-    <div
-        class="flowLine"
-        id="linePV"
-    ></div>
-
-    <div
-        class="flowLine"
-        id="lineGrid"
-    ></div>
-
-    <div
-        class="flowLine"
-        id="lineBattery"
-    ></div>
+    <div class="flowLine" id="linePV"></div>
+    <div class="flowLine" id="lineGrid"></div>
+    <div class="flowLine" id="lineBattery"></div>
 
 
-    <!-- FARBIGE PUNKTE -->
+    <!-- PUNKTE -->
 
-    <div
-        class="flowDot"
-        id="dotPV"
-    ></div>
-
-    <div
-        class="flowDot"
-        id="dotGrid"
-    ></div>
-
-    <div
-        class="flowDot"
-        id="dotBattery"
-    ></div>
+    <div class="flowDot" id="dotPV"></div>
+    <div class="flowDot" id="dotGrid"></div>
+    <div class="flowDot" id="dotBattery"></div>
 
 
     <div class="houseHalo"></div>
 
 
-    <!-- =====================================================
-         PV TEXT
-         ===================================================== -->
+    <!-- PV TEXT -->
 
     <div id="pvText">
 
@@ -960,9 +913,7 @@ body {
     </div>
 
 
-    <!-- =====================================================
-         PV KREIS
-         ===================================================== -->
+    <!-- PV KREIS -->
 
     <div
         class="circleNode"
@@ -998,9 +949,7 @@ body {
     </div>
 
 
-    <!-- =====================================================
-         NETZ KREIS
-         ===================================================== -->
+    <!-- NETZ KREIS -->
 
     <div
         class="circleNode"
@@ -1052,9 +1001,7 @@ body {
     </div>
 
 
-    <!-- =====================================================
-         HAUS KREIS
-         ===================================================== -->
+    <!-- HAUS KREIS -->
 
     <div
         class="circleNode"
@@ -1103,9 +1050,7 @@ body {
     </div>
 
 
-    <!-- =====================================================
-         BATTERIE KREIS
-         ===================================================== -->
+    <!-- BATTERIE KREIS -->
 
     <div
         class="circleNode"
@@ -1236,8 +1181,6 @@ function handleMessage(data)
         Number(data.soc || 0);
 
 
-    /* Werte */
-
     document
         .getElementById("pvValue")
         .textContent =
@@ -1309,7 +1252,7 @@ function handleMessage(data)
     }
 
 
-    /* Netz */
+    /* NETZ */
 
     const dotGrid =
         document.getElementById("dotGrid");
@@ -1387,7 +1330,7 @@ function handleMessage(data)
     }
 
 
-    /* Batterie */
+    /* BATTERIE */
 
     const dotBattery =
         document.getElementById("dotBattery");
