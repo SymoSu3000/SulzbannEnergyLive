@@ -17,13 +17,25 @@
     --circle: rgba(110, 110, 110, 0.46);
     --halo: rgba(110, 110, 110, 0.04);
 
+    /*
+     * Gemeinsame Geometrie
+     */
     --icon-size: 64px;
     --house-size: 70px;
 
-    --diagram-top: 28px;
-    --pv-y: 50px;
-    --main-y: 218px;
+    /*
+     * Gesamtes Diagramm weiter nach unten
+     */
+    --diagram-top: 65px;
 
+    /*
+     * Horizontale Hauptachse
+     */
+    --main-y: 205px;
+
+    /*
+     * Horizontale Positionen
+     */
     --grid-x: 17%;
     --house-x: 50%;
     --battery-x: 83%;
@@ -78,10 +90,6 @@ body {
 }
 
 
-/* =========================================================
-   DIAGRAMM
-   ========================================================= */
-
 .energy {
     position: relative;
 
@@ -97,7 +105,7 @@ body {
 
 
 /* =========================================================
-   KNOTEN
+   NORMALE KNOTEN
    ========================================================= */
 
 .node {
@@ -113,14 +121,45 @@ body {
 }
 
 
+/* =========================================================
+   PV
+   ========================================================= */
+
+/*
+ * PV ist speziell aufgebaut:
+ *
+ * Text
+ * Leistung
+ * Status
+ * Kreis
+ * Leitung
+ */
+
 #pv {
     left: var(--house-x);
-    top: var(--diagram-top);
+
+    top: calc(
+        var(--diagram-top)
+        -
+        53px
+    );
 }
 
 
+.pvTextBlock {
+    margin-bottom: 7px;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   NETZ / HAUS / BATTERIE
+   ========================================================= */
+
 #grid {
     left: var(--grid-x);
+
     top: calc(
         var(--diagram-top)
         +
@@ -133,6 +172,7 @@ body {
 
 #house {
     left: var(--house-x);
+
     top: calc(
         var(--diagram-top)
         +
@@ -145,6 +185,7 @@ body {
 
 #battery {
     left: var(--battery-x);
+
     top: calc(
         var(--diagram-top)
         +
@@ -195,18 +236,21 @@ body {
 
 .iconPV {
     color: var(--pv);
+
     border-color: var(--pv);
 }
 
 
 .iconGrid {
     color: var(--grid);
+
     border-color: var(--grid);
 }
 
 
 .iconBattery {
     color: var(--battery);
+
     border-color: var(--battery);
 }
 
@@ -265,8 +309,23 @@ body {
 }
 
 
+/*
+ * Beim PV-Block liegen die Texte VOR dem Kreis.
+ * Deshalb dort kein zusätzlicher oberer Abstand.
+ */
+
+.pvTextBlock .nodeTitle {
+    margin-top: 0;
+}
+
+
+.pvTextBlock .nodeStatus {
+    margin-bottom: 0;
+}
+
+
 /* =========================================================
-   HAUS-HALO
+   HAUS HALO
    ========================================================= */
 
 .houseHalo {
@@ -294,7 +353,7 @@ body {
 
 
 /* =========================================================
-   GRAUE LINIEN
+   GRAUE VERBINDUNGSLINIEN
    ========================================================= */
 
 .flowLine {
@@ -308,15 +367,14 @@ body {
 }
 
 
+/* =========================================================
+   PV -> HAUS
+   ========================================================= */
+
 /*
-   PV -> Haus
-
-   Start:
-   Unterkante PV-Kreis
-
-   Ende:
-   Oberkante Haus-Kreis
-*/
+ * Start direkt unterhalb PV-Kreis.
+ * Ende exakt an Oberkante Haus-Kreis.
+ */
 
 #linePV {
     width: 4px;
@@ -326,13 +384,13 @@ body {
     top: calc(
         var(--diagram-top)
         +
-        var(--icon-size)
+        41px
     );
 
     height: calc(
         var(--main-y)
         -
-        var(--icon-size)
+        41px
         -
         (var(--house-size) / 2)
     );
@@ -341,13 +399,13 @@ body {
 }
 
 
-/*
+/* =========================================================
    NETZ -> HAUS
+   ========================================================= */
 
-   Linie exakt durch Kreismitte.
-   Sie beginnt am rechten Rand des Netz-Kreises
-   und endet am linken Rand des Haus-Kreises.
-*/
+/*
+ * Linie exakt auf Kreismitte.
+ */
 
 #lineGrid {
     height: 4px;
@@ -374,11 +432,9 @@ body {
 }
 
 
-/*
+/* =========================================================
    HAUS -> BATTERIE
-
-   Linie exakt durch Kreismitte.
-*/
+   ========================================================= */
 
 #lineBattery {
     height: 4px;
@@ -450,12 +506,13 @@ body {
     top: calc(
         var(--diagram-top)
         +
-        var(--icon-size)
+        41px
         -
         5px
     );
 
     color: var(--pv);
+
     background: var(--pv);
 }
 
@@ -475,7 +532,7 @@ body {
         top: calc(
             var(--diagram-top)
             +
-            var(--icon-size)
+            41px
             -
             5px
         );
@@ -727,12 +784,12 @@ body {
 @media (max-width: 700px) {
 
     :root {
-        --diagram-top: 24px;
+        --diagram-top: 60px;
 
         --icon-size: 58px;
         --house-size: 64px;
 
-        --main-y: 194px;
+        --main-y: 185px;
 
         --grid-x: 17%;
         --battery-x: 83%;
@@ -774,6 +831,60 @@ body {
         width: 80px;
         height: 80px;
     }
+
+
+    #linePV {
+        top: calc(
+            var(--diagram-top)
+            +
+            38px
+        );
+
+        height: calc(
+            var(--main-y)
+            -
+            38px
+            -
+            (var(--house-size) / 2)
+        );
+    }
+
+
+    #dotPV {
+        top: calc(
+            var(--diagram-top)
+            +
+            38px
+            -
+            5px
+        );
+    }
+
+
+    @keyframes pvFlow {
+
+        from {
+            top: calc(
+                var(--diagram-top)
+                +
+                38px
+                -
+                5px
+            );
+        }
+
+        to {
+            top: calc(
+                var(--diagram-top)
+                +
+                var(--main-y)
+                -
+                (var(--house-size) / 2)
+                -
+                5px
+            );
+        }
+    }
 }
 
 
@@ -784,12 +895,12 @@ body {
 @media (max-width: 430px) {
 
     :root {
-        --diagram-top: 22px;
+        --diagram-top: 54px;
 
         --icon-size: 50px;
         --house-size: 56px;
 
-        --main-y: 178px;
+        --main-y: 165px;
 
         --grid-x: 17%;
         --battery-x: 83%;
@@ -840,6 +951,60 @@ body {
         width: 70px;
         height: 70px;
     }
+
+
+    #linePV {
+        top: calc(
+            var(--diagram-top)
+            +
+            34px
+        );
+
+        height: calc(
+            var(--main-y)
+            -
+            34px
+            -
+            (var(--house-size) / 2)
+        );
+    }
+
+
+    #dotPV {
+        top: calc(
+            var(--diagram-top)
+            +
+            34px
+            -
+            5px
+        );
+    }
+
+
+    @keyframes pvFlow {
+
+        from {
+            top: calc(
+                var(--diagram-top)
+                +
+                34px
+                -
+                5px
+            );
+        }
+
+        to {
+            top: calc(
+                var(--diagram-top)
+                +
+                var(--main-y)
+                -
+                (var(--house-size) / 2)
+                -
+                5px
+            );
+        }
+    }
 }
 
 
@@ -850,12 +1015,12 @@ body {
 @media (max-width: 350px) {
 
     :root {
-        --diagram-top: 20px;
+        --diagram-top: 50px;
 
         --icon-size: 46px;
         --house-size: 52px;
 
-        --main-y: 165px;
+        --main-y: 155px;
 
         --grid-x: 18%;
         --battery-x: 82%;
@@ -933,8 +1098,6 @@ body {
     ></div>
 
 
-    <!-- HALO -->
-
     <div class="houseHalo"></div>
 
 
@@ -946,6 +1109,31 @@ body {
         class="node"
         id="pv"
     >
+
+        <!-- Text bewusst OBERHALB des PV-Kreises -->
+
+        <div class="pvTextBlock">
+
+            <div class="nodeTitle">
+                PV-Anlage
+            </div>
+
+            <div
+                class="nodeValue"
+                id="pvValue"
+            >
+                -- kW
+            </div>
+
+            <div
+                class="nodeStatus"
+                id="pvStatus"
+            >
+                -
+            </div>
+
+        </div>
+
 
         <div class="iconCircle iconPV">
 
@@ -971,27 +1159,6 @@ body {
 
             </svg>
 
-        </div>
-
-
-        <div class="nodeTitle">
-            PV-Anlage
-        </div>
-
-
-        <div
-            class="nodeValue"
-            id="pvValue"
-        >
-            -- kW
-        </div>
-
-
-        <div
-            class="nodeStatus"
-            id="pvStatus"
-        >
-            -
         </div>
 
     </div>
@@ -1164,10 +1331,6 @@ body {
 <script>
 
 
-/* =========================================================
-   HELFER
-   ========================================================= */
-
 function kw(value)
 {
     return (
@@ -1179,10 +1342,6 @@ function kw(value)
     );
 }
 
-
-/* =========================================================
-   LIVE-WERTE
-   ========================================================= */
 
 function handleMessage(data)
 {
