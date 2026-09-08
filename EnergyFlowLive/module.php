@@ -65,108 +65,145 @@ class EnergyFlowLive extends IPSModule
             return;
         }
 
-        $pvKW =
-            max(
-                0,
-                floatval(
-                    GetValue(self::ID_PV_W)
-                ) / 1000
-            );
-
-        $gridW =
+        /*
+         * PV-Leistung
+         * Variable liefert Watt
+         */
+        $pvKW = max(
+            0,
             floatval(
-                GetValue(self::ID_GRID_W)
-            );
+                GetValue(self::ID_PV_W)
+            ) / 1000
+        );
 
-        // positiv = Netzbezug
-        // negativ = Einspeisung
-        $gridImportKW =
-            max(
-                0,
-                $gridW / 1000
-            );
+        /*
+         * Netzleistung
+         *
+         * positiv  = Netzbezug
+         * negativ  = Einspeisung
+         */
+        $gridW = floatval(
+            GetValue(self::ID_GRID_W)
+        );
 
-        $gridExportKW =
-            max(
-                0,
-                -$gridW / 1000
-            );
+        $gridImportKW = max(
+            0,
+            $gridW / 1000
+        );
 
-        $batteryChargeKW =
-            max(
-                0,
-                floatval(
-                    GetValue(self::ID_BAT_CHARGE)
-                ) / 1000
-            );
+        $gridExportKW = max(
+            0,
+            -$gridW / 1000
+        );
 
-        // Bei deiner Fronius-Variable wurde Entladung
-        // als negativer Wert beobachtet.
-        $rawDischarge =
+        /*
+         * Batterie laden
+         */
+        $batteryChargeKW = max(
+            0,
             floatval(
-                GetValue(self::ID_BAT_DISCH)
-            );
+                GetValue(self::ID_BAT_CHARGE)
+            ) / 1000
+        );
 
-        $batteryDischargeKW =
-            abs(
-                min(
-                    0,
-                    $rawDischarge
-                )
-            ) / 1000;
+        /*
+         * Batterie entladen
+         *
+         * Bei deiner Fronius-Variable wurde
+         * Entladung als negativer Wert beobachtet.
+         */
+        $rawDischarge = floatval(
+            GetValue(self::ID_BAT_DISCH)
+        );
 
-        $soc =
-            max(
+        $batteryDischargeKW = abs(
+            min(
                 0,
-                min(
-                    100,
-                    floatval(
-                        GetValue(self::ID_SOC)
-                    )
+                $rawDischarge
+            )
+        ) / 1000;
+
+        /*
+         * Ladezustand
+         */
+        $soc = max(
+            0,
+            min(
+                100,
+                floatval(
+                    GetValue(self::ID_SOC)
                 )
-            );
+            )
+        );
 
-        $houseKW =
-            max(
-                0,
-                $pvKW
-                +
-                $gridImportKW
-                +
-                $batteryDischargeKW
-                -
-                $gridExportKW
-                -
-                $batteryChargeKW
-            );
+        /*
+         * Hausverbrauch
+         *
+         * Haus =
+         * PV
+         * + Netzbezug
+         * + Batterieentladung
+         * - Netzeinspeisung
+         * - Batterieladung
+         */
+        $houseKW = max(
+            0,
+            $pvKW
+            + $gridImportKW
+            + $batteryDischargeKW
+            - $gridExportKW
+            - $batteryChargeKW
+        );
 
+        /*
+         * Daten für die Visualisierung
+         */
         $values = [
+            'pv' => round(
+                $pvKW,
+                2
+            ),
 
-            'pv' =>
-                round($pvKW, 2),
+            'house' => round(
+                $houseKW,
+                2
+            ),
 
-            'house' =>
-                round($houseKW, 2),
+            'gridImport' => round(
+                $gridImportKW,
+                2
+            ),
 
-            'gridImport' =>
-                round($gridImportKW, 2),
+            'gridExport' => round(
+                $gridExportKW,
+                2
+            ),
 
-            'gridExport' =>
-                round($gridExportKW, 2),
+            'batteryCharge' => round(
+                $batteryChargeKW,
+                2
+            ),
 
-            'batteryCharge' =>
-                round($batteryChargeKW, 2),
+            'batteryDischarge' => round(
+                $batteryDischargeKW,
+                2
+            ),
 
-            'batteryDischarge' =>
-                round($batteryDischargeKW, 2),
-
-            'soc' =>
-                round($soc, 1)
-
+            'soc' => round(
+                $soc,
+                1
+            )
         ];
 
+        /*
+         * HTML SDK erwartet hier einen String.
+         * Deshalb Array als JSON übertragen.
+         */
         $this->UpdateVisualizationValue(
-            $values
+            json_encode(
+                $values,
+                JSON_UNESCAPED_UNICODE
+            )
         );
     }
 
@@ -175,19 +212,14 @@ class EnergyFlowLive extends IPSModule
         $Value
     ) {
         switch ($Ident) {
-
             case 'Refresh':
-
                 $this->SendLiveValues();
-
                 break;
 
             default:
-
                 throw new Exception(
                     'Unbekannte Aktion: '
-                    .
-                    $Ident
+                    . $Ident
                 );
         }
     }
