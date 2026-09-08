@@ -1,899 +1,226 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
+<?php
 
-<style>
-:root {
-    --pv: #4caf50;
-    --grid: #f39c3d;
-    --battery: #22b8c7;
-    --inactive: rgba(128, 128, 128, .35);
-}
+class EnergyFlowLive extends IPSModule
+{
+    private const ID_PV_W       = 24848;
+    private const ID_GRID_W     = 36592;
+    private const ID_BAT_CHARGE = 21945;
+    private const ID_BAT_DISCH  = 50622;
+    private const ID_SOC        = 46752;
 
-* {
-    box-sizing: border-box;
-}
+    public function Create()
+    {
+        parent::Create();
 
-html,
-body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    background: transparent;
-    color: inherit;
-
-    font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Arial,
-        sans-serif;
-}
-
-.energy {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    min-height: 360px;
-    overflow: hidden;
-}
-
-.node {
-    position: absolute;
-    transform: translate(-50%, -50%);
-    width: 130px;
-    text-align: center;
-    z-index: 10;
-}
-
-.icon {
-    width: 68px;
-    height: 68px;
-    margin: auto;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border: 2px solid var(--inactive);
-    border-radius: 50%;
-
-    font-size: 28px;
-}
-
-.title {
-    margin-top: 6px;
-    font-size: 13px;
-    opacity: .7;
-}
-
-.value {
-    margin-top: 2px;
-    font-size: 20px;
-    font-weight: 600;
-}
-
-.sub {
-    margin-top: 2px;
-    font-size: 12px;
-    opacity: .65;
-}
-
-
-/* ==========================================================
-   KNOTENPOSITIONEN
-   ========================================================== */
-
-#pv {
-    left: 50%;
-    top: 15%;
-}
-
-#house {
-    left: 50%;
-    top: 58%;
-}
-
-#grid {
-    left: 18%;
-    top: 58%;
-}
-
-#battery {
-    left: 82%;
-    top: 58%;
-}
-
-
-/* ==========================================================
-   ENERGIELINIEN
-   ========================================================== */
-
-.line {
-    position: absolute;
-    height: 4px;
-
-    border-radius: 5px;
-    background: var(--inactive);
-
-    opacity: .8;
-    z-index: 1;
-
-    transition: background .25s ease;
-}
-
-#linePV {
-    left: 50%;
-    top: 27%;
-    width: 27%;
-
-    transform: rotate(90deg);
-    transform-origin: left center;
-}
-
-#lineGrid {
-    left: 25%;
-    top: 58%;
-    width: 25%;
-}
-
-#lineBattery {
-    left: 50%;
-    top: 58%;
-    width: 25%;
-}
-
-
-/* ==========================================================
-   FLUSSPUNKTE
-   ========================================================== */
-
-.dot {
-    position: absolute;
-
-    width: 10px;
-    height: 10px;
-
-    border-radius: 50%;
-
-    opacity: 0;
-    z-index: 5;
-
-    box-shadow: 0 0 8px currentColor;
-}
-
-.dot.active {
-    opacity: 1;
-}
-
-
-/* ==========================================================
-   PV
-   ========================================================== */
-
-#dotPV {
-    left: 50%;
-    top: 29%;
-
-    background: var(--pv);
-    color: var(--pv);
-}
-
-#dotPV.active {
-    animation: pvFlow 1.25s linear infinite;
-}
-
-@keyframes pvFlow {
-    from {
-        transform: translate(-5px, 0);
+        // Eigene HTML-Kacheldarstellung aktivieren
+        $this->SetVisualizationType(1);
     }
 
-    to {
-        transform: translate(-5px, 115px);
-    }
-}
+    public function ApplyChanges()
+    {
+        parent::ApplyChanges();
 
-
-/* ==========================================================
-   NETZ
-   ========================================================== */
-
-#dotGrid {
-    left: 25%;
-    top: 58%;
-}
-
-#dotGrid.import {
-    animation: gridImport 1.25s linear infinite;
-}
-
-#dotGrid.export {
-    animation: gridExport 1.25s linear infinite;
-}
-
-@keyframes gridImport {
-    from {
-        transform: translate(0, -5px);
+        // Live-Werte abonnieren
+        $this->RegisterMessage(self::ID_PV_W, VM_UPDATE);
+        $this->RegisterMessage(self::ID_GRID_W, VM_UPDATE);
+        $this->RegisterMessage(self::ID_BAT_CHARGE, VM_UPDATE);
+        $this->RegisterMessage(self::ID_BAT_DISCH, VM_UPDATE);
+        $this->RegisterMessage(self::ID_SOC, VM_UPDATE);
     }
 
-    to {
-        transform: translate(125px, -5px);
-    }
-}
-
-@keyframes gridExport {
-    from {
-        transform: translate(125px, -5px);
+    public function GetVisualizationTile()
+    {
+        return file_get_contents(__DIR__ . '/module.html');
     }
 
-    to {
-        transform: translate(0, -5px);
-    }
-}
-
-
-/* ==========================================================
-   BATTERIE
-   ========================================================== */
-
-#dotBattery {
-    left: 50%;
-    top: 58%;
-}
-
-#dotBattery.charge {
-    animation: batteryCharge 1.25s linear infinite;
-}
-
-#dotBattery.discharge {
-    animation: batteryDischarge 1.25s linear infinite;
-}
-
-@keyframes batteryCharge {
-    from {
-        transform: translate(0, -5px);
-    }
-
-    to {
-        transform: translate(125px, -5px);
-    }
-}
-
-@keyframes batteryDischarge {
-    from {
-        transform: translate(125px, -5px);
-    }
-
-    to {
-        transform: translate(0, -5px);
-    }
-}
-
-
-/* ==========================================================
-   BATTERIE SOC
-   ========================================================== */
-
-.batteryBar {
-    width: 74px;
-    height: 7px;
-
-    margin: 5px auto 0;
-
-    border-radius: 5px;
-    overflow: hidden;
-
-    background: rgba(128, 128, 128, .25);
-}
-
-#batteryFill {
-    height: 100%;
-    width: 0;
-
-    background: var(--battery);
-
-    transition: width .3s ease;
-}
-
-
-/* ==========================================================
-   MOBILE
-   ========================================================== */
-
-@media(max-width: 600px) {
-
-    .energy {
-        min-height: 320px;
-    }
-
-    .node {
-        width: 100px;
-    }
-
-    .icon {
-        width: 56px;
-        height: 56px;
-
-        font-size: 23px;
-    }
-
-    .value {
-        font-size: 17px;
-    }
-
-    #grid {
-        left: 15%;
-    }
-
-    #battery {
-        left: 85%;
-    }
-}
-
-</style>
-</head>
-
-
-<body>
-
-<div class="energy">
-
-    <!-- =====================================================
-         PV
-         ===================================================== -->
-
-    <div class="node" id="pv">
-
-        <div
-            class="icon"
-            style="
-                color: var(--pv);
-                border-color: var(--pv);
-            "
-        >
-            ☀
-        </div>
-
-        <div class="title">
-            PV
-        </div>
-
-        <div
-            class="value"
-            id="pvValue"
-        >
-            -- kW
-        </div>
-
-    </div>
-
-
-    <!-- =====================================================
-         NETZ
-         ===================================================== -->
-
-    <div class="node" id="grid">
-
-        <div
-            class="icon"
-            style="
-                color: var(--grid);
-                border-color: var(--grid);
-            "
-        >
-            ↔
-        </div>
-
-        <div class="title">
-            Netz
-        </div>
-
-        <div
-            class="value"
-            id="gridValue"
-        >
-            -- kW
-        </div>
-
-        <div
-            class="sub"
-            id="gridMode"
-        >
-            -
-        </div>
-
-    </div>
-
-
-    <!-- =====================================================
-         HAUS
-         ===================================================== -->
-
-    <div class="node" id="house">
-
-        <div class="icon">
-            ⌂
-        </div>
-
-        <div class="title">
-            Haus
-        </div>
-
-        <div
-            class="value"
-            id="houseValue"
-        >
-            -- kW
-        </div>
-
-    </div>
-
-
-    <!-- =====================================================
-         BATTERIE
-         ===================================================== -->
-
-    <div class="node" id="battery">
-
-        <div
-            class="icon"
-            style="
-                color: var(--battery);
-                border-color: var(--battery);
-            "
-        >
-            ▰
-        </div>
-
-        <div class="title">
-            Batterie
-        </div>
-
-        <div
-            class="value"
-            id="batteryValue"
-        >
-            -- kW
-        </div>
-
-        <div
-            class="sub"
-            id="batteryMode"
-        >
-            -
-        </div>
-
-        <div class="batteryBar">
-
-            <div id="batteryFill">
-            </div>
-
-        </div>
-
-        <div
-            class="sub"
-            id="socValue"
-        >
-            -- %
-        </div>
-
-    </div>
-
-
-    <!-- =====================================================
-         LINIEN
-         ===================================================== -->
-
-    <div
-        class="line"
-        id="linePV"
-    ></div>
-
-    <div
-        class="line"
-        id="lineGrid"
-    ></div>
-
-    <div
-        class="line"
-        id="lineBattery"
-    ></div>
-
-
-    <!-- =====================================================
-         FLUSSPUNKTE
-         ===================================================== -->
-
-    <div
-        class="dot"
-        id="dotPV"
-    ></div>
-
-    <div
-        class="dot"
-        id="dotGrid"
-    ></div>
-
-    <div
-        class="dot"
-        id="dotBattery"
-    ></div>
-
-</div>
-
-
-<script>
-
-/* ==========================================================
-   HELFER
-   ========================================================== */
-
-function kw(value) {
-
-    return (
-        Number(value || 0).toFixed(1)
-        +
-        " kW"
-    );
-}
-
-
-/* ==========================================================
-   LIVE UPDATE
-   ========================================================== */
-
-function handleMessage(data) {
-
-    if (!data) {
-        return;
-    }
-
-
-    const pv =
-        Number(
-            data.pv || 0
+    public function MessageSink(
+        $TimeStamp,
+        $SenderID,
+        $Message,
+        $Data
+    ) {
+        parent::MessageSink(
+            $TimeStamp,
+            $SenderID,
+            $Message,
+            $Data
         );
 
+        if ($Message !== VM_UPDATE) {
+            return;
+        }
 
-    const house =
-        Number(
-            data.house || 0
+        $this->SendLiveValues();
+    }
+
+    private function SendLiveValues()
+    {
+        if (
+            !IPS_VariableExists(self::ID_PV_W) ||
+            !IPS_VariableExists(self::ID_GRID_W) ||
+            !IPS_VariableExists(self::ID_BAT_CHARGE) ||
+            !IPS_VariableExists(self::ID_BAT_DISCH) ||
+            !IPS_VariableExists(self::ID_SOC)
+        ) {
+            return;
+        }
+
+        /*
+         * PV-Leistung
+         * Variable liefert Watt
+         */
+        $pvKW = max(
+            0,
+            floatval(
+                GetValue(self::ID_PV_W)
+            ) / 1000
         );
 
-
-    const gridImport =
-        Number(
-            data.gridImport || 0
+        /*
+         * Netzleistung
+         *
+         * positiv  = Netzbezug
+         * negativ  = Einspeisung
+         */
+        $gridW = floatval(
+            GetValue(self::ID_GRID_W)
         );
 
-
-    const gridExport =
-        Number(
-            data.gridExport || 0
+        $gridImportKW = max(
+            0,
+            $gridW / 1000
         );
 
-
-    const batteryCharge =
-        Number(
-            data.batteryCharge || 0
+        $gridExportKW = max(
+            0,
+            -$gridW / 1000
         );
 
-
-    const batteryDischarge =
-        Number(
-            data.batteryDischarge || 0
+        /*
+         * Batterie laden
+         */
+        $batteryChargeKW = max(
+            0,
+            floatval(
+                GetValue(self::ID_BAT_CHARGE)
+            ) / 1000
         );
 
-
-    const soc =
-        Number(
-            data.soc || 0
+        /*
+         * Batterie entladen
+         *
+         * Bei deiner Fronius-Variable wurde
+         * Entladung als negativer Wert beobachtet.
+         */
+        $rawDischarge = floatval(
+            GetValue(self::ID_BAT_DISCH)
         );
 
-
-    /* ======================================================
-       ANZEIGEWERTE
-       ====================================================== */
-
-    document
-        .getElementById("pvValue")
-        .textContent =
-            kw(pv);
-
-
-    document
-        .getElementById("houseValue")
-        .textContent =
-            kw(house);
-
-
-    document
-        .getElementById("socValue")
-        .textContent =
-            soc.toFixed(0)
-            +
-            " %";
-
-
-    document
-        .getElementById("batteryFill")
-        .style.width =
-            Math.max(
+        $batteryDischargeKW = abs(
+            min(
                 0,
-                Math.min(
-                    100,
-                    soc
+                $rawDischarge
+            )
+        ) / 1000;
+
+        /*
+         * Ladezustand
+         */
+        $soc = max(
+            0,
+            min(
+                100,
+                floatval(
+                    GetValue(self::ID_SOC)
                 )
             )
-            +
-            "%";
-
-
-    /* ======================================================
-       PV
-       ====================================================== */
-
-    const linePV =
-        document.getElementById(
-            "linePV"
         );
 
-
-    const dotPV =
-        document.getElementById(
-            "dotPV"
+        /*
+         * Hausverbrauch
+         *
+         * Haus =
+         * PV
+         * + Netzbezug
+         * + Batterieentladung
+         * - Netzeinspeisung
+         * - Batterieladung
+         */
+        $houseKW = max(
+            0,
+            $pvKW
+            + $gridImportKW
+            + $batteryDischargeKW
+            - $gridExportKW
+            - $batteryChargeKW
         );
 
+        /*
+         * Daten für die Visualisierung
+         */
+        $values = [
+            'pv' => round(
+                $pvKW,
+                2
+            ),
 
-    if (pv > 0.05) {
+            'house' => round(
+                $houseKW,
+                2
+            ),
 
-        linePV.style.background =
-            "var(--pv)";
+            'gridImport' => round(
+                $gridImportKW,
+                2
+            ),
 
+            'gridExport' => round(
+                $gridExportKW,
+                2
+            ),
 
-        dotPV.className =
-            "dot active";
+            'batteryCharge' => round(
+                $batteryChargeKW,
+                2
+            ),
 
-    } else {
+            'batteryDischarge' => round(
+                $batteryDischargeKW,
+                2
+            ),
 
-        linePV.style.background =
-            "var(--inactive)";
+            'soc' => round(
+                $soc,
+                1
+            )
+        ];
 
-
-        dotPV.className =
-            "dot";
+        /*
+         * HTML SDK erwartet hier einen String.
+         * Deshalb Array als JSON übertragen.
+         */
+        $this->UpdateVisualizationValue(
+            json_encode(
+                $values,
+                JSON_UNESCAPED_UNICODE
+            )
+        );
     }
 
-
-    /* ======================================================
-       NETZ
-       ====================================================== */
-
-    const lineGrid =
-        document.getElementById(
-            "lineGrid"
-        );
-
-
-    const dotGrid =
-        document.getElementById(
-            "dotGrid"
-        );
-
-
-    if (gridImport > 0.05) {
-
-        document
-            .getElementById("gridValue")
-            .textContent =
-                kw(
-                    gridImport
-                );
-
-
-        document
-            .getElementById("gridMode")
-            .textContent =
-                "Bezug";
-
-
-        lineGrid.style.background =
-            "var(--grid)";
-
-
-        dotGrid.style.background =
-            "var(--grid)";
-
-
-        dotGrid.style.color =
-            "var(--grid)";
-
-
-        dotGrid.className =
-            "dot active import";
-
-
-    } else if (
-        gridExport > 0.05
+    public function RequestAction(
+        $Ident,
+        $Value
     ) {
+        switch ($Ident) {
+            case 'Refresh':
+                $this->SendLiveValues();
+                break;
 
-        document
-            .getElementById("gridValue")
-            .textContent =
-                kw(
-                    gridExport
+            default:
+                throw new Exception(
+                    'Unbekannte Aktion: '
+                    . $Ident
                 );
-
-
-        document
-            .getElementById("gridMode")
-            .textContent =
-                "Einspeisung";
-
-
-        lineGrid.style.background =
-            "var(--pv)";
-
-
-        dotGrid.style.background =
-            "var(--pv)";
-
-
-        dotGrid.style.color =
-            "var(--pv)";
-
-
-        dotGrid.className =
-            "dot active export";
-
-
-    } else {
-
-        document
-            .getElementById("gridValue")
-            .textContent =
-                "0.0 kW";
-
-
-        document
-            .getElementById("gridMode")
-            .textContent =
-                "neutral";
-
-
-        lineGrid.style.background =
-            "var(--inactive)";
-
-
-        dotGrid.className =
-            "dot";
-    }
-
-
-    /* ======================================================
-       BATTERIE
-       ====================================================== */
-
-    const lineBattery =
-        document.getElementById(
-            "lineBattery"
-        );
-
-
-    const dotBattery =
-        document.getElementById(
-            "dotBattery"
-        );
-
-
-    if (batteryCharge > 0.05) {
-
-        document
-            .getElementById("batteryValue")
-            .textContent =
-                kw(
-                    batteryCharge
-                );
-
-
-        document
-            .getElementById("batteryMode")
-            .textContent =
-                "Laden";
-
-
-        lineBattery.style.background =
-            "var(--pv)";
-
-
-        dotBattery.style.background =
-            "var(--pv)";
-
-
-        dotBattery.style.color =
-            "var(--pv)";
-
-
-        dotBattery.className =
-            "dot active charge";
-
-
-    } else if (
-        batteryDischarge > 0.05
-    ) {
-
-        document
-            .getElementById("batteryValue")
-            .textContent =
-                kw(
-                    batteryDischarge
-                );
-
-
-        document
-            .getElementById("batteryMode")
-            .textContent =
-                "Entladen";
-
-
-        lineBattery.style.background =
-            "var(--battery)";
-
-
-        dotBattery.style.background =
-            "var(--battery)";
-
-
-        dotBattery.style.color =
-            "var(--battery)";
-
-
-        dotBattery.className =
-            "dot active discharge";
-
-
-    } else {
-
-        document
-            .getElementById("batteryValue")
-            .textContent =
-                "0.0 kW";
-
-
-        document
-            .getElementById("batteryMode")
-            .textContent =
-                "Standby";
-
-
-        lineBattery.style.background =
-            "var(--inactive)";
-
-
-        dotBattery.className =
-            "dot";
+        }
     }
 }
-
-
-/* ==========================================================
-   INITIALWERTE ANFORDERN
-   ========================================================== */
-
-window.addEventListener(
-    "load",
-    function () {
-
-        requestAction(
-            "Refresh",
-            true
-        );
-    }
-);
-
-</script>
-
-</body>
-</html>
