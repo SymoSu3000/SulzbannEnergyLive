@@ -20,9 +20,12 @@
     --icon-size: 64px;
     --house-size: 70px;
 
-    /* komplette Grafik */
-    --pv-center-y: 142px;
-    --main-center-y: 292px;
+    /*
+     * Feste Mittelpunkte.
+     * Alle Linien und Kreise hängen an diesen Werten.
+     */
+    --pv-center-y: 145px;
+    --main-center-y: 285px;
 
     --grid-x: 19%;
     --house-x: 50%;
@@ -35,6 +38,7 @@
    ========================================================= */
 
 @media (prefers-color-scheme: dark) {
+
     :root {
         --text: #f2f2f2;
         --text-muted: rgba(242, 242, 242, 0.68);
@@ -65,6 +69,7 @@ body {
     overflow: hidden;
 
     background: transparent;
+
     color: var(--text);
 
     font-family:
@@ -81,7 +86,7 @@ body {
     width: 100%;
     height: 100%;
 
-    min-height: 360px;
+    min-height: 350px;
 
     overflow: hidden;
 
@@ -101,16 +106,10 @@ body {
     z-index: 10;
 }
 
-
-/* PV-Kreis */
-
 #pvCircleNode {
     left: var(--house-x);
     top: var(--pv-center-y);
 }
-
-
-/* untere Kreise exakt auf Hauptachse */
 
 #gridCircleNode {
     left: var(--grid-x);
@@ -145,22 +144,30 @@ body {
 }
 
 
-/* PV-Text oberhalb */
+/*
+ * PV-TEXT:
+ *
+ * bewusst NICHT mehr mit kompliziertem calc().
+ * Er bekommt einen festen Abstand zum PV-Kreis.
+ */
 
 #pvText {
-    left: var(--house-x);
+    position: absolute;
 
-    top: calc(
-        var(--pv-center-y)
-        -
-        (var(--icon-size) / 2)
-        -
-        58px
-    );
+    left: 50%;
+    top: 66px;
+
+    width: 130px;
+
+    transform: translateX(-50%);
+
+    text-align: center;
+
+    z-index: 20;
 }
 
 
-/* untere Texte unterhalb der Kreise */
+/* Untere Beschriftungen */
 
 #gridText {
     left: var(--grid-x);
@@ -223,6 +230,7 @@ body {
     height: 28px;
 
     stroke: currentColor;
+
     stroke-width: 1.8;
 
     fill: none;
@@ -275,6 +283,7 @@ body {
     margin-top: 1px;
 
     font-size: 19px;
+
     line-height: 1.15;
 
     font-weight: 650;
@@ -290,6 +299,7 @@ body {
     margin-top: 3px;
 
     font-size: 9px;
+
     line-height: 1.15;
 
     color: var(--text-muted);
@@ -334,7 +344,12 @@ body {
 }
 
 
-/* PV -> Haus */
+/*
+ * PV -> HAUS
+ *
+ * beginnt exakt an der Unterkante PV-Kreis
+ * endet exakt an der Oberkante Haus-Kreis
+ */
 
 #linePV {
     width: 4px;
@@ -361,7 +376,11 @@ body {
 }
 
 
-/* Netz -> Haus */
+/*
+ * NETZ -> HAUS
+ *
+ * exakt durch die Kreismitten
+ */
 
 #lineGrid {
     height: 4px;
@@ -386,7 +405,9 @@ body {
 }
 
 
-/* Haus -> Batterie */
+/*
+ * HAUS -> BATTERIE
+ */
 
 #lineBattery {
     height: 4px;
@@ -441,7 +462,9 @@ body {
 }
 
 
-/* PV */
+/* =========================================================
+   PV-PUNKT
+   ========================================================= */
 
 #dotPV {
     left: calc(
@@ -463,10 +486,15 @@ body {
 }
 
 #dotPV.active {
-    animation: pvFlow 1.7s linear infinite;
+    animation:
+        pvFlow
+        1.7s
+        linear
+        infinite;
 }
 
 @keyframes pvFlow {
+
     from {
         top: calc(
             var(--pv-center-y)
@@ -489,7 +517,9 @@ body {
 }
 
 
-/* Netz */
+/* =========================================================
+   NETZ-PUNKT
+   ========================================================= */
 
 #dotGrid {
     top: calc(
@@ -500,14 +530,23 @@ body {
 }
 
 #dotGrid.import {
-    animation: gridImport 1.7s linear infinite;
+    animation:
+        gridImport
+        1.7s
+        linear
+        infinite;
 }
 
 #dotGrid.export {
-    animation: gridExport 1.7s linear infinite;
+    animation:
+        gridExport
+        1.7s
+        linear
+        infinite;
 }
 
 @keyframes gridImport {
+
     from {
         left: calc(
             var(--grid-x)
@@ -530,6 +569,7 @@ body {
 }
 
 @keyframes gridExport {
+
     from {
         left: calc(
             50%
@@ -552,7 +592,9 @@ body {
 }
 
 
-/* Batterie */
+/* =========================================================
+   BATTERIE-PUNKT
+   ========================================================= */
 
 #dotBattery {
     top: calc(
@@ -563,14 +605,23 @@ body {
 }
 
 #dotBattery.charge {
-    animation: batteryCharge 1.7s linear infinite;
+    animation:
+        batteryCharge
+        1.7s
+        linear
+        infinite;
 }
 
 #dotBattery.discharge {
-    animation: batteryDischarge 1.7s linear infinite;
+    animation:
+        batteryDischarge
+        1.7s
+        linear
+        infinite;
 }
 
 @keyframes batteryCharge {
+
     from {
         left: calc(
             50%
@@ -593,6 +644,7 @@ body {
 }
 
 @keyframes batteryDischarge {
+
     from {
         left: calc(
             var(--battery-x)
@@ -674,7 +726,7 @@ body {
 
 
 /* =========================================================
-   TABLET / MITTLERE KACHEL
+   TABLET / KLEINERE KACHEL
    ========================================================= */
 
 @media (max-width: 700px) {
@@ -684,30 +736,23 @@ body {
         --house-size: 64px;
 
         --pv-center-y: 126px;
-        --main-center-y: 262px;
+        --main-center-y: 260px;
 
         --grid-x: 19%;
         --battery-x: 81%;
     }
 
     .energy {
-        min-height: 325px;
+        min-height: 320px;
+    }
+
+    #pvText {
+        top: 57px;
+        width: 115px;
     }
 
     .labelBlock {
         width: 105px;
-    }
-
-    #pvText {
-        width: 115px;
-
-        top: calc(
-            var(--pv-center-y)
-            -
-            (var(--icon-size) / 2)
-            -
-            52px
-        );
     }
 
     .iconCircle svg {
@@ -745,30 +790,23 @@ body {
         --house-size: 56px;
 
         --pv-center-y: 112px;
-        --main-center-y: 230px;
+        --main-center-y: 228px;
 
         --grid-x: 19%;
         --battery-x: 81%;
     }
 
     .energy {
-        min-height: 290px;
+        min-height: 285px;
+    }
+
+    #pvText {
+        top: 50px;
+        width: 100px;
     }
 
     .labelBlock {
         width: 88px;
-    }
-
-    #pvText {
-        width: 100px;
-
-        top: calc(
-            var(--pv-center-y)
-            -
-            (var(--icon-size) / 2)
-            -
-            47px
-        );
     }
 
     .iconCircle svg {
@@ -800,7 +838,7 @@ body {
 
 
 /* =========================================================
-   SEHR SCHMAL
+   SEHR SCHMALES NATEL
    ========================================================= */
 
 @media (max-width: 350px) {
@@ -810,30 +848,23 @@ body {
         --house-size: 52px;
 
         --pv-center-y: 104px;
-        --main-center-y: 216px;
+        --main-center-y: 215px;
 
         --grid-x: 20%;
         --battery-x: 80%;
     }
 
+    #pvText {
+        top: 46px;
+        width: 90px;
+    }
+
     .energy {
-        min-height: 275px;
+        min-height: 270px;
     }
 
     .labelBlock {
         width: 76px;
-    }
-
-    #pvText {
-        width: 90px;
-
-        top: calc(
-            var(--pv-center-y)
-            -
-            (var(--icon-size) / 2)
-            -
-            43px
-        );
     }
 
     .nodeValue {
@@ -863,24 +894,48 @@ body {
 <div class="energy">
 
 
-    <!-- Linien -->
+    <!-- GRAUE ENERGIEWEGE -->
 
-    <div class="flowLine" id="linePV"></div>
-    <div class="flowLine" id="lineGrid"></div>
-    <div class="flowLine" id="lineBattery"></div>
+    <div
+        class="flowLine"
+        id="linePV"
+    ></div>
+
+    <div
+        class="flowLine"
+        id="lineGrid"
+    ></div>
+
+    <div
+        class="flowLine"
+        id="lineBattery"
+    ></div>
 
 
-    <!-- Punkte -->
+    <!-- FARBIGE PUNKTE -->
 
-    <div class="flowDot" id="dotPV"></div>
-    <div class="flowDot" id="dotGrid"></div>
-    <div class="flowDot" id="dotBattery"></div>
+    <div
+        class="flowDot"
+        id="dotPV"
+    ></div>
+
+    <div
+        class="flowDot"
+        id="dotGrid"
+    ></div>
+
+    <div
+        class="flowDot"
+        id="dotBattery"
+    ></div>
 
 
     <div class="houseHalo"></div>
 
 
-    <!-- PV Beschriftung -->
+    <!-- =====================================================
+         PV TEXT
+         ===================================================== -->
 
     <div id="pvText">
 
@@ -905,7 +960,9 @@ body {
     </div>
 
 
-    <!-- PV Kreis -->
+    <!-- =====================================================
+         PV KREIS
+         ===================================================== -->
 
     <div
         class="circleNode"
@@ -916,7 +973,11 @@ body {
 
             <svg viewBox="0 0 24 24">
 
-                <circle cx="12" cy="12" r="4"></circle>
+                <circle
+                    cx="12"
+                    cy="12"
+                    r="4"
+                ></circle>
 
                 <path d="M12 2v2"></path>
                 <path d="M12 20v2"></path>
@@ -937,7 +998,9 @@ body {
     </div>
 
 
-    <!-- Netz Kreis -->
+    <!-- =====================================================
+         NETZ KREIS
+         ===================================================== -->
 
     <div
         class="circleNode"
@@ -961,7 +1024,7 @@ body {
     </div>
 
 
-    <!-- Netz Text -->
+    <!-- NETZ TEXT -->
 
     <div
         class="labelBlock"
@@ -989,7 +1052,9 @@ body {
     </div>
 
 
-    <!-- Haus Kreis -->
+    <!-- =====================================================
+         HAUS KREIS
+         ===================================================== -->
 
     <div
         class="circleNode"
@@ -1013,7 +1078,7 @@ body {
     </div>
 
 
-    <!-- Haus Text -->
+    <!-- HAUS TEXT -->
 
     <div
         class="labelBlock"
@@ -1038,7 +1103,9 @@ body {
     </div>
 
 
-    <!-- Batterie Kreis -->
+    <!-- =====================================================
+         BATTERIE KREIS
+         ===================================================== -->
 
     <div
         class="circleNode"
@@ -1068,7 +1135,7 @@ body {
     </div>
 
 
-    <!-- Batterie Text -->
+    <!-- BATTERIE TEXT -->
 
     <div
         class="labelBlock"
@@ -1128,7 +1195,12 @@ function handleMessage(data)
     if (typeof data === "string") {
 
         try {
-            data = JSON.parse(data);
+
+            data =
+                JSON.parse(
+                    data
+                );
+
         } catch (error) {
 
             console.error(
