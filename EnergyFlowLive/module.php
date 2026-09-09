@@ -96,11 +96,6 @@ class EnergyFlowLive extends IPSModule
             (float) GetValue(self::ID_PV_W) / 1000.0
         );
 
-        /*
-         * Fronius Smart Meter:
-         * positiv = Netzbezug
-         * negativ = Einspeisung
-         */
         $gridW = (float) GetValue(self::ID_GRID_W);
 
         $gridImportKW = max(
@@ -118,9 +113,6 @@ class EnergyFlowLive extends IPSModule
             (float) GetValue(self::ID_BAT_CHARGE_W) / 1000.0
         );
 
-        /*
-         * Dieser Fronius-Wert ist beim Entladen negativ.
-         */
         $batteryDischargeRawW =
             (float) GetValue(self::ID_BAT_DISCHARGE_W);
 
