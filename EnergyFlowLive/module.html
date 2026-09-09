@@ -1,15 +1,11 @@
 <!DOCTYPE html>
-
 <html>
-
 <head>
-
 <meta charset="UTF-8">
 
 <style>
 
 :root {
-
     --pv: #35b657;
     --grid: #f39a2d;
     --battery: #22b8c7;
@@ -17,87 +13,32 @@
     --house: #10c7b1;
 
     --text: #202020;
-
-    --muted:
-        rgba(
-            32,
-            32,
-            32,
-            0.68
-        );
-
-    --line:
-        rgba(
-            110,
-            110,
-            110,
-            0.44
-        );
-
-    --surface:
-        rgba(
-            255,
-            255,
-            255,
-            0.02
-        );
+    --muted: rgba(32, 32, 32, 0.68);
+    --line: rgba(110, 110, 110, 0.44);
+    --surface: rgba(255,255,255,0.02);
 }
 
-
-@media (
-    prefers-color-scheme: dark
-) {
-
+@media (prefers-color-scheme: dark) {
     :root {
-
         --text: #f4f4f4;
-
-        --muted:
-            rgba(
-                244,
-                244,
-                244,
-                0.72
-            );
-
-        --line:
-            rgba(
-                220,
-                220,
-                220,
-                0.48
-            );
-
-        --surface:
-            rgba(
-                255,
-                255,
-                255,
-                0.025
-            );
+        --muted: rgba(244,244,244,0.72);
+        --line: rgba(220,220,220,0.48);
+        --surface: rgba(255,255,255,0.025);
     }
 }
-
 
 * {
     box-sizing: border-box;
 }
 
-
 html,
 body {
-
     margin: 0;
-
     width: 100%;
     height: 100%;
-
     overflow: hidden;
-
     background: transparent;
-
-    color:
-        var(--text);
+    color: var(--text);
 
     font-family:
         -apple-system,
@@ -107,376 +48,194 @@ body {
         sans-serif;
 }
 
-
 #wrap {
-
     width: 100%;
     height: 100%;
-
     overflow: hidden;
 }
 
-
 #energySvg {
-
+    display: block;
     width: 100%;
     height: 100%;
-
-    display: block;
 }
-
-
-/* =========================================================
-   LINIEN
-   ========================================================= */
 
 .flow-line {
-
-    stroke:
-        var(--line);
-
+    stroke: var(--line);
     stroke-width: 4;
-
-    stroke-linecap:
-        round;
-
-    fill:
-        none;
+    stroke-linecap: round;
+    fill: none;
 }
-
-
-/* =========================================================
-   KREISE
-   ========================================================= */
 
 .node-ring {
-
-    fill:
-        var(--surface);
-
+    fill: var(--surface);
     stroke-width: 4;
 }
 
-
 .house-fill {
+    fill: color-mix(
+        in srgb,
+        var(--house) 32%,
+        transparent
+    );
 
-    fill:
-        color-mix(
-            in srgb,
-            var(--house) 32%,
-            transparent
-        );
-
-    stroke:
-        var(--house);
-
+    stroke: var(--house);
     stroke-width: 5;
 }
 
-
-/* =========================================================
-   ICONS
-   ========================================================= */
-
 .node-icon {
-
     fill: none;
-
-    stroke:
-        var(--text);
-
+    stroke: var(--text);
     stroke-width: 4;
-
-    stroke-linecap:
-        round;
-
-    stroke-linejoin:
-        round;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
-
-/* =========================================================
-   TEXTE
-   ========================================================= */
-
 .value {
-
-    fill:
-        var(--text);
-
-    font-size: 32px;
-
+    fill: var(--text);
+    font-size: 28px;
     font-weight: 700;
 }
 
-
 .label {
-
-    fill:
-        var(--muted);
-
-    font-size: 23px;
-
+    fill: var(--muted);
+    font-size: 20px;
     font-weight: 500;
 }
-
 
 .sub {
-
-    fill:
-        var(--muted);
-
-    font-size: 18px;
-
+    fill: var(--muted);
+    font-size: 16px;
     font-weight: 500;
 }
 
-
-/* =========================================================
-   ENERGIEPUNKTE
-   ========================================================= */
-
 .dot {
-
-    filter:
-        drop-shadow(
-            0 0 5px
-            currentColor
-        );
+    filter: drop-shadow(
+        0 0 5px currentColor
+    );
 }
 
 </style>
-
 </head>
-
 
 <body>
 
 <div id="wrap">
 
-
 <svg
-
     id="energySvg"
-
-    xmlns="
-        http://www.w3.org/2000/svg
-    "
-
-    viewBox="
-        0 0 1000 650
-    "
-
-    preserveAspectRatio="
-        xMidYMid meet
-    "
-
-    aria-label="
-        Energieverteilung
-    "
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 1000 650"
+    preserveAspectRatio="xMidYMid meet"
 >
-
-
-<!-- ======================================================
-     BATTERIE CLIP
-     ====================================================== -->
 
 <defs>
 
-    <clipPath
-        id="batteryClip"
-    >
-
+    <clipPath id="batteryClip">
         <rect
-            x="-30"
-            y="-14"
-            width="56"
-            height="28"
-            rx="5"
+            x="-26"
+            y="-12"
+            width="48"
+            height="24"
+            rx="4"
         />
-
     </clipPath>
 
 </defs>
 
 
-<!-- ======================================================
-     FESTE ENERGIEWEGE
-     ====================================================== -->
-
-
-<!-- PV -> Haus -->
+<!-- =======================================================
+     FESTE VERBINDUNGSPFADE
+     exakt vom Kreisrand bis zum Haus-Kreisrand
+     ======================================================= -->
 
 <path
-
     id="pathPvToHouse"
-
     class="flow-line"
-
-    d="
-        M 250 182
-        L 432 286
-    "
-
+    d="M 332.60 206.53 L 441.30 289.95"
 />
 
-
-<!-- Netz -> Haus -->
-
 <path
-
     id="pathGridToHouse"
-
     class="flow-line"
-
-    d="
-        M 750 182
-        L 568 286
-    "
-
+    d="M 667.40 206.53 L 558.70 289.95"
 />
 
-
-<!-- Haus -> Netz -->
-
 <path
-
     id="pathHouseToGrid"
-
     class="flow-line"
-
-    d="
-        M 568 286
-        L 750 182
-    "
-
+    d="M 558.70 289.95 L 667.40 206.53"
 />
 
-
-<!-- Haus -> Verbraucher -->
-
 <path
-
     id="pathHouseToLoad"
-
     class="flow-line"
-
-    d="
-        M 432 364
-        L 250 468
-    "
-
+    d="M 441.30 380.05 L 332.60 463.47"
 />
 
-
-<!-- Batterie -> Haus -->
-
 <path
-
     id="pathBatteryToHouse"
-
     class="flow-line"
-
-    d="
-        M 750 468
-        L 568 364
-    "
-
+    d="M 667.40 463.47 L 558.70 380.05"
 />
-
-
-<!-- Haus -> Batterie -->
 
 <path
-
     id="pathHouseToBattery"
-
     class="flow-line"
-
-    d="
-        M 568 364
-        L 750 468
-    "
-
+    d="M 558.70 380.05 L 667.40 463.47"
 />
 
 
-
-<!-- ======================================================
-     ANIMIERTE PUNKTE
-     ====================================================== -->
+<!-- Energiepunkte -->
 
 <g id="pvDots"></g>
-
 <g id="gridDots"></g>
-
 <g id="loadDots"></g>
-
 <g id="batteryDots"></g>
 
 
-
-<!-- ======================================================
+<!-- =======================================================
      PV
-     ====================================================== -->
+     ======================================================= -->
 
-<g
-    id="pvNode"
-    transform="
-        translate(
-            200
-            145
-        )
-    "
->
-
+<g transform="translate(285 170)">
 
     <circle
-
-        r="72"
-
-        class="
-            node-ring
-        "
-
-        stroke="
-            var(--pv)
-        "
-
+        r="60"
+        class="node-ring"
+        stroke="var(--pv)"
     />
 
 
-    <!-- SONNE -->
+    <!-- Sonne -->
 
     <g
         id="weatherSun"
         class="node-icon"
     >
-
         <circle
             cx="0"
             cy="0"
-            r="19"
+            r="17"
         />
 
         <path d="
-            M0 -43 L0 -32
-            M0 32 L0 43
+            M0 -38 L0 -28
+            M0 28 L0 38
 
-            M-43 0 L-32 0
-            M32 0 L43 0
+            M-38 0 L-28 0
+            M28 0 L38 0
 
-            M-30 -30 L-22 -22
-            M22 22 L30 30
+            M-27 -27 L-20 -20
+            M20 20 L27 27
 
-            M30 -30 L22 -22
-            M-22 22 L-30 30
+            M27 -27 L20 -20
+            M-20 20 L-27 27
         "/>
-
     </g>
 
 
-    <!-- SONNE + WOLKE -->
+    <!-- Sonne + Wolke -->
 
     <g
         id="weatherPartlyCloudy"
@@ -485,17 +244,8 @@ body {
 
         <g
             class="node-icon"
-            transform="
-                translate(
-                    -12
-                    -10
-                )
-                scale(
-                    0.72
-                )
-            "
+            transform="translate(-11 -10) scale(.68)"
         >
-
             <circle
                 cx="0"
                 cy="0"
@@ -503,28 +253,25 @@ body {
             />
 
             <path d="
-                M0 -36 L0 -27
-                M0 27 L0 36
+                M0 -35 L0 -27
+                M0 27 L0 35
 
-                M-36 0 L-27 0
-                M27 0 L36 0
+                M-35 0 L-27 0
+                M27 0 L35 0
 
-                M-25 -25 L-18 -18
-                M18 18 L25 25
+                M-24 -24 L-18 -18
+                M18 18 L24 24
 
-                M25 -25 L18 -18
-                M-18 18 L-25 25
+                M24 -24 L18 -18
+                M-18 18 L-24 24
             "/>
-
         </g>
 
 
         <path
-
             class="node-icon"
-
             d="
-                M -25 18
+                M -25 17
 
                 C -25 6
                   -16 -1
@@ -542,15 +289,14 @@ body {
 
                 C -24 25
                   -29 21
-                  -25 18
+                  -25 17
             "
-
         />
 
     </g>
 
 
-    <!-- WOLKE -->
+    <!-- Wolke -->
 
     <g
         id="weatherCloud"
@@ -558,11 +304,7 @@ body {
     >
 
         <path
-
-            class="
-                node-icon
-            "
-
+            class="node-icon"
             d="
                 M -31 16
 
@@ -584,13 +326,12 @@ body {
                   -32 20
                   -31 16
             "
-
         />
 
     </g>
 
 
-    <!-- REGEN -->
+    <!-- Regen -->
 
     <g
         id="weatherRain"
@@ -598,11 +339,7 @@ body {
     >
 
         <path
-
-            class="
-                node-icon
-            "
-
+            class="node-icon"
             d="
                 M -31 6
 
@@ -624,41 +361,25 @@ body {
                   -32 11
                   -31 6
             "
-
         />
 
 
         <g
-            stroke="
-                var(--battery)
-            "
-
+            stroke="var(--battery)"
             stroke-width="5"
-
             stroke-linecap="round"
         >
 
-            <path d="
-                M-20 26
-                L-25 37
-            "/>
-
-            <path d="
-                M0 26
-                L-5 37
-            "/>
-
-            <path d="
-                M20 26
-                L15 37
-            "/>
+            <path d="M-20 26 L-25 37"/>
+            <path d="M0 26 L-5 37"/>
+            <path d="M20 26 L15 37"/>
 
         </g>
 
     </g>
 
 
-    <!-- GEWITTER -->
+    <!-- Gewitter -->
 
     <g
         id="weatherStorm"
@@ -666,11 +387,7 @@ body {
     >
 
         <path
-
-            class="
-                node-icon
-            "
-
+            class="node-icon"
             d="
                 M -31 1
 
@@ -692,12 +409,10 @@ body {
                   -32 7
                   -31 1
             "
-
         />
 
 
         <path
-
             d="
                 M4 15
                 L-9 33
@@ -707,17 +422,13 @@ body {
                 H5
                 Z
             "
-
-            fill="
-                var(--grid)
-            "
-
+            fill="var(--grid)"
         />
 
     </g>
 
 
-    <!-- SCHNEE -->
+    <!-- Schnee -->
 
     <g
         id="weatherSnow"
@@ -725,11 +436,7 @@ body {
     >
 
         <path
-
-            class="
-                node-icon
-            "
-
+            class="node-icon"
             d="
                 M -31 1
 
@@ -751,73 +458,40 @@ body {
                   -32 7
                   -31 1
             "
-
         />
 
 
         <g
-
-            fill="
-                var(--battery)
-            "
-
-            font-size="23"
-
+            fill="var(--battery)"
+            font-size="22"
             text-anchor="middle"
-
         >
-
-            <text
-                x="-18"
-                y="39"
-            >
-                *
-            </text>
-
-            <text
-                x="3"
-                y="44"
-            >
-                *
-            </text>
-
-            <text
-                x="23"
-                y="37"
-            >
-                *
-            </text>
-
+            <text x="-18" y="38">*</text>
+            <text x="3" y="43">*</text>
+            <text x="23" y="36">*</text>
         </g>
 
     </g>
 
 
-    <!-- NEBEL -->
+    <!-- Nebel -->
 
     <g
         id="weatherFog"
         display="none"
-        class="
-            node-icon
-        "
+        class="node-icon"
     >
 
         <path d="
-            M-34 -14
-            L34 -14
-
-            M-40 0
-            L28 0
-
-            M-31 14
-            L39 14
+            M-34 -14 L34 -14
+            M-40 0 L28 0
+            M-31 14 L39 14
         "/>
 
     </g>
 
 
-    <!-- MOND -->
+    <!-- Mond -->
 
     <g
         id="weatherMoon"
@@ -825,7 +499,6 @@ body {
     >
 
         <path
-
             d="
                 M 20 -32
 
@@ -845,11 +518,7 @@ body {
                   15 -25
                   20 -32
             "
-
-            fill="
-                var(--text)
-            "
-
+            fill="var(--text)"
         />
 
     </g>
@@ -857,64 +526,35 @@ body {
 </g>
 
 
-
-<!-- PV TEXT -->
+<!-- PV Text -->
 
 <g>
 
     <text
-
         id="pvValue"
-
-        class="
-            value
-        "
-
-        x="105"
-        y="122"
-
-        text-anchor="
-            end
-        "
-
+        class="value"
+        x="150"
+        y="143"
+        text-anchor="end"
     >
         -- kW
     </text>
 
-
     <text
-
-        class="
-            label
-        "
-
-        x="105"
-        y="154"
-
-        text-anchor="
-            end
-        "
-
+        class="label"
+        x="150"
+        y="174"
+        text-anchor="end"
     >
         PV-Anlage
     </text>
 
-
     <text
-
         id="pvTemp"
-
-        class="
-            sub
-        "
-
-        x="105"
-        y="183"
-
-        text-anchor="
-            end
-        "
-
+        class="sub"
+        x="150"
+        y="202"
+        text-anchor="end"
     >
         WR --.- °C
     </text>
@@ -922,77 +562,56 @@ body {
 </g>
 
 
-
-<!-- ======================================================
+<!-- =======================================================
      NETZ
-     ====================================================== -->
+     ======================================================= -->
 
-<g
-    transform="
-        translate(
-            800
-            145
-        )
-    "
->
-
+<g transform="translate(715 170)">
 
     <circle
-
-        r="72"
-
-        class="
-            node-ring
-        "
-
-        stroke="
-            var(--grid)
-        "
-
+        r="60"
+        class="node-ring"
+        stroke="var(--grid)"
     />
 
 
-    <!-- STROMMAST -->
+    <!-- Strommast -->
 
-    <g
-        class="
-            node-icon
-        "
-    >
+    <g class="node-icon">
 
         <path d="
-            M0 -40
-            L0 40
+            M0 -34
+            L0 34
         "/>
 
         <path d="
-            M-28 -25
-            L28 -25
+            M-22 -19
+            L22 -19
         "/>
 
         <path d="
-            M-36 -8
-            L36 -8
+            M-30 -3
+            L30 -3
         "/>
 
         <path d="
-            M-18 40
-            L0 -8
-            L18 40
+            M-14 34
+            L0 -3
+            L14 34
         "/>
 
         <path d="
-            M-28 -25
-            L-36 -35
+            M-22 -19
+            L-30 -28
 
-            M28 -25
-            L36 -35
+            M22 -19
+            L30 -28
 
-            M-36 -8
-            L-46 -16
+            M-30 -3
+            L-39 -11
 
-            M36 -8
-            L46 -16
+            M30 -3
+            L39 -11
         "/>
 
     </g>
@@ -1000,63 +619,35 @@ body {
 </g>
 
 
-<!-- NETZ TEXT -->
+<!-- Netz Text -->
 
 <g>
 
     <text
-
         id="gridValue"
-
-        class="
-            value
-        "
-
-        x="895"
-        y="122"
-
-        text-anchor="
-            start
-        "
-
+        class="value"
+        x="850"
+        y="143"
+        text-anchor="start"
     >
         -- kW
     </text>
 
-
     <text
-
-        class="
-            label
-        "
-
-        x="895"
-        y="154"
-
-        text-anchor="
-            start
-        "
-
+        class="label"
+        x="850"
+        y="174"
+        text-anchor="start"
     >
         Stromnetz
     </text>
 
-
     <text
-
         id="gridStatus"
-
-        class="
-            sub
-        "
-
-        x="895"
-        y="183"
-
-        text-anchor="
-            start
-        "
-
+        class="sub"
+        x="850"
+        y="202"
+        text-anchor="start"
     >
         --.- V · --.- Hz
     </text>
@@ -1064,94 +655,53 @@ body {
 </g>
 
 
-
-<!-- ======================================================
+<!-- =======================================================
      VERBRAUCH
-     ====================================================== -->
+     ======================================================= -->
 
-<g
-    transform="
-        translate(
-            200
-            505
-        )
-    "
->
-
+<g transform="translate(285 500)">
 
     <circle
-
-        r="72"
-
-        class="
-            node-ring
-        "
-
-        stroke="
-            var(--load)
-        "
-
+        r="60"
+        class="node-ring"
+        stroke="var(--load)"
     />
 
-
     <path
-
         d="
-            M 9 -40
-            L -26 7
+            M 7 -34
+            L -22 7
             H -4
-            L -15 39
-            L 27 -13
+            L -13 33
+            L 23 -11
             H 5
             Z
         "
-
-        fill="
-            var(--text)
-        "
-
+        fill="var(--text)"
     />
 
 </g>
 
 
-<!-- VERBRAUCH TEXT -->
+<!-- Verbrauch Text -->
 
 <g>
 
     <text
-
         id="loadValue"
-
-        class="
-            value
-        "
-
-        x="105"
-        y="487"
-
-        text-anchor="
-            end
-        "
-
+        class="value"
+        x="150"
+        y="483"
+        text-anchor="end"
     >
         -- kW
     </text>
 
-
     <text
-
-        class="
-            label
-        "
-
-        x="105"
-        y="520"
-
-        text-anchor="
-            end
-        "
-
+        class="label"
+        x="150"
+        y="515"
+        text-anchor="end"
     >
         Verbrauch
     </text>
@@ -1159,177 +709,82 @@ body {
 </g>
 
 
-
-<!-- ======================================================
+<!-- =======================================================
      BATTERIE
-     ====================================================== -->
+     ======================================================= -->
 
-<g
-
-    id="
-        batteryNode
-    "
-
-    transform="
-        translate(
-            800
-            505
-        )
-    "
->
-
+<g transform="translate(715 500)">
 
     <circle
-
-        r="72"
-
-        class="
-            node-ring
-        "
-
-        stroke="
-            var(--battery)
-        "
-
+        r="60"
+        class="node-ring"
+        stroke="var(--battery)"
     />
 
 
-    <!-- SOC FÜLLUNG -->
-
     <rect
-
-        id="
-            batteryFill
-        "
-
-        x="-30"
-        y="-14"
-
+        id="batteryFill"
+        x="-26"
+        y="-12"
         width="0"
-        height="28"
-
-        rx="5"
-
-        fill="
-            var(--battery)
-        "
-
-        clip-path="
-            url(
-                #batteryClip
-            )
-        "
-
+        height="24"
+        rx="4"
+        fill="var(--battery)"
+        clip-path="url(#batteryClip)"
     />
 
-
-    <!-- BATTERIE -->
 
     <rect
-
-        x="-34"
-        y="-18"
-
-        width="62"
-        height="36"
-
-        rx="7"
-
-        fill="
-            none
-        "
-
-        stroke="
-            var(--text)
-        "
-
+        x="-30"
+        y="-16"
+        width="54"
+        height="32"
+        rx="6"
+        fill="none"
+        stroke="var(--text)"
         stroke-width="4"
-
     />
 
-
-    <!-- Anschluss -->
 
     <path
-
-        d="
-            M33 -7
-            L33 7
-        "
-
-        stroke="
-            var(--text)
-        "
-
+        d="M29 -6 L29 6"
+        stroke="var(--text)"
         stroke-width="4"
-
-        stroke-linecap="
-            round
-        "
-
+        stroke-linecap="round"
     />
 
 </g>
 
 
-
-<!-- BATTERIE TEXT -->
+<!-- Batterie Text -->
 
 <g>
 
     <text
-
         id="batteryValue"
-
-        class="
-            value
-        "
-
-        x="895"
-        y="487"
-
-        text-anchor="
-            start
-        "
-
+        class="value"
+        x="850"
+        y="483"
+        text-anchor="start"
     >
         -- kW
     </text>
 
-
     <text
-
-        class="
-            label
-        "
-
-        x="895"
-        y="520"
-
-        text-anchor="
-            start
-        "
-
+        class="label"
+        x="850"
+        y="515"
+        text-anchor="start"
     >
         Batterie
     </text>
 
-
     <text
-
         id="batteryInfo"
-
-        class="
-            sub
-        "
-
-        x="895"
-        y="550"
-
-        text-anchor="
-            start
-        "
-
+        class="sub"
+        x="850"
+        y="543"
+        text-anchor="start"
     >
         -- % · --.- °C
     </text>
@@ -1337,43 +792,21 @@ body {
 </g>
 
 
-
-<!-- ======================================================
+<!-- =======================================================
      HAUS
-     EXAKT MITTIG
-     ====================================================== -->
+     ======================================================= -->
 
-<g
-    transform="
-        translate(
-            500
-            325
-        )
-    "
->
-
+<g transform="translate(500 335)">
 
     <circle
-
-        r="82"
-
-        class="
-            house-fill
-        "
-
+        r="74"
+        class="house-fill"
     />
 
 
     <g
-        class="
-            node-icon
-        "
-
-        transform="
-            scale(
-                1.55
-            )
-        "
+        class="node-icon"
+        transform="scale(1.4)"
     >
 
         <path d="
@@ -1405,51 +838,27 @@ body {
 </div>
 
 
-
 <script>
-
 
 const SVG_NS =
     'http://www.w3.org/2000/svg';
 
-
 const $ =
     id =>
-        document.getElementById(
-            id
-        );
-
-
-let lastPayload =
-    null;
+        document.getElementById(id);
 
 
 /* =========================================================
-   LEISTUNG -> ANIMATIONSGESCHWINDIGKEIT
-
-   wenig Leistung = langsam
-   viel Leistung = maximal etwa bisheriges Tempo
+   LEISTUNG -> GESCHWINDIGKEIT
    ========================================================= */
 
-function flowDuration(
-    powerKW
-)
+function flowDuration(powerKW)
 {
     const power =
         Math.max(
             0,
-            Number(
-                powerKW || 0
-            )
+            Number(powerKW || 0)
         );
-
-
-    /*
-     * 0 kW     -> 6.0 Sekunden
-     * 1 kW     -> ca. 4.7 Sekunden
-     * 3 kW     -> ca. 3.0 Sekunden
-     * 6 kW+    -> ca. 1.9 Sekunden
-     */
 
     const normalized =
         Math.min(
@@ -1457,19 +866,15 @@ function flowDuration(
             1
         );
 
-
     const shaped =
         Math.sqrt(
             normalized
         );
 
-
     return (
         6.0
         -
-        shaped
-        *
-        4.1
+        shaped * 4.1
     );
 }
 
@@ -1489,35 +894,29 @@ function makeDot(
     const group =
         $(groupID);
 
-
     const circle =
         document.createElementNS(
             SVG_NS,
             'circle'
         );
 
-
     circle.setAttribute(
         'r',
         '7'
     );
-
 
     circle.setAttribute(
         'fill',
         color
     );
 
-
     circle.setAttribute(
         'class',
         'dot'
     );
 
-
     circle.style.color =
         color;
-
 
     const motion =
         document.createElementNS(
@@ -1525,30 +924,25 @@ function makeDot(
             'animateMotion'
         );
 
-
     motion.setAttribute(
         'dur',
         duration + 's'
     );
-
 
     motion.setAttribute(
         'begin',
         delay + 's'
     );
 
-
     motion.setAttribute(
         'repeatCount',
         'indefinite'
     );
 
-
     motion.setAttribute(
         'calcMode',
         'linear'
     );
-
 
     const motionPath =
         document.createElementNS(
@@ -1556,22 +950,18 @@ function makeDot(
             'mpath'
         );
 
-
     motionPath.setAttribute(
         'href',
         '#' + pathID
     );
 
-
     motion.appendChild(
         motionPath
     );
 
-
     circle.appendChild(
         motion
     );
-
 
     group.appendChild(
         circle
@@ -1583,18 +973,12 @@ function makeDot(
    GRUPPE LEEREN
    ========================================================= */
 
-function clearGroup(
-    id
-)
+function clearGroup(id)
 {
     const group =
         $(id);
 
-
-    while (
-        group.firstChild
-    ) {
-
+    while (group.firstChild) {
         group.removeChild(
             group.firstChild
         );
@@ -1603,7 +987,7 @@ function clearGroup(
 
 
 /* =========================================================
-   PUNKT-FARBVERTEILUNG
+   PUNKTVERTEILUNG
    ========================================================= */
 
 function allocateDots(
@@ -1613,21 +997,15 @@ function allocateDots(
 {
     const entries =
         Object
-        .entries(
-            weights
-        )
+        .entries(weights)
         .filter(
             ([, value]) =>
                 Number(value) > 0.0001
         );
 
-
-    if (
-        entries.length === 0
-    ) {
+    if (!entries.length) {
         return [];
     }
-
 
     const total =
         entries.reduce(
@@ -1635,106 +1013,72 @@ function allocateDots(
                 sum,
                 [, value]
             ) =>
-                sum
-                +
-                Number(value),
+                sum + Number(value),
             0
         );
 
-
     const result = [];
 
-
-    let distributed = 0;
-
-
-    const calculated =
+    const allocation =
         entries.map(
-            (
-                [key, value]
-            ) => {
-
-                const raw =
+            ([key, value]) => ({
+                key,
+                raw:
                     Number(value)
                     /
                     total
                     *
-                    amount;
-
-
-                const count =
-                    Math.floor(
-                        raw
-                    );
-
-
-                distributed +=
-                    count;
-
-
-                return {
-                    key,
-                    raw,
-                    count
-                };
-            }
+                    amount,
+                count: 0
+            })
         );
 
+    let assigned = 0;
 
-    while (
-        distributed < amount
-    ) {
+    allocation.forEach(
+        item => {
 
-        calculated.sort(
+            item.count =
+                Math.floor(
+                    item.raw
+                );
+
+            assigned +=
+                item.count;
+        }
+    );
+
+    while (assigned < amount) {
+
+        allocation.sort(
             (
                 a,
                 b
             ) =>
                 (
-                    b.raw
-                    -
-                    b.count
+                    b.raw - b.count
                 )
                 -
                 (
-                    a.raw
-                    -
-                    a.count
+                    a.raw - a.count
                 )
         );
 
+        allocation[0].count++;
 
-        calculated[0].count++;
-
-        distributed++;
+        assigned++;
     }
 
+    let remaining = amount;
 
-    let remaining =
-        calculated.reduce(
-            (
-                sum,
-                item
-            ) =>
-                sum
-                +
-                item.count,
-            0
-        );
-
-
-    while (
-        remaining > 0
-    ) {
+    while (remaining > 0) {
 
         for (
             const item
-            of calculated
+            of allocation
         ) {
 
-            if (
-                item.count > 0
-            ) {
+            if (item.count > 0) {
 
                 result.push(
                     item.key
@@ -1747,20 +1091,15 @@ function allocateDots(
         }
     }
 
-
-    return result.slice(
-        0,
-        amount
-    );
+    return result;
 }
 
 
 /* =========================================================
-   WETTERSYMBOL
+   WETTER
    ========================================================= */
 
 const weatherIDs = [
-
     'weatherSun',
     'weatherPartlyCloudy',
     'weatherCloud',
@@ -1769,58 +1108,24 @@ const weatherIDs = [
     'weatherSnow',
     'weatherFog',
     'weatherMoon'
-
 ];
 
 
-function hideWeatherIcons()
+function showWeatherIcon(id)
 {
     weatherIDs.forEach(
-        id => {
+        item => {
 
-            const element =
-                $(id);
-
-            if (
-                element
-            ) {
-
-                element.setAttribute(
-                    'display',
-                    'none'
-                );
-            }
+            $(item).setAttribute(
+                'display',
+                item === id
+                ? ''
+                : 'none'
+            );
         }
     );
 }
 
-
-function showWeatherIcon(
-    id
-)
-{
-    hideWeatherIcons();
-
-
-    const element =
-        $(id);
-
-
-    if (
-        element
-    ) {
-
-        element.setAttribute(
-            'display',
-            ''
-        );
-    }
-}
-
-
-/* =========================================================
-   WETTER AUSWERTEN
-   ========================================================= */
 
 function updateWeather(
     conditionID,
@@ -1828,13 +1133,7 @@ function updateWeather(
     rainDetected
 )
 {
-    /*
-     * Realer Regensensor hat Vorrang.
-     */
-
-    if (
-        rainDetected
-    ) {
+    if (rainDetected) {
 
         showWeatherIcon(
             'weatherRain'
@@ -1857,14 +1156,8 @@ function updateWeather(
 
 
     const night =
-        icon.endsWith(
-            'n'
-        );
+        icon.endsWith('n');
 
-
-    /*
-     * Gewitter
-     */
 
     if (
         condition >= 200
@@ -1879,10 +1172,6 @@ function updateWeather(
         return;
     }
 
-
-    /*
-     * Niesel / Regen
-     */
 
     if (
         (
@@ -1906,10 +1195,6 @@ function updateWeather(
     }
 
 
-    /*
-     * Schnee
-     */
-
     if (
         condition >= 600
         &&
@@ -1923,10 +1208,6 @@ function updateWeather(
         return;
     }
 
-
-    /*
-     * Nebel / Dunst
-     */
 
     if (
         condition >= 700
@@ -1942,10 +1223,6 @@ function updateWeather(
     }
 
 
-    /*
-     * Klar
-     */
-
     if (
         condition === 800
     ) {
@@ -1959,10 +1236,6 @@ function updateWeather(
         return;
     }
 
-
-    /*
-     * leicht bewölkt
-     */
 
     if (
         condition === 801
@@ -1980,10 +1253,6 @@ function updateWeather(
     }
 
 
-    /*
-     * stark bewölkt
-     */
-
     if (
         condition === 803
         ||
@@ -1998,10 +1267,6 @@ function updateWeather(
     }
 
 
-    /*
-     * Fallback
-     */
-
     showWeatherIcon(
         night
         ? 'weatherMoon'
@@ -2011,35 +1276,25 @@ function updateWeather(
 
 
 /* =========================================================
-   LEISTUNG FORMATIEREN
+   LEISTUNGSFORMAT
    ========================================================= */
 
-function powerText(
-    value
-)
+function powerText(value)
 {
     const number =
         Math.max(
             0,
-            Number(
-                value || 0
-            )
+            Number(value || 0)
         );
 
-
-    if (
-        number < 1
-    ) {
+    if (number < 1) {
 
         return (
-            number
-            *
-            1000
+            number * 1000
         ).toFixed(0)
         +
         ' W';
     }
-
 
     return (
         number.toFixed(2)
@@ -2050,251 +1305,122 @@ function powerText(
 
 
 /* =========================================================
-   ENERGIEFLÜSSE
+   FLOWS
    ========================================================= */
 
-function renderFlows(
-    data
-)
+function renderFlows(data)
 {
     const pv =
-        Number(
-            data.pv || 0
-        );
-
+        Number(data.pv || 0);
 
     const load =
-        Number(
-            data.house || 0
-        );
-
+        Number(data.house || 0);
 
     const gridImport =
-        Number(
-            data.gridImport || 0
-        );
-
+        Number(data.gridImport || 0);
 
     const gridExport =
-        Number(
-            data.gridExport || 0
-        );
-
+        Number(data.gridExport || 0);
 
     const batteryCharge =
-        Number(
-            data.batteryCharge || 0
-        );
-
+        Number(data.batteryCharge || 0);
 
     const batteryDischarge =
-        Number(
-            data.batteryDischarge || 0
-        );
+        Number(data.batteryDischarge || 0);
 
 
-    clearGroup(
-        'pvDots'
-    );
-
-    clearGroup(
-        'gridDots'
-    );
-
-    clearGroup(
-        'loadDots'
-    );
-
-    clearGroup(
-        'batteryDots'
-    );
+    clearGroup('pvDots');
+    clearGroup('gridDots');
+    clearGroup('loadDots');
+    clearGroup('batteryDots');
 
 
-    /*
-     * PV -> Haus
-     */
-
-    if (
-        pv > 0.03
-    ) {
+    if (pv > 0.03) {
 
         const duration =
-            flowDuration(
-                pv
-            );
+            flowDuration(pv);
 
-
-        for (
-            let i = 0;
-            i < 4;
-            i++
-        ) {
+        for (let i = 0; i < 4; i++) {
 
             makeDot(
-
                 'pvDots',
-
                 'pathPvToHouse',
-
                 'var(--pv)',
-
-                -i
-                *
+                -i * duration / 4,
                 duration
-                /
-                4,
-
-                duration
-
             );
         }
     }
 
 
-    /*
-     * Netz
-     */
-
-    if (
-        gridImport > 0.03
-    ) {
+    if (gridImport > 0.03) {
 
         const duration =
-            flowDuration(
-                gridImport
-            );
+            flowDuration(gridImport);
 
-
-        for (
-            let i = 0;
-            i < 3;
-            i++
-        ) {
+        for (let i = 0; i < 3; i++) {
 
             makeDot(
-
                 'gridDots',
-
                 'pathGridToHouse',
-
                 'var(--grid)',
-
-                -i
-                *
+                -i * duration / 3,
                 duration
-                /
-                3,
-
-                duration
-
             );
         }
 
-    } else if (
-        gridExport > 0.03
-    ) {
+    } else if (gridExport > 0.03) {
 
         const duration =
-            flowDuration(
-                gridExport
-            );
+            flowDuration(gridExport);
 
-
-        for (
-            let i = 0;
-            i < 3;
-            i++
-        ) {
+        for (let i = 0; i < 3; i++) {
 
             makeDot(
-
                 'gridDots',
-
                 'pathHouseToGrid',
-
                 'var(--pv)',
-
-                -i
-                *
+                -i * duration / 3,
                 duration
-                /
-                3,
-
-                duration
-
             );
         }
     }
 
 
-    /*
-     * Batterie
-     */
-
-    if (
-        batteryDischarge > 0.03
-    ) {
+    if (batteryDischarge > 0.03) {
 
         const duration =
             flowDuration(
                 batteryDischarge
             );
 
-
-        for (
-            let i = 0;
-            i < 3;
-            i++
-        ) {
+        for (let i = 0; i < 3; i++) {
 
             makeDot(
-
                 'batteryDots',
-
                 'pathBatteryToHouse',
-
                 'var(--battery)',
-
-                -i
-                *
+                -i * duration / 3,
                 duration
-                /
-                3,
-
-                duration
-
             );
         }
 
-    } else if (
-        batteryCharge > 0.03
-    ) {
+    } else if (batteryCharge > 0.03) {
 
         const duration =
             flowDuration(
                 batteryCharge
             );
 
-
-        /*
-         * Batterie-Ladung kann aus PV
-         * und ggf. Netz bestehen.
-         */
-
         const mix =
             allocateDots(
-
                 {
-                    pv:
-                        pv,
-
+                    pv,
                     grid:
                         gridImport
                 },
-
                 4
             );
-
 
         mix.forEach(
             (
@@ -2302,75 +1428,43 @@ function renderFlows(
                 index
             ) => {
 
-                let color =
-                    'var(--pv)';
-
-
-                if (
-                    source ===
-                    'grid'
-                ) {
-
-                    color =
-                        'var(--grid)';
-                }
-
+                const color =
+                    source === 'grid'
+                    ? 'var(--grid)'
+                    : 'var(--pv)';
 
                 makeDot(
-
                     'batteryDots',
-
                     'pathHouseToBattery',
-
                     color,
-
                     -index
                     *
                     duration
                     /
                     mix.length,
-
                     duration
-
                 );
             }
         );
     }
 
 
-    /*
-     * Verbraucher
-     *
-     * Quelle proportional darstellen.
-     */
-
-    if (
-        load > 0.03
-    ) {
+    if (load > 0.03) {
 
         const duration =
-            flowDuration(
-                load
-            );
-
+            flowDuration(load);
 
         const mix =
             allocateDots(
-
                 {
-                    pv:
-                        pv,
-
+                    pv,
                     grid:
                         gridImport,
-
                     battery:
                         batteryDischarge
                 },
-
                 6
             );
-
 
         mix.forEach(
             (
@@ -2381,43 +1475,26 @@ function renderFlows(
                 let color =
                     'var(--pv)';
 
-
-                if (
-                    source ===
-                    'grid'
-                ) {
-
+                if (source === 'grid') {
                     color =
                         'var(--grid)';
                 }
 
-
-                if (
-                    source ===
-                    'battery'
-                ) {
-
+                if (source === 'battery') {
                     color =
                         'var(--battery)';
                 }
 
-
                 makeDot(
-
                     'loadDots',
-
                     'pathHouseToLoad',
-
                     color,
-
                     -index
                     *
                     duration
                     /
                     mix.length,
-
                     duration
-
                 );
             }
         );
@@ -2429,107 +1506,67 @@ function renderFlows(
    LIVE-DATEN
    ========================================================= */
 
-function handleMessage(
-    data
-)
+function handleMessage(data)
 {
-    if (
-        !data
-    ) {
+    if (!data) {
         return;
     }
 
-
-    if (
-        typeof data ===
-        'string'
-    ) {
+    if (typeof data === 'string') {
 
         try {
 
             data =
-                JSON.parse(
-                    data
-                );
+                JSON.parse(data);
 
-        } catch (
-            error
-        ) {
+        } catch (error) {
 
             return;
         }
     }
 
 
-    lastPayload =
-        data;
-
-
     const pv =
-        Number(
-            data.pv || 0
-        );
-
+        Number(data.pv || 0);
 
     const load =
-        Number(
-            data.house || 0
-        );
-
+        Number(data.house || 0);
 
     const gridImport =
-        Number(
-            data.gridImport || 0
-        );
-
+        Number(data.gridImport || 0);
 
     const gridExport =
-        Number(
-            data.gridExport || 0
-        );
-
+        Number(data.gridExport || 0);
 
     const batteryCharge =
-        Number(
-            data.batteryCharge || 0
-        );
-
+        Number(data.batteryCharge || 0);
 
     const batteryDischarge =
-        Number(
-            data.batteryDischarge || 0
-        );
-
+        Number(data.batteryDischarge || 0);
 
     const soc =
         Math.max(
             0,
             Math.min(
                 100,
-                Number(
-                    data.soc || 0
-                )
+                Number(data.soc || 0)
             )
         );
-
 
     const tempWR =
         Number(
             data.tempWR || 0
         );
 
-
     const tempBattery =
         Number(
             data.tempBattery || 0
         );
 
-
     const voltage =
         Number(
             data.gridVoltage || 0
         );
-
 
     const frequency =
         Number(
@@ -2537,85 +1574,48 @@ function handleMessage(
         );
 
 
-    /*
-     * PV
-     */
-
     $('pvValue').textContent =
-        powerText(
-            pv
-        );
-
+        powerText(pv);
 
     $('pvTemp').textContent =
         `WR ${tempWR.toFixed(1)} °C`;
 
 
-    /*
-     * Netz
-     */
-
     $('gridValue').textContent =
         powerText(
-
             gridImport > 0.03
-
             ? gridImport
-
             : gridExport
-
         );
-
 
     $('gridStatus').textContent =
         `${voltage.toFixed(1)} V · ${frequency.toFixed(1)} Hz`;
 
 
-    /*
-     * Verbrauch
-     */
-
     $('loadValue').textContent =
-        powerText(
-            load
-        );
+        powerText(load);
 
-
-    /*
-     * Batterie
-     */
 
     const batteryPower =
         batteryDischarge > 0.03
-
         ? batteryDischarge
-
         : batteryCharge;
-
 
     $('batteryValue').textContent =
         powerText(
             batteryPower
         );
 
-
     $('batteryInfo').textContent =
         `${soc.toFixed(0)} % · ${tempBattery.toFixed(1)} °C`;
 
 
-    /*
-     * Batterie-Füllstand
-     */
-
     const fillWidth =
-        56
+        48
         *
-        (
-            soc
-            /
-            100
-        );
-
+        soc
+        /
+        100;
 
     $('batteryFill').setAttribute(
         'width',
@@ -2623,30 +1623,16 @@ function handleMessage(
     );
 
 
-    /*
-     * Wetter
-     */
-
     updateWeather(
-
         data.weatherConditionID,
-
         data.weatherIcon,
-
         Boolean(
             data.rainDetected
         )
-
     );
 
 
-    /*
-     * Energiepunkte
-     */
-
-    renderFlows(
-        data
-    );
+    renderFlows(data);
 }
 
 
@@ -2655,9 +1641,7 @@ function handleMessage(
    ========================================================= */
 
 window.addEventListener(
-
     'load',
-
     () => {
 
         if (
@@ -2672,12 +1656,9 @@ window.addEventListener(
             );
         }
     }
-
 );
 
 </script>
 
-
 </body>
-
 </html>
