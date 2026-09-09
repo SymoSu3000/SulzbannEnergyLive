@@ -1,290 +1,1402 @@
 <!DOCTYPE html>
+
 <html>
+
 <head>
+
 <meta charset="UTF-8">
+
 <style>
-:root{
-  --pv:#35b657;
-  --grid:#f39a2d;
-  --battery:#22b8c7;
-  --load:#f39a2d;
-  --house:#10c7b1;
-  --text:#202020;
-  --muted:rgba(32,32,32,.68);
-  --line:rgba(110,110,110,.44);
-  --surface:rgba(255,255,255,.02);
-}
-@media(prefers-color-scheme:dark){
-  :root{
-    --text:#f4f4f4;
-    --muted:rgba(244,244,244,.72);
-    --line:rgba(220,220,220,.48);
-    --surface:rgba(255,255,255,.025)
-  }
+
+:root {
+
+    --pv: #35b657;
+    --grid: #f39a2d;
+    --battery: #22b8c7;
+    --load: #f39a2d;
+    --house: #10c7b1;
+
+    --text: #202020;
+
+    --muted:
+        rgba(
+            32,
+            32,
+            32,
+            0.68
+        );
+
+    --line:
+        rgba(
+            110,
+            110,
+            110,
+            0.44
+        );
+
+    --surface:
+        rgba(
+            255,
+            255,
+            255,
+            0.02
+        );
 }
 
-*{box-sizing:border-box}
 
-html,body{
-  margin:0;
-  width:100%;
-  height:100%;
-  overflow:hidden;
-  background:transparent;
-  color:var(--text);
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif
+@media (
+    prefers-color-scheme: dark
+) {
+
+    :root {
+
+        --text: #f4f4f4;
+
+        --muted:
+            rgba(
+                244,
+                244,
+                244,
+                0.72
+            );
+
+        --line:
+            rgba(
+                220,
+                220,
+                220,
+                0.48
+            );
+
+        --surface:
+            rgba(
+                255,
+                255,
+                255,
+                0.025
+            );
+    }
 }
 
-#wrap{
-  position:relative;
-  width:100%;
-  height:100%;
-  overflow:hidden
+
+* {
+    box-sizing: border-box;
 }
 
-#energySvg{
-  width:100%;
-  height:100%;
-  display:block;
-  overflow:visible
+
+html,
+body {
+
+    margin: 0;
+
+    width: 100%;
+    height: 100%;
+
+    overflow: hidden;
+
+    background: transparent;
+
+    color:
+        var(--text);
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Arial,
+        sans-serif;
 }
 
-.flow-line{
-  stroke:var(--line);
-  stroke-width:2.4;
-  stroke-linecap:round;
-  fill:none
+
+#wrap {
+
+    width: 100%;
+    height: 100%;
+
+    overflow: hidden;
 }
 
-.node-ring{
-  fill:var(--surface);
-  stroke-width:2.4
+
+#energySvg {
+
+    width: 100%;
+    height: 100%;
+
+    display: block;
 }
 
-.node-icon{
-  fill:none;
-  stroke:var(--text);
-  stroke-width:2.2;
-  stroke-linecap:round;
-  stroke-linejoin:round
+
+/* =========================================================
+   LINIEN
+   ========================================================= */
+
+.flow-line {
+
+    stroke:
+        var(--line);
+
+    stroke-width: 4;
+
+    stroke-linecap:
+        round;
+
+    fill:
+        none;
 }
 
-.node-icon-fill{
-  fill:var(--text);
-  stroke:none
+
+/* =========================================================
+   KREISE
+   ========================================================= */
+
+.node-ring {
+
+    fill:
+        var(--surface);
+
+    stroke-width: 4;
 }
 
-.label{
-  fill:var(--muted);
-  font-weight:500;
-  text-anchor:middle
+
+.house-fill {
+
+    fill:
+        color-mix(
+            in srgb,
+            var(--house) 32%,
+            transparent
+        );
+
+    stroke:
+        var(--house);
+
+    stroke-width: 5;
 }
 
-.value{
-  fill:var(--text);
-  font-weight:700;
-  text-anchor:middle
+
+/* =========================================================
+   ICONS
+   ========================================================= */
+
+.node-icon {
+
+    fill: none;
+
+    stroke:
+        var(--text);
+
+    stroke-width: 4;
+
+    stroke-linecap:
+        round;
+
+    stroke-linejoin:
+        round;
 }
 
-.sub{
-  fill:var(--muted);
-  font-weight:500;
-  text-anchor:middle
+
+/* =========================================================
+   TEXTE
+   ========================================================= */
+
+.value {
+
+    fill:
+        var(--text);
+
+    font-size: 32px;
+
+    font-weight: 700;
 }
 
-.house-fill{
-  fill:color-mix(in srgb,var(--house) 30%,transparent);
-  stroke:var(--house);
-  stroke-width:3
+
+.label {
+
+    fill:
+        var(--muted);
+
+    font-size: 23px;
+
+    font-weight: 500;
 }
 
-.dot{
-  filter:drop-shadow(0 0 4px currentColor)
+
+.sub {
+
+    fill:
+        var(--muted);
+
+    font-size: 18px;
+
+    font-weight: 500;
 }
+
+
+/* =========================================================
+   ENERGIEPUNKTE
+   ========================================================= */
+
+.dot {
+
+    filter:
+        drop-shadow(
+            0 0 5px
+            currentColor
+        );
+}
+
 </style>
+
 </head>
+
 
 <body>
 
 <div id="wrap">
 
+
 <svg
-  id="energySvg"
-  xmlns="http://www.w3.org/2000/svg"
-  aria-label="Energieverteilung"
+
+    id="energySvg"
+
+    xmlns="
+        http://www.w3.org/2000/svg
+    "
+
+    viewBox="
+        0 0 1000 650
+    "
+
+    preserveAspectRatio="
+        xMidYMid meet
+    "
+
+    aria-label="
+        Energieverteilung
+    "
 >
+
+
+<!-- ======================================================
+     BATTERIE CLIP
+     ====================================================== -->
 
 <defs>
 
-  <clipPath id="batteryInnerClip">
-    <rect
-      id="batteryClipRect"
-      x="-15"
-      y="-7"
-      width="28"
-      height="14"
-      rx="2"
-    />
-  </clipPath>
+    <clipPath
+        id="batteryClip"
+    >
+
+        <rect
+            x="-30"
+            y="-14"
+            width="56"
+            height="28"
+            rx="5"
+        />
+
+    </clipPath>
 
 </defs>
 
-<path id="pathPvToHouse" class="flow-line"/>
-<path id="pathGridToHouse" class="flow-line"/>
-<path id="pathHouseToGrid" class="flow-line"/>
-<path id="pathHouseToLoad" class="flow-line"/>
-<path id="pathBatteryToHouse" class="flow-line"/>
-<path id="pathHouseToBattery" class="flow-line"/>
+
+<!-- ======================================================
+     FESTE ENERGIEWEGE
+     ====================================================== -->
+
+
+<!-- PV -> Haus -->
+
+<path
+
+    id="pathPvToHouse"
+
+    class="flow-line"
+
+    d="
+        M 250 182
+        L 432 286
+    "
+
+/>
+
+
+<!-- Netz -> Haus -->
+
+<path
+
+    id="pathGridToHouse"
+
+    class="flow-line"
+
+    d="
+        M 750 182
+        L 568 286
+    "
+
+/>
+
+
+<!-- Haus -> Netz -->
+
+<path
+
+    id="pathHouseToGrid"
+
+    class="flow-line"
+
+    d="
+        M 568 286
+        L 750 182
+    "
+
+/>
+
+
+<!-- Haus -> Verbraucher -->
+
+<path
+
+    id="pathHouseToLoad"
+
+    class="flow-line"
+
+    d="
+        M 432 364
+        L 250 468
+    "
+
+/>
+
+
+<!-- Batterie -> Haus -->
+
+<path
+
+    id="pathBatteryToHouse"
+
+    class="flow-line"
+
+    d="
+        M 750 468
+        L 568 364
+    "
+
+/>
+
+
+<!-- Haus -> Batterie -->
+
+<path
+
+    id="pathHouseToBattery"
+
+    class="flow-line"
+
+    d="
+        M 568 364
+        L 750 468
+    "
+
+/>
+
+
+
+<!-- ======================================================
+     ANIMIERTE PUNKTE
+     ====================================================== -->
 
 <g id="pvDots"></g>
+
 <g id="gridDots"></g>
+
 <g id="loadDots"></g>
+
 <g id="batteryDots"></g>
 
 
-<!-- PV -->
 
-<g id="pvNode">
+<!-- ======================================================
+     PV
+     ====================================================== -->
 
-  <circle
-    id="pvRing"
-    class="node-ring"
-    stroke="var(--pv)"
-  />
-
-  <g
-    id="pvIcon"
-    class="node-icon"
-  >
-    <path d="M-17,-11 L15,-11 L20,10 L-22,10 Z"/>
-    <path d="M-10,-11 L-13,10 M0,-11 L0,10 M10,-11 L13,10 M-20,0 L18,0"/>
-    <path d="M-7,10 L-7,18 M7,10 L7,18 M-12,18 L12,18"/>
-  </g>
-
-  <text id="pvValue" class="value">-- kW</text>
-  <text id="pvLabel" class="label">PV-Anlage</text>
-  <text id="pvTemp" class="sub">WR --.- °C</text>
-
-</g>
+<g
+    id="pvNode"
+    transform="
+        translate(
+            200
+            145
+        )
+    "
+>
 
 
-<!-- Netz -->
+    <circle
 
-<g id="gridNode">
+        r="72"
 
-  <circle
-    id="gridRing"
-    class="node-ring"
-    stroke="var(--grid)"
-  />
+        class="
+            node-ring
+        "
 
-  <g
-    id="gridIcon"
-    class="node-icon"
-  >
-    <path d="M0,-18 L0,19 M-8,-12 L8,-12 M-12,-6 L12,-6"/>
-    <path d="M-12,-6 L-17,-10 M12,-6 L17,-10 M-8,-12 L-12,-16 M8,-12 L12,-16"/>
-    <path d="M-4,-6 L-4,19 M4,-6 L4,19"/>
-  </g>
+        stroke="
+            var(--pv)
+        "
 
-  <text id="gridValue" class="value">-- kW</text>
-  <text id="gridLabel" class="label">Stromnetz</text>
-  <text id="gridStatus" class="sub">-</text>
-
-</g>
-
-
-<!-- Verbrauch -->
-
-<g id="loadNode">
-
-  <circle
-    id="loadRing"
-    class="node-ring"
-    stroke="var(--load)"
-  />
-
-  <path
-    id="loadIcon"
-    class="node-icon-fill"
-    d="M3,-20 L-12,4 H-2 L-7,20 L13,-6 H2 Z"
-  />
-
-  <text id="loadValue" class="value">-- kW</text>
-  <text id="loadLabel" class="label">Verbrauch</text>
-
-</g>
-
-
-<!-- Batterie -->
-
-<g id="batteryNode">
-
-  <circle
-    id="batteryRing"
-    class="node-ring"
-    stroke="var(--battery)"
-  />
-
-  <g id="batteryIcon">
-
-    <rect
-      id="batterySocFill"
-      x="-15"
-      y="-7"
-      width="0"
-      height="14"
-      rx="2"
-      fill="var(--battery)"
-      clip-path="url(#batteryInnerClip)"
     />
 
-    <rect
-      x="-18"
-      y="-10"
-      width="32"
-      height="20"
-      rx="4"
-      fill="none"
-      stroke="var(--text)"
-      stroke-width="2.2"
+
+    <!-- SONNE -->
+
+    <g
+        id="weatherSun"
+        class="node-icon"
+    >
+
+        <circle
+            cx="0"
+            cy="0"
+            r="19"
+        />
+
+        <path d="
+            M0 -43 L0 -32
+            M0 32 L0 43
+
+            M-43 0 L-32 0
+            M32 0 L43 0
+
+            M-30 -30 L-22 -22
+            M22 22 L30 30
+
+            M30 -30 L22 -22
+            M-22 22 L-30 30
+        "/>
+
+    </g>
+
+
+    <!-- SONNE + WOLKE -->
+
+    <g
+        id="weatherPartlyCloudy"
+        display="none"
+    >
+
+        <g
+            class="node-icon"
+            transform="
+                translate(
+                    -12
+                    -10
+                )
+                scale(
+                    0.72
+                )
+            "
+        >
+
+            <circle
+                cx="0"
+                cy="0"
+                r="17"
+            />
+
+            <path d="
+                M0 -36 L0 -27
+                M0 27 L0 36
+
+                M-36 0 L-27 0
+                M27 0 L36 0
+
+                M-25 -25 L-18 -18
+                M18 18 L25 25
+
+                M25 -25 L18 -18
+                M-18 18 L-25 25
+            "/>
+
+        </g>
+
+
+        <path
+
+            class="node-icon"
+
+            d="
+                M -25 18
+
+                C -25 6
+                  -16 -1
+                  -7 1
+
+                C -2 -13
+                  18 -12
+                  22 2
+
+                C 36 2
+                  40 20
+                  27 25
+
+                L -16 25
+
+                C -24 25
+                  -29 21
+                  -25 18
+            "
+
+        />
+
+    </g>
+
+
+    <!-- WOLKE -->
+
+    <g
+        id="weatherCloud"
+        display="none"
+    >
+
+        <path
+
+            class="
+                node-icon
+            "
+
+            d="
+                M -31 16
+
+                C -32 4
+                  -22 -5
+                  -11 -3
+
+                C -5 -21
+                  19 -22
+                  25 -5
+
+                C 41 -5
+                  46 16
+                  31 23
+
+                L -19 23
+
+                C -27 23
+                  -32 20
+                  -31 16
+            "
+
+        />
+
+    </g>
+
+
+    <!-- REGEN -->
+
+    <g
+        id="weatherRain"
+        display="none"
+    >
+
+        <path
+
+            class="
+                node-icon
+            "
+
+            d="
+                M -31 6
+
+                C -31 -6
+                  -21 -14
+                  -10 -12
+
+                C -4 -28
+                  20 -29
+                  26 -12
+
+                C 41 -12
+                  46 8
+                  31 15
+
+                L -19 15
+
+                C -27 15
+                  -32 11
+                  -31 6
+            "
+
+        />
+
+
+        <g
+            stroke="
+                var(--battery)
+            "
+
+            stroke-width="5"
+
+            stroke-linecap="round"
+        >
+
+            <path d="
+                M-20 26
+                L-25 37
+            "/>
+
+            <path d="
+                M0 26
+                L-5 37
+            "/>
+
+            <path d="
+                M20 26
+                L15 37
+            "/>
+
+        </g>
+
+    </g>
+
+
+    <!-- GEWITTER -->
+
+    <g
+        id="weatherStorm"
+        display="none"
+    >
+
+        <path
+
+            class="
+                node-icon
+            "
+
+            d="
+                M -31 1
+
+                C -31 -10
+                  -21 -18
+                  -10 -16
+
+                C -4 -31
+                  20 -32
+                  26 -16
+
+                C 41 -16
+                  46 4
+                  31 11
+
+                L -19 11
+
+                C -27 11
+                  -32 7
+                  -31 1
+            "
+
+        />
+
+
+        <path
+
+            d="
+                M4 15
+                L-9 33
+                H1
+                L-6 48
+                L14 27
+                H5
+                Z
+            "
+
+            fill="
+                var(--grid)
+            "
+
+        />
+
+    </g>
+
+
+    <!-- SCHNEE -->
+
+    <g
+        id="weatherSnow"
+        display="none"
+    >
+
+        <path
+
+            class="
+                node-icon
+            "
+
+            d="
+                M -31 1
+
+                C -31 -10
+                  -21 -18
+                  -10 -16
+
+                C -4 -31
+                  20 -32
+                  26 -16
+
+                C 41 -16
+                  46 4
+                  31 11
+
+                L -19 11
+
+                C -27 11
+                  -32 7
+                  -31 1
+            "
+
+        />
+
+
+        <g
+
+            fill="
+                var(--battery)
+            "
+
+            font-size="23"
+
+            text-anchor="middle"
+
+        >
+
+            <text
+                x="-18"
+                y="39"
+            >
+                *
+            </text>
+
+            <text
+                x="3"
+                y="44"
+            >
+                *
+            </text>
+
+            <text
+                x="23"
+                y="37"
+            >
+                *
+            </text>
+
+        </g>
+
+    </g>
+
+
+    <!-- NEBEL -->
+
+    <g
+        id="weatherFog"
+        display="none"
+        class="
+            node-icon
+        "
+    >
+
+        <path d="
+            M-34 -14
+            L34 -14
+
+            M-40 0
+            L28 0
+
+            M-31 14
+            L39 14
+        "/>
+
+    </g>
+
+
+    <!-- MOND -->
+
+    <g
+        id="weatherMoon"
+        display="none"
+    >
+
+        <path
+
+            d="
+                M 20 -32
+
+                C -5 -28
+                  -15 -4
+                  -8 15
+
+                C 0 35
+                  25 40
+                  40 24
+
+                C 17 27
+                  2 10
+                  7 -7
+
+                C 10 -18
+                  15 -25
+                  20 -32
+            "
+
+            fill="
+                var(--text)
+            "
+
+        />
+
+    </g>
+
+</g>
+
+
+
+<!-- PV TEXT -->
+
+<g>
+
+    <text
+
+        id="pvValue"
+
+        class="
+            value
+        "
+
+        x="105"
+        y="122"
+
+        text-anchor="
+            end
+        "
+
+    >
+        -- kW
+    </text>
+
+
+    <text
+
+        class="
+            label
+        "
+
+        x="105"
+        y="154"
+
+        text-anchor="
+            end
+        "
+
+    >
+        PV-Anlage
+    </text>
+
+
+    <text
+
+        id="pvTemp"
+
+        class="
+            sub
+        "
+
+        x="105"
+        y="183"
+
+        text-anchor="
+            end
+        "
+
+    >
+        WR --.- °C
+    </text>
+
+</g>
+
+
+
+<!-- ======================================================
+     NETZ
+     ====================================================== -->
+
+<g
+    transform="
+        translate(
+            800
+            145
+        )
+    "
+>
+
+
+    <circle
+
+        r="72"
+
+        class="
+            node-ring
+        "
+
+        stroke="
+            var(--grid)
+        "
+
     />
+
+
+    <!-- STROMMAST -->
+
+    <g
+        class="
+            node-icon
+        "
+    >
+
+        <path d="
+            M0 -40
+            L0 40
+        "/>
+
+        <path d="
+            M-28 -25
+            L28 -25
+        "/>
+
+        <path d="
+            M-36 -8
+            L36 -8
+        "/>
+
+        <path d="
+            M-18 40
+            L0 -8
+            L18 40
+        "/>
+
+        <path d="
+            M-28 -25
+            L-36 -35
+
+            M28 -25
+            L36 -35
+
+            M-36 -8
+            L-46 -16
+
+            M36 -8
+            L46 -16
+        "/>
+
+    </g>
+
+</g>
+
+
+<!-- NETZ TEXT -->
+
+<g>
+
+    <text
+
+        id="gridValue"
+
+        class="
+            value
+        "
+
+        x="895"
+        y="122"
+
+        text-anchor="
+            start
+        "
+
+    >
+        -- kW
+    </text>
+
+
+    <text
+
+        class="
+            label
+        "
+
+        x="895"
+        y="154"
+
+        text-anchor="
+            start
+        "
+
+    >
+        Stromnetz
+    </text>
+
+
+    <text
+
+        id="gridStatus"
+
+        class="
+            sub
+        "
+
+        x="895"
+        y="183"
+
+        text-anchor="
+            start
+        "
+
+    >
+        --.- V · --.- Hz
+    </text>
+
+</g>
+
+
+
+<!-- ======================================================
+     VERBRAUCH
+     ====================================================== -->
+
+<g
+    transform="
+        translate(
+            200
+            505
+        )
+    "
+>
+
+
+    <circle
+
+        r="72"
+
+        class="
+            node-ring
+        "
+
+        stroke="
+            var(--load)
+        "
+
+    />
+
 
     <path
-      d="M16,-4 L16,4"
-      stroke="var(--text)"
-      stroke-width="2.2"
-      stroke-linecap="round"
+
+        d="
+            M 9 -40
+            L -26 7
+            H -4
+            L -15 39
+            L 27 -13
+            H 5
+            Z
+        "
+
+        fill="
+            var(--text)
+        "
+
     />
-
-  </g>
-
-  <text id="batteryValue" class="value">-- kW</text>
-  <text id="batteryLabel" class="label">Batterie</text>
-  <text id="batteryInfo" class="sub">-- % · --.- °C</text>
 
 </g>
 
 
-<!-- Haus -->
+<!-- VERBRAUCH TEXT -->
 
-<g id="houseNode">
+<g>
 
-  <circle
-    id="houseRing"
-    class="house-fill"
-  />
+    <text
 
-  <g
-    id="houseIcon"
-    class="node-icon"
-  >
+        id="loadValue"
 
-    <path d="M-18,1 L0,-15 L18,1"/>
-    <path d="M-14,-2 L-14,17 L14,17 L14,-2"/>
-    <path d="M-5,17 L-5,6 L5,6 L5,17"/>
+        class="
+            value
+        "
 
-  </g>
+        x="105"
+        y="487"
+
+        text-anchor="
+            end
+        "
+
+    >
+        -- kW
+    </text>
+
+
+    <text
+
+        class="
+            label
+        "
+
+        x="105"
+        y="520"
+
+        text-anchor="
+            end
+        "
+
+    >
+        Verbrauch
+    </text>
+
+</g>
+
+
+
+<!-- ======================================================
+     BATTERIE
+     ====================================================== -->
+
+<g
+
+    id="
+        batteryNode
+    "
+
+    transform="
+        translate(
+            800
+            505
+        )
+    "
+>
+
+
+    <circle
+
+        r="72"
+
+        class="
+            node-ring
+        "
+
+        stroke="
+            var(--battery)
+        "
+
+    />
+
+
+    <!-- SOC FÜLLUNG -->
+
+    <rect
+
+        id="
+            batteryFill
+        "
+
+        x="-30"
+        y="-14"
+
+        width="0"
+        height="28"
+
+        rx="5"
+
+        fill="
+            var(--battery)
+        "
+
+        clip-path="
+            url(
+                #batteryClip
+            )
+        "
+
+    />
+
+
+    <!-- BATTERIE -->
+
+    <rect
+
+        x="-34"
+        y="-18"
+
+        width="62"
+        height="36"
+
+        rx="7"
+
+        fill="
+            none
+        "
+
+        stroke="
+            var(--text)
+        "
+
+        stroke-width="4"
+
+    />
+
+
+    <!-- Anschluss -->
+
+    <path
+
+        d="
+            M33 -7
+            L33 7
+        "
+
+        stroke="
+            var(--text)
+        "
+
+        stroke-width="4"
+
+        stroke-linecap="
+            round
+        "
+
+    />
+
+</g>
+
+
+
+<!-- BATTERIE TEXT -->
+
+<g>
+
+    <text
+
+        id="batteryValue"
+
+        class="
+            value
+        "
+
+        x="895"
+        y="487"
+
+        text-anchor="
+            start
+        "
+
+    >
+        -- kW
+    </text>
+
+
+    <text
+
+        class="
+            label
+        "
+
+        x="895"
+        y="520"
+
+        text-anchor="
+            start
+        "
+
+    >
+        Batterie
+    </text>
+
+
+    <text
+
+        id="batteryInfo"
+
+        class="
+            sub
+        "
+
+        x="895"
+        y="550"
+
+        text-anchor="
+            start
+        "
+
+    >
+        -- % · --.- °C
+    </text>
+
+</g>
+
+
+
+<!-- ======================================================
+     HAUS
+     EXAKT MITTIG
+     ====================================================== -->
+
+<g
+    transform="
+        translate(
+            500
+            325
+        )
+    "
+>
+
+
+    <circle
+
+        r="82"
+
+        class="
+            house-fill
+        "
+
+    />
+
+
+    <g
+        class="
+            node-icon
+        "
+
+        transform="
+            scale(
+                1.55
+            )
+        "
+    >
+
+        <path d="
+            M-18 1
+            L0 -15
+            L18 1
+        "/>
+
+        <path d="
+            M-14 -2
+            L-14 17
+            L14 17
+            L14 -2
+        "/>
+
+        <path d="
+            M-5 17
+            L-5 6
+            L5 6
+            L5 17
+        "/>
+
+    </g>
 
 </g>
 
@@ -293,1358 +1405,1279 @@ html,body{
 </div>
 
 
+
 <script>
 
+
 const SVG_NS =
-  'http://www.w3.org/2000/svg';
+    'http://www.w3.org/2000/svg';
+
 
 const $ =
-  id =>
-    document.getElementById(id);
-
-let lastPayload = null;
-let resizeRAF = null;
-
-
-function makeAnimatedDot(
-  groupId,
-  pathId,
-  color,
-  delay,
-  duration = 1.9
-)
-{
-  const group =
-    $(groupId);
-
-  const circle =
-    document.createElementNS(
-      SVG_NS,
-      'circle'
-    );
-
-  circle.setAttribute(
-    'r',
-    '5.2'
-  );
-
-  circle.setAttribute(
-    'fill',
-    color
-  );
-
-  circle.setAttribute(
-    'class',
-    'dot'
-  );
-
-  circle.style.color =
-    color;
-
-  const motion =
-    document.createElementNS(
-      SVG_NS,
-      'animateMotion'
-    );
-
-  motion.setAttribute(
-    'dur',
-    duration + 's'
-  );
-
-  motion.setAttribute(
-    'begin',
-    delay + 's'
-  );
-
-  motion.setAttribute(
-    'repeatCount',
-    'indefinite'
-  );
-
-  motion.setAttribute(
-    'calcMode',
-    'linear'
-  );
-
-  const motionPath =
-    document.createElementNS(
-      SVG_NS,
-      'mpath'
-    );
-
-  motionPath.setAttribute(
-    'href',
-    '#' + pathId
-  );
-
-  motion.appendChild(
-    motionPath
-  );
-
-  circle.appendChild(
-    motion
-  );
-
-  group.appendChild(
-    circle
-  );
-}
-
-
-function clearGroup(id)
-{
-  const group =
-    $(id);
-
-  while (group.firstChild) {
-    group.removeChild(
-      group.firstChild
-    );
-  }
-}
-
-
-function setNode(
-  groupID,
-  x,
-  y
-)
-{
-  $(groupID).setAttribute(
-    'transform',
-    `translate(${x} ${y})`
-  );
-}
-
-
-function clippedPath(
-  a,
-  b,
-  radiusA,
-  radiusB
-)
-{
-  const dx =
-    b.x - a.x;
-
-  const dy =
-    b.y - a.y;
-
-  const length =
-    Math.hypot(
-      dx,
-      dy
-    ) || 1;
-
-  const unitX =
-    dx / length;
-
-  const unitY =
-    dy / length;
-
-  const start = {
-    x:
-      a.x
-      +
-      unitX
-      *
-      radiusA,
-
-    y:
-      a.y
-      +
-      unitY
-      *
-      radiusA
-  };
-
-  const end = {
-    x:
-      b.x
-      -
-      unitX
-      *
-      radiusB,
-
-    y:
-      b.y
-      -
-      unitY
-      *
-      radiusB
-  };
-
-  return {
-    d:
-      `M ${start.x} ${start.y} L ${end.x} ${end.y}`
-  };
-}
-
-
-function applyGeometry()
-{
-  const svg =
-    $('energySvg');
-
-  const width =
-    svg.clientWidth || 600;
-
-  const height =
-    svg.clientHeight || 400;
-
-
-  const mobile =
-    width < 560;
-
-  const tablet =
-    width >= 560
-    &&
-    width < 950;
-
-
-  const safeTop =
-    mobile
-    ? 76
-    :
-    (
-      tablet
-      ? 66
-      : 58
-    );
-
-
-  const radius =
-    mobile
-    ? 29
-    :
-    (
-      tablet
-      ? 32
-      : 34
-    );
-
-
-  const houseRadius =
-    mobile
-    ? 38
-    :
-    (
-      tablet
-      ? 40
-      : 42
-    );
-
-
-  const iconScale =
-    mobile
-    ? 1.02
-    :
-    (
-      tablet
-      ? 1.06
-      : 1.10
-    );
-
-
-  const side =
-    mobile
-    ? 28
-    :
-    (
-      tablet
-      ? 44
-      : 56
-    );
-
-
-  const leftX =
-    side + radius;
-
-  const rightX =
-    width
-    -
-    side
-    -
-    radius;
-
-
-  const topY =
-    safeTop
-    +
-    radius
-    +
-    14;
-
-
-  const bottomLabelRoom =
-    mobile
-    ? 76
-    :
-    (
-      tablet
-      ? 72
-      : 70
-    );
-
-
-  const maxBottomY =
-    height
-    -
-    bottomLabelRoom
-    -
-    radius;
-
-
-  const minVerticalSpan =
-    mobile
-    ? 126
-    :
-    (
-      tablet
-      ? 144
-      : 154
-    );
-
-
-  const bottomY =
-    Math.max(
-      topY + minVerticalSpan,
-      maxBottomY
-    );
-
-
-  const usableBottom =
-    Math.min(
-      bottomY,
-      maxBottomY
-    );
-
-
-  const houseX =
-    width / 2;
-
-
-  const houseY =
-    (
-      topY
-      +
-      usableBottom
-    )
-    /
-    2;
-
-
-  const points = {
-
-    pv: {
-      x:leftX,
-      y:topY
-    },
-
-    grid: {
-      x:rightX,
-      y:topY
-    },
-
-    load: {
-      x:leftX,
-      y:usableBottom
-    },
-
-    battery: {
-      x:rightX,
-      y:usableBottom
-    },
-
-    house: {
-      x:houseX,
-      y:houseY
-    }
-  };
-
-
-  setNode(
-    'pvNode',
-    points.pv.x,
-    points.pv.y
-  );
-
-  setNode(
-    'gridNode',
-    points.grid.x,
-    points.grid.y
-  );
-
-  setNode(
-    'loadNode',
-    points.load.x,
-    points.load.y
-  );
-
-  setNode(
-    'batteryNode',
-    points.battery.x,
-    points.battery.y
-  );
-
-  setNode(
-    'houseNode',
-    points.house.x,
-    points.house.y
-  );
-
-
-  [
-    'pvRing',
-    'gridRing',
-    'loadRing',
-    'batteryRing'
-  ].forEach(
     id =>
-      $(id).setAttribute(
-        'r',
-        radius
-      )
-  );
+        document.getElementById(
+            id
+        );
 
 
-  $('houseRing').setAttribute(
-    'r',
-    houseRadius
-  );
+let lastPayload =
+    null;
 
 
-  $('pvIcon').setAttribute(
-    'transform',
-    `scale(${iconScale})`
-  );
+/* =========================================================
+   LEISTUNG -> ANIMATIONSGESCHWINDIGKEIT
 
-  $('gridIcon').setAttribute(
-    'transform',
-    `scale(${iconScale})`
-  );
+   wenig Leistung = langsam
+   viel Leistung = maximal etwa bisheriges Tempo
+   ========================================================= */
 
-  $('loadIcon').setAttribute(
-    'transform',
-    `scale(${iconScale})`
-  );
-
-  $('batteryIcon').setAttribute(
-    'transform',
-    `scale(${iconScale})`
-  );
-
-  $('houseIcon').setAttribute(
-    'transform',
-    `scale(${iconScale * 1.06})`
-  );
-
-
-  const valueSize =
-    mobile
-    ? 18
-    :
-    (
-      tablet
-      ? 17
-      : 17
-    );
-
-
-  const labelSize =
-    mobile
-    ? 12.5
-    :
-    (
-      tablet
-      ? 11.5
-      : 11
-    );
-
-
-  const subSize =
-    mobile
-    ? 10.5
-    :
-    (
-      tablet
-      ? 10.5
-      : 10
-    );
-
-
-  function positionText(
-    id,
-    x,
-    y,
-    size,
-    anchor = 'middle'
-  )
-  {
-    const element =
-      $(id);
-
-    element.setAttribute(
-      'x',
-      x
-    );
-
-    element.setAttribute(
-      'y',
-      y
-    );
-
-    element.setAttribute(
-      'font-size',
-      size
-    );
-
-    element.setAttribute(
-      'text-anchor',
-      anchor
-    );
-  }
-
-
-  if (width >= 950) {
-
-    const gap =
-      16;
-
-    const leftTextX =
-      -(radius + gap);
-
-    const rightTextX =
-      radius + gap;
-
-    const base =
-      -5;
-
-
-    positionText(
-      'pvValue',
-      leftTextX,
-      base,
-      valueSize,
-      'end'
-    );
-
-    positionText(
-      'pvLabel',
-      leftTextX,
-      base + 23,
-      labelSize,
-      'end'
-    );
-
-    positionText(
-      'pvTemp',
-      leftTextX,
-      base + 43,
-      subSize,
-      'end'
-    );
-
-
-    positionText(
-      'gridValue',
-      rightTextX,
-      base,
-      valueSize,
-      'start'
-    );
-
-    positionText(
-      'gridLabel',
-      rightTextX,
-      base + 23,
-      labelSize,
-      'start'
-    );
-
-    positionText(
-      'gridStatus',
-      rightTextX,
-      base + 43,
-      subSize,
-      'start'
-    );
-
-
-    positionText(
-      'loadValue',
-      leftTextX,
-      base,
-      valueSize,
-      'end'
-    );
-
-    positionText(
-      'loadLabel',
-      leftTextX,
-      base + 23,
-      labelSize,
-      'end'
-    );
-
-
-    positionText(
-      'batteryValue',
-      rightTextX,
-      base,
-      valueSize,
-      'start'
-    );
-
-    positionText(
-      'batteryLabel',
-      rightTextX,
-      base + 23,
-      labelSize,
-      'start'
-    );
-
-    positionText(
-      'batteryInfo',
-      rightTextX,
-      base + 43,
-      subSize,
-      'start'
-    );
-
-  } else {
-
-    const valueY =
-      radius + 30;
-
-
-    positionText(
-      'pvValue',
-      0,
-      valueY,
-      valueSize
-    );
-
-    positionText(
-      'pvLabel',
-      0,
-      valueY + 21,
-      labelSize
-    );
-
-    positionText(
-      'pvTemp',
-      0,
-      valueY + 39,
-      subSize
-    );
-
-
-    positionText(
-      'gridValue',
-      0,
-      valueY,
-      valueSize
-    );
-
-    positionText(
-      'gridLabel',
-      0,
-      valueY + 21,
-      labelSize
-    );
-
-    positionText(
-      'gridStatus',
-      0,
-      valueY + 39,
-      subSize
-    );
-
-
-    positionText(
-      'loadValue',
-      0,
-      valueY,
-      valueSize
-    );
-
-    positionText(
-      'loadLabel',
-      0,
-      valueY + 21,
-      labelSize
-    );
-
-
-    positionText(
-      'batteryValue',
-      0,
-      valueY,
-      valueSize
-    );
-
-    positionText(
-      'batteryLabel',
-      0,
-      valueY + 21,
-      labelSize
-    );
-
-    positionText(
-      'batteryInfo',
-      0,
-      valueY + 39,
-      subSize
-    );
-  }
-
-
-  $('pathPvToHouse').setAttribute(
-    'd',
-    clippedPath(
-      points.pv,
-      points.house,
-      radius,
-      houseRadius
-    ).d
-  );
-
-
-  $('pathGridToHouse').setAttribute(
-    'd',
-    clippedPath(
-      points.grid,
-      points.house,
-      radius,
-      houseRadius
-    ).d
-  );
-
-
-  $('pathHouseToGrid').setAttribute(
-    'd',
-    clippedPath(
-      points.house,
-      points.grid,
-      houseRadius,
-      radius
-    ).d
-  );
-
-
-  $('pathHouseToLoad').setAttribute(
-    'd',
-    clippedPath(
-      points.house,
-      points.load,
-      houseRadius,
-      radius
-    ).d
-  );
-
-
-  $('pathBatteryToHouse').setAttribute(
-    'd',
-    clippedPath(
-      points.battery,
-      points.house,
-      radius,
-      houseRadius
-    ).d
-  );
-
-
-  $('pathHouseToBattery').setAttribute(
-    'd',
-    clippedPath(
-      points.house,
-      points.battery,
-      houseRadius,
-      radius
-    ).d
-  );
-
-
-  if (lastPayload) {
-    renderFlows(
-      lastPayload
-    );
-  }
-}
-
-
-function allocateDots(
-  weights,
-  numberOfDots = 6
+function flowDuration(
+    powerKW
 )
 {
-  const entries =
-    Object
-    .entries(
-      weights
-    )
-    .filter(
-      ([, value]) =>
-        value > 0.0001
-    );
-
-
-  if (!entries.length) {
-    return [];
-  }
-
-
-  const total =
-    entries.reduce(
-      (
-        sum,
-        [, value]
-      ) =>
-        sum + value,
-      0
-    );
-
-
-  let allocation =
-    entries.map(
-      ([key, value]) => ({
-        key,
-        raw:
-          value
-          /
-          total
-          *
-          numberOfDots,
-        count:
-          Math.floor(
-            value
-            /
-            total
-            *
-            numberOfDots
-          )
-      })
-    );
-
-
-  let used =
-    allocation.reduce(
-      (
-        sum,
-        item
-      ) =>
-        sum
-        +
-        item.count,
-      0
-    );
-
-
-  allocation.sort(
-    (
-      a,
-      b
-    ) =>
-      (
-        b.raw
-        -
-        b.count
-      )
-      -
-      (
-        a.raw
-        -
-        a.count
-      )
-  );
-
-
-  for (
-    let index = 0;
-    index < numberOfDots - used;
-    index++
-  ) {
-
-    allocation[
-      index
-      %
-      allocation.length
-    ].count++;
-  }
-
-
-  const result = [];
-
-  let remaining =
-    allocation.reduce(
-      (
-        sum,
-        item
-      ) =>
-        sum
-        +
-        item.count,
-      0
-    );
-
-
-  while (remaining > 0) {
-
-    allocation.sort(
-      (
-        a,
-        b
-      ) =>
-        b.count
-        -
-        a.count
-    );
-
-
-    for (
-      const item
-      of allocation
-    ) {
-
-      if (item.count > 0) {
-
-        result.push(
-          item.key
+    const power =
+        Math.max(
+            0,
+            Number(
+                powerKW || 0
+            )
         );
 
-        item.count--;
 
-        remaining--;
-      }
-    }
-  }
+    /*
+     * 0 kW     -> 6.0 Sekunden
+     * 1 kW     -> ca. 4.7 Sekunden
+     * 3 kW     -> ca. 3.0 Sekunden
+     * 6 kW+    -> ca. 1.9 Sekunden
+     */
 
-
-  return result.slice(
-    0,
-    numberOfDots
-  );
-}
-
-
-function renderFlows(data)
-{
-  const pv =
-    Number(
-      data.pv || 0
-    );
-
-  const gridImport =
-    Number(
-      data.gridImport || 0
-    );
-
-  const gridExport =
-    Number(
-      data.gridExport || 0
-    );
-
-  const batteryCharge =
-    Number(
-      data.batteryCharge || 0
-    );
-
-  const batteryDischarge =
-    Number(
-      data.batteryDischarge || 0
-    );
-
-  const load =
-    Number(
-      data.house || 0
-    );
-
-
-  clearGroup('pvDots');
-  clearGroup('gridDots');
-  clearGroup('loadDots');
-  clearGroup('batteryDots');
-
-
-  if (pv > 0.05) {
-
-    for (
-      let index = 0;
-      index < 4;
-      index++
-    ) {
-
-      makeAnimatedDot(
-        'pvDots',
-        'pathPvToHouse',
-        'var(--pv)',
-        -index * 0.45
-      );
-    }
-  }
-
-
-  if (gridImport > 0.05) {
-
-    for (
-      let index = 0;
-      index < 3;
-      index++
-    ) {
-
-      makeAnimatedDot(
-        'gridDots',
-        'pathGridToHouse',
-        'var(--grid)',
-        -index * 0.6
-      );
-    }
-
-  } else if (gridExport > 0.05) {
-
-    for (
-      let index = 0;
-      index < 3;
-      index++
-    ) {
-
-      makeAnimatedDot(
-        'gridDots',
-        'pathHouseToGrid',
-        'var(--pv)',
-        -index * 0.6
-      );
-    }
-  }
-
-
-  if (batteryDischarge > 0.05) {
-
-    for (
-      let index = 0;
-      index < 3;
-      index++
-    ) {
-
-      makeAnimatedDot(
-        'batteryDots',
-        'pathBatteryToHouse',
-        'var(--battery)',
-        -index * 0.6
-      );
-    }
-
-  } else if (batteryCharge > 0.05) {
-
-    const colors =
-      allocateDots(
-        {
-          pv:pv,
-          grid:gridImport
-        },
-        4
-      );
-
-
-    colors.forEach(
-      (
-        key,
-        index
-      ) => {
-
-        makeAnimatedDot(
-          'batteryDots',
-          'pathHouseToBattery',
-
-          key === 'grid'
-          ? 'var(--grid)'
-          : 'var(--pv)',
-
-          -index * 0.48
+    const normalized =
+        Math.min(
+            power / 6,
+            1
         );
-      }
-    );
-  }
 
 
-  if (load > 0.05) {
-
-    const mix =
-      allocateDots(
-        {
-          pv:pv,
-          grid:gridImport,
-          battery:batteryDischarge
-        },
-        6
-      );
-
-
-    mix.forEach(
-      (
-        key,
-        index
-      ) => {
-
-        let color =
-          'var(--pv)';
-
-
-        if (key === 'grid') {
-          color =
-            'var(--grid)';
-        }
-
-        else if (key === 'battery') {
-          color =
-            'var(--battery)';
-        }
-
-
-        makeAnimatedDot(
-          'loadDots',
-          'pathHouseToLoad',
-          color,
-          -index * 0.32,
-          1.95
+    const shaped =
+        Math.sqrt(
+            normalized
         );
-      }
-    );
-  }
-}
 
-
-function kw(value)
-{
-  const number =
-    Number(
-      value || 0
-    );
-
-
-  if (number < 1) {
 
     return (
-      number
-      *
-      1000
-    ).toFixed(0)
-    +
-    ' W';
-  }
-
-
-  return number.toFixed(2)
-  +
-  ' kW';
+        6.0
+        -
+        shaped
+        *
+        4.1
+    );
 }
 
 
-function handleMessage(data)
+/* =========================================================
+   PUNKT ERSTELLEN
+   ========================================================= */
+
+function makeDot(
+    groupID,
+    pathID,
+    color,
+    delay,
+    duration
+)
 {
-  if (!data) {
-    return;
-  }
+    const group =
+        $(groupID);
 
 
-  if (
-    typeof data === 'string'
-  ) {
-
-    try {
-
-      data =
-        JSON.parse(
-          data
+    const circle =
+        document.createElementNS(
+            SVG_NS,
+            'circle'
         );
 
-    } catch (error) {
 
-      return;
-    }
-  }
-
-
-  lastPayload =
-    data;
-
-
-  const pv =
-    Number(
-      data.pv || 0
-    );
-
-  const load =
-    Number(
-      data.house || 0
-    );
-
-  const gridImport =
-    Number(
-      data.gridImport || 0
-    );
-
-  const gridExport =
-    Number(
-      data.gridExport || 0
-    );
-
-  const batteryCharge =
-    Number(
-      data.batteryCharge || 0
-    );
-
-  const batteryDischarge =
-    Number(
-      data.batteryDischarge || 0
-    );
-
-  const soc =
-    Math.max(
-      0,
-      Math.min(
-        100,
-        Number(
-          data.soc || 0
-        )
-      )
-    );
-
-  const tempWR =
-    Number(
-      data.tempWR || 0
-    );
-
-  const tempBattery =
-    Number(
-      data.tempBattery || 0
-    );
-
-  const gridVoltage =
-    Number(
-      data.gridVoltage || 0
-    );
-
-  const gridFrequency =
-    Number(
-      data.gridFrequency || 0
+    circle.setAttribute(
+        'r',
+        '7'
     );
 
 
-  $('pvValue').textContent =
-    kw(pv);
-
-  $('pvTemp').textContent =
-    `WR ${tempWR.toFixed(1)} °C`;
-
-
-  $('gridValue').textContent =
-    kw(
-      gridImport > 0.05
-      ? gridImport
-      : gridExport
-    );
-
-  $('gridStatus').textContent =
-    `${gridVoltage.toFixed(1)} V · ${gridFrequency.toFixed(1)} Hz`;
-
-
-  $('loadValue').textContent =
-    kw(load);
-
-
-  $('batteryValue').textContent =
-    kw(
-      batteryDischarge > 0.05
-      ? batteryDischarge
-      : batteryCharge
+    circle.setAttribute(
+        'fill',
+        color
     );
 
 
-  $('batteryLabel').textContent =
-    batteryDischarge > 0.05
-    ? 'Entladen'
-    :
-    (
-      batteryCharge > 0.05
-      ? 'Laden'
-      : 'Batterie'
+    circle.setAttribute(
+        'class',
+        'dot'
     );
 
 
-  $('batteryInfo').textContent =
-    `${soc.toFixed(0)} % · ${tempBattery.toFixed(1)} °C`;
+    circle.style.color =
+        color;
 
 
-  const innerWidth =
-    28
-    *
-    (
-      soc
-      /
-      100
+    const motion =
+        document.createElementNS(
+            SVG_NS,
+            'animateMotion'
+        );
+
+
+    motion.setAttribute(
+        'dur',
+        duration + 's'
     );
 
 
-  $('batterySocFill').setAttribute(
-    'width',
-    innerWidth
-  );
+    motion.setAttribute(
+        'begin',
+        delay + 's'
+    );
 
 
-  renderFlows(data);
+    motion.setAttribute(
+        'repeatCount',
+        'indefinite'
+    );
+
+
+    motion.setAttribute(
+        'calcMode',
+        'linear'
+    );
+
+
+    const motionPath =
+        document.createElementNS(
+            SVG_NS,
+            'mpath'
+        );
+
+
+    motionPath.setAttribute(
+        'href',
+        '#' + pathID
+    );
+
+
+    motion.appendChild(
+        motionPath
+    );
+
+
+    circle.appendChild(
+        motion
+    );
+
+
+    group.appendChild(
+        circle
+    );
 }
 
 
-const resizeObserver =
-  new ResizeObserver(
-    () => {
+/* =========================================================
+   GRUPPE LEEREN
+   ========================================================= */
 
-      if (resizeRAF) {
+function clearGroup(
+    id
+)
+{
+    const group =
+        $(id);
 
-        cancelAnimationFrame(
-          resizeRAF
-        );
-      }
 
+    while (
+        group.firstChild
+    ) {
 
-      resizeRAF =
-        requestAnimationFrame(
-          applyGeometry
+        group.removeChild(
+            group.firstChild
         );
     }
-  );
+}
 
 
-window.addEventListener(
-  'load',
-  () => {
+/* =========================================================
+   PUNKT-FARBVERTEILUNG
+   ========================================================= */
 
-    applyGeometry();
-
-
-    resizeObserver.observe(
-      $('wrap')
-    );
+function allocateDots(
+    weights,
+    amount = 6
+)
+{
+    const entries =
+        Object
+        .entries(
+            weights
+        )
+        .filter(
+            ([, value]) =>
+                Number(value) > 0.0001
+        );
 
 
     if (
-      typeof requestAction
-      ===
-      'function'
+        entries.length === 0
+    ) {
+        return [];
+    }
+
+
+    const total =
+        entries.reduce(
+            (
+                sum,
+                [, value]
+            ) =>
+                sum
+                +
+                Number(value),
+            0
+        );
+
+
+    const result = [];
+
+
+    let distributed = 0;
+
+
+    const calculated =
+        entries.map(
+            (
+                [key, value]
+            ) => {
+
+                const raw =
+                    Number(value)
+                    /
+                    total
+                    *
+                    amount;
+
+
+                const count =
+                    Math.floor(
+                        raw
+                    );
+
+
+                distributed +=
+                    count;
+
+
+                return {
+                    key,
+                    raw,
+                    count
+                };
+            }
+        );
+
+
+    while (
+        distributed < amount
     ) {
 
-      requestAction(
-        'Refresh',
-        true
-      );
+        calculated.sort(
+            (
+                a,
+                b
+            ) =>
+                (
+                    b.raw
+                    -
+                    b.count
+                )
+                -
+                (
+                    a.raw
+                    -
+                    a.count
+                )
+        );
+
+
+        calculated[0].count++;
+
+        distributed++;
     }
-  }
+
+
+    let remaining =
+        calculated.reduce(
+            (
+                sum,
+                item
+            ) =>
+                sum
+                +
+                item.count,
+            0
+        );
+
+
+    while (
+        remaining > 0
+    ) {
+
+        for (
+            const item
+            of calculated
+        ) {
+
+            if (
+                item.count > 0
+            ) {
+
+                result.push(
+                    item.key
+                );
+
+                item.count--;
+
+                remaining--;
+            }
+        }
+    }
+
+
+    return result.slice(
+        0,
+        amount
+    );
+}
+
+
+/* =========================================================
+   WETTERSYMBOL
+   ========================================================= */
+
+const weatherIDs = [
+
+    'weatherSun',
+    'weatherPartlyCloudy',
+    'weatherCloud',
+    'weatherRain',
+    'weatherStorm',
+    'weatherSnow',
+    'weatherFog',
+    'weatherMoon'
+
+];
+
+
+function hideWeatherIcons()
+{
+    weatherIDs.forEach(
+        id => {
+
+            const element =
+                $(id);
+
+            if (
+                element
+            ) {
+
+                element.setAttribute(
+                    'display',
+                    'none'
+                );
+            }
+        }
+    );
+}
+
+
+function showWeatherIcon(
+    id
+)
+{
+    hideWeatherIcons();
+
+
+    const element =
+        $(id);
+
+
+    if (
+        element
+    ) {
+
+        element.setAttribute(
+            'display',
+            ''
+        );
+    }
+}
+
+
+/* =========================================================
+   WETTER AUSWERTEN
+   ========================================================= */
+
+function updateWeather(
+    conditionID,
+    weatherIcon,
+    rainDetected
+)
+{
+    /*
+     * Realer Regensensor hat Vorrang.
+     */
+
+    if (
+        rainDetected
+    ) {
+
+        showWeatherIcon(
+            'weatherRain'
+        );
+
+        return;
+    }
+
+
+    const condition =
+        Number(
+            conditionID || 0
+        );
+
+
+    const icon =
+        String(
+            weatherIcon || ''
+        );
+
+
+    const night =
+        icon.endsWith(
+            'n'
+        );
+
+
+    /*
+     * Gewitter
+     */
+
+    if (
+        condition >= 200
+        &&
+        condition < 300
+    ) {
+
+        showWeatherIcon(
+            'weatherStorm'
+        );
+
+        return;
+    }
+
+
+    /*
+     * Niesel / Regen
+     */
+
+    if (
+        (
+            condition >= 300
+            &&
+            condition < 400
+        )
+        ||
+        (
+            condition >= 500
+            &&
+            condition < 600
+        )
+    ) {
+
+        showWeatherIcon(
+            'weatherRain'
+        );
+
+        return;
+    }
+
+
+    /*
+     * Schnee
+     */
+
+    if (
+        condition >= 600
+        &&
+        condition < 700
+    ) {
+
+        showWeatherIcon(
+            'weatherSnow'
+        );
+
+        return;
+    }
+
+
+    /*
+     * Nebel / Dunst
+     */
+
+    if (
+        condition >= 700
+        &&
+        condition < 800
+    ) {
+
+        showWeatherIcon(
+            'weatherFog'
+        );
+
+        return;
+    }
+
+
+    /*
+     * Klar
+     */
+
+    if (
+        condition === 800
+    ) {
+
+        showWeatherIcon(
+            night
+            ? 'weatherMoon'
+            : 'weatherSun'
+        );
+
+        return;
+    }
+
+
+    /*
+     * leicht bewölkt
+     */
+
+    if (
+        condition === 801
+        ||
+        condition === 802
+    ) {
+
+        showWeatherIcon(
+            night
+            ? 'weatherCloud'
+            : 'weatherPartlyCloudy'
+        );
+
+        return;
+    }
+
+
+    /*
+     * stark bewölkt
+     */
+
+    if (
+        condition === 803
+        ||
+        condition === 804
+    ) {
+
+        showWeatherIcon(
+            'weatherCloud'
+        );
+
+        return;
+    }
+
+
+    /*
+     * Fallback
+     */
+
+    showWeatherIcon(
+        night
+        ? 'weatherMoon'
+        : 'weatherCloud'
+    );
+}
+
+
+/* =========================================================
+   LEISTUNG FORMATIEREN
+   ========================================================= */
+
+function powerText(
+    value
+)
+{
+    const number =
+        Math.max(
+            0,
+            Number(
+                value || 0
+            )
+        );
+
+
+    if (
+        number < 1
+    ) {
+
+        return (
+            number
+            *
+            1000
+        ).toFixed(0)
+        +
+        ' W';
+    }
+
+
+    return (
+        number.toFixed(2)
+        +
+        ' kW'
+    );
+}
+
+
+/* =========================================================
+   ENERGIEFLÜSSE
+   ========================================================= */
+
+function renderFlows(
+    data
+)
+{
+    const pv =
+        Number(
+            data.pv || 0
+        );
+
+
+    const load =
+        Number(
+            data.house || 0
+        );
+
+
+    const gridImport =
+        Number(
+            data.gridImport || 0
+        );
+
+
+    const gridExport =
+        Number(
+            data.gridExport || 0
+        );
+
+
+    const batteryCharge =
+        Number(
+            data.batteryCharge || 0
+        );
+
+
+    const batteryDischarge =
+        Number(
+            data.batteryDischarge || 0
+        );
+
+
+    clearGroup(
+        'pvDots'
+    );
+
+    clearGroup(
+        'gridDots'
+    );
+
+    clearGroup(
+        'loadDots'
+    );
+
+    clearGroup(
+        'batteryDots'
+    );
+
+
+    /*
+     * PV -> Haus
+     */
+
+    if (
+        pv > 0.03
+    ) {
+
+        const duration =
+            flowDuration(
+                pv
+            );
+
+
+        for (
+            let i = 0;
+            i < 4;
+            i++
+        ) {
+
+            makeDot(
+
+                'pvDots',
+
+                'pathPvToHouse',
+
+                'var(--pv)',
+
+                -i
+                *
+                duration
+                /
+                4,
+
+                duration
+
+            );
+        }
+    }
+
+
+    /*
+     * Netz
+     */
+
+    if (
+        gridImport > 0.03
+    ) {
+
+        const duration =
+            flowDuration(
+                gridImport
+            );
+
+
+        for (
+            let i = 0;
+            i < 3;
+            i++
+        ) {
+
+            makeDot(
+
+                'gridDots',
+
+                'pathGridToHouse',
+
+                'var(--grid)',
+
+                -i
+                *
+                duration
+                /
+                3,
+
+                duration
+
+            );
+        }
+
+    } else if (
+        gridExport > 0.03
+    ) {
+
+        const duration =
+            flowDuration(
+                gridExport
+            );
+
+
+        for (
+            let i = 0;
+            i < 3;
+            i++
+        ) {
+
+            makeDot(
+
+                'gridDots',
+
+                'pathHouseToGrid',
+
+                'var(--pv)',
+
+                -i
+                *
+                duration
+                /
+                3,
+
+                duration
+
+            );
+        }
+    }
+
+
+    /*
+     * Batterie
+     */
+
+    if (
+        batteryDischarge > 0.03
+    ) {
+
+        const duration =
+            flowDuration(
+                batteryDischarge
+            );
+
+
+        for (
+            let i = 0;
+            i < 3;
+            i++
+        ) {
+
+            makeDot(
+
+                'batteryDots',
+
+                'pathBatteryToHouse',
+
+                'var(--battery)',
+
+                -i
+                *
+                duration
+                /
+                3,
+
+                duration
+
+            );
+        }
+
+    } else if (
+        batteryCharge > 0.03
+    ) {
+
+        const duration =
+            flowDuration(
+                batteryCharge
+            );
+
+
+        /*
+         * Batterie-Ladung kann aus PV
+         * und ggf. Netz bestehen.
+         */
+
+        const mix =
+            allocateDots(
+
+                {
+                    pv:
+                        pv,
+
+                    grid:
+                        gridImport
+                },
+
+                4
+            );
+
+
+        mix.forEach(
+            (
+                source,
+                index
+            ) => {
+
+                let color =
+                    'var(--pv)';
+
+
+                if (
+                    source ===
+                    'grid'
+                ) {
+
+                    color =
+                        'var(--grid)';
+                }
+
+
+                makeDot(
+
+                    'batteryDots',
+
+                    'pathHouseToBattery',
+
+                    color,
+
+                    -index
+                    *
+                    duration
+                    /
+                    mix.length,
+
+                    duration
+
+                );
+            }
+        );
+    }
+
+
+    /*
+     * Verbraucher
+     *
+     * Quelle proportional darstellen.
+     */
+
+    if (
+        load > 0.03
+    ) {
+
+        const duration =
+            flowDuration(
+                load
+            );
+
+
+        const mix =
+            allocateDots(
+
+                {
+                    pv:
+                        pv,
+
+                    grid:
+                        gridImport,
+
+                    battery:
+                        batteryDischarge
+                },
+
+                6
+            );
+
+
+        mix.forEach(
+            (
+                source,
+                index
+            ) => {
+
+                let color =
+                    'var(--pv)';
+
+
+                if (
+                    source ===
+                    'grid'
+                ) {
+
+                    color =
+                        'var(--grid)';
+                }
+
+
+                if (
+                    source ===
+                    'battery'
+                ) {
+
+                    color =
+                        'var(--battery)';
+                }
+
+
+                makeDot(
+
+                    'loadDots',
+
+                    'pathHouseToLoad',
+
+                    color,
+
+                    -index
+                    *
+                    duration
+                    /
+                    mix.length,
+
+                    duration
+
+                );
+            }
+        );
+    }
+}
+
+
+/* =========================================================
+   LIVE-DATEN
+   ========================================================= */
+
+function handleMessage(
+    data
+)
+{
+    if (
+        !data
+    ) {
+        return;
+    }
+
+
+    if (
+        typeof data ===
+        'string'
+    ) {
+
+        try {
+
+            data =
+                JSON.parse(
+                    data
+                );
+
+        } catch (
+            error
+        ) {
+
+            return;
+        }
+    }
+
+
+    lastPayload =
+        data;
+
+
+    const pv =
+        Number(
+            data.pv || 0
+        );
+
+
+    const load =
+        Number(
+            data.house || 0
+        );
+
+
+    const gridImport =
+        Number(
+            data.gridImport || 0
+        );
+
+
+    const gridExport =
+        Number(
+            data.gridExport || 0
+        );
+
+
+    const batteryCharge =
+        Number(
+            data.batteryCharge || 0
+        );
+
+
+    const batteryDischarge =
+        Number(
+            data.batteryDischarge || 0
+        );
+
+
+    const soc =
+        Math.max(
+            0,
+            Math.min(
+                100,
+                Number(
+                    data.soc || 0
+                )
+            )
+        );
+
+
+    const tempWR =
+        Number(
+            data.tempWR || 0
+        );
+
+
+    const tempBattery =
+        Number(
+            data.tempBattery || 0
+        );
+
+
+    const voltage =
+        Number(
+            data.gridVoltage || 0
+        );
+
+
+    const frequency =
+        Number(
+            data.gridFrequency || 0
+        );
+
+
+    /*
+     * PV
+     */
+
+    $('pvValue').textContent =
+        powerText(
+            pv
+        );
+
+
+    $('pvTemp').textContent =
+        `WR ${tempWR.toFixed(1)} °C`;
+
+
+    /*
+     * Netz
+     */
+
+    $('gridValue').textContent =
+        powerText(
+
+            gridImport > 0.03
+
+            ? gridImport
+
+            : gridExport
+
+        );
+
+
+    $('gridStatus').textContent =
+        `${voltage.toFixed(1)} V · ${frequency.toFixed(1)} Hz`;
+
+
+    /*
+     * Verbrauch
+     */
+
+    $('loadValue').textContent =
+        powerText(
+            load
+        );
+
+
+    /*
+     * Batterie
+     */
+
+    const batteryPower =
+        batteryDischarge > 0.03
+
+        ? batteryDischarge
+
+        : batteryCharge;
+
+
+    $('batteryValue').textContent =
+        powerText(
+            batteryPower
+        );
+
+
+    $('batteryInfo').textContent =
+        `${soc.toFixed(0)} % · ${tempBattery.toFixed(1)} °C`;
+
+
+    /*
+     * Batterie-Füllstand
+     */
+
+    const fillWidth =
+        56
+        *
+        (
+            soc
+            /
+            100
+        );
+
+
+    $('batteryFill').setAttribute(
+        'width',
+        fillWidth
+    );
+
+
+    /*
+     * Wetter
+     */
+
+    updateWeather(
+
+        data.weatherConditionID,
+
+        data.weatherIcon,
+
+        Boolean(
+            data.rainDetected
+        )
+
+    );
+
+
+    /*
+     * Energiepunkte
+     */
+
+    renderFlows(
+        data
+    );
+}
+
+
+/* =========================================================
+   START
+   ========================================================= */
+
+window.addEventListener(
+
+    'load',
+
+    () => {
+
+        if (
+            typeof requestAction
+            ===
+            'function'
+        ) {
+
+            requestAction(
+                'Refresh',
+                true
+            );
+        }
+    }
+
 );
 
 </script>
 
+
 </body>
+
 </html>
