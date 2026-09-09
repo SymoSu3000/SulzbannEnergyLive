@@ -5,81 +5,41 @@
 
 <style>
 
-:root {
-    --pv: #35b657;
-    --grid: #f29a38;
-    --battery: #23b8c7;
+:root{
+    --pv:#35b657;
+    --grid:#f39a2d;
+    --battery:#22b8c7;
+    --load:#f39a2d;
+    --house:#10c7b1;
 
-    --text: #202020;
-    --text-muted: rgba(32, 32, 32, 0.72);
-
-    --line: rgba(110, 110, 110, 0.30);
-    --circle: rgba(110, 110, 110, 0.46);
-    --halo: rgba(110, 110, 110, 0.04);
-
-    /*
-     * Diese Werte werden von JavaScript
-     * passend zur Kachel gesetzt.
-     */
-    --safe-top: 58px;
-
-    --pv-y: 145px;
-    --main-y: 285px;
-
-    --grid-x: 19%;
-    --house-x: 50%;
-    --battery-x: 81%;
-
-    --icon-size: 64px;
-    --house-size: 70px;
-
-    --label-width: 125px;
-
-    --font-title: 11px;
-    --font-value: 19px;
-    --font-status: 10px;
-    --font-soc: 14px;
+    --text:#202020;
+    --muted:rgba(32,32,32,.68);
+    --line:rgba(110,110,110,.44);
+    --surface:rgba(255,255,255,.02);
 }
 
-
-/* =========================================================
-   DARK MODE
-   ========================================================= */
-
-@media (prefers-color-scheme: dark) {
-
-    :root {
-        --text: #f4f4f4;
-        --text-muted: rgba(244, 244, 244, 0.82);
-
-        --line: rgba(220, 220, 220, 0.30);
-        --circle: rgba(220, 220, 220, 0.50);
-        --halo: rgba(255, 255, 255, 0.045);
+@media(prefers-color-scheme:dark){
+    :root{
+        --text:#f4f4f4;
+        --muted:rgba(244,244,244,.72);
+        --line:rgba(220,220,220,.48);
+        --surface:rgba(255,255,255,.025);
     }
 }
 
-
-/* =========================================================
-   BASIS
-   ========================================================= */
-
-* {
-    box-sizing: border-box;
+*{
+    box-sizing:border-box;
 }
 
 html,
-body {
-    margin: 0;
-    padding: 0;
+body{
+    margin:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
 
-    width: 100%;
-    height: 100%;
-
-    overflow: hidden;
-
-    background: transparent;
-
-    color: var(--text);
+    background:transparent;
+    color:var(--text);
 
     font-family:
         -apple-system,
@@ -89,1477 +49,1760 @@ body {
         sans-serif;
 }
 
+#wrap{
+    position:relative;
 
-#energyViewport {
-    position: relative;
+    width:100%;
+    height:100%;
 
-    width: 100%;
-    height: 100%;
-
-    min-width: 0;
-    min-height: 240px;
-
-    overflow: hidden;
+    overflow:hidden;
 }
 
+#energySvg{
+    width:100%;
+    height:100%;
 
-/* =========================================================
-   KREISE
-   ========================================================= */
+    display:block;
 
-.circleNode {
-    position: absolute;
+    overflow:visible;
+}
 
-    transform:
-        translate(
-            -50%,
-            -50%
+.flow-line{
+    stroke:var(--line);
+    stroke-width:2.4;
+    stroke-linecap:round;
+    fill:none;
+}
+
+.node-ring{
+    fill:var(--surface);
+    stroke-width:2.4;
+}
+
+.node-icon{
+    fill:none;
+    stroke:var(--text);
+    stroke-width:2.2;
+
+    stroke-linecap:round;
+    stroke-linejoin:round;
+}
+
+.node-icon-fill{
+    fill:var(--text);
+    stroke:none;
+}
+
+.label{
+    fill:var(--muted);
+
+    font-weight:500;
+
+    text-anchor:middle;
+}
+
+.value{
+    fill:var(--text);
+
+    font-weight:700;
+
+    text-anchor:middle;
+}
+
+.sub{
+    fill:var(--muted);
+
+    font-weight:500;
+
+    text-anchor:middle;
+}
+
+.status-pv{
+    fill:var(--pv);
+}
+
+.status-grid{
+    fill:var(--grid);
+}
+
+.status-bat{
+    fill:var(--battery);
+}
+
+.house-fill{
+    fill:color-mix(
+        in srgb,
+        var(--house) 30%,
+        transparent
+    );
+
+    stroke:var(--house);
+    stroke-width:3;
+}
+
+.dot{
+    filter:
+        drop-shadow(
+            0 0 4px currentColor
         );
-
-    z-index: 10;
-}
-
-
-#pvCircleNode {
-    left: var(--house-x);
-    top: var(--pv-y);
-}
-
-
-#gridCircleNode {
-    left: var(--grid-x);
-    top: var(--main-y);
-}
-
-
-#houseCircleNode {
-    left: var(--house-x);
-    top: var(--main-y);
-}
-
-
-#batteryCircleNode {
-    left: var(--battery-x);
-    top: var(--main-y);
-}
-
-
-/* =========================================================
-   ICON-KREISE
-   ========================================================= */
-
-.iconCircle {
-    width: var(--icon-size);
-    height: var(--icon-size);
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 50%;
-
-    border:
-        2px solid
-        var(--circle);
-
-    background:
-        var(--halo);
-}
-
-
-.iconCircle svg {
-    width: 44%;
-    height: 44%;
-
-    stroke: currentColor;
-
-    stroke-width: 1.8;
-
-    fill: none;
-
-    stroke-linecap: round;
-    stroke-linejoin: round;
-}
-
-
-.iconPV {
-    color: var(--pv);
-    border-color: var(--pv);
-}
-
-
-.iconGrid {
-    color: var(--grid);
-    border-color: var(--grid);
-}
-
-
-.iconBattery {
-    color: var(--battery);
-    border-color: var(--battery);
-}
-
-
-.iconHouse {
-    width: var(--house-size);
-    height: var(--house-size);
-
-    color: var(--text);
-
-    border-color:
-        var(--circle);
-
-    background:
-        var(--halo);
-}
-
-
-/* =========================================================
-   HAUS-HALO
-   ========================================================= */
-
-.houseHalo {
-    position: absolute;
-
-    left: var(--house-x);
-    top: var(--main-y);
-
-    width:
-        calc(
-            var(--house-size)
-            +
-            20px
-        );
-
-    height:
-        calc(
-            var(--house-size)
-            +
-            20px
-        );
-
-    transform:
-        translate(
-            -50%,
-            -50%
-        );
-
-    border-radius: 50%;
-
-    background:
-        var(--halo);
-
-    z-index: 0;
-}
-
-
-/* =========================================================
-   BESCHRIFTUNGEN
-   ========================================================= */
-
-.labelBlock {
-    position: absolute;
-
-    width: var(--label-width);
-
-    transform:
-        translateX(
-            -50%
-        );
-
-    text-align: center;
-
-    z-index: 20;
-}
-
-
-/*
- * PV-Beschriftung:
- * liegt bewusst unter dem reservierten
- * Kacheltitelbereich.
- */
-
-#pvText {
-    left: var(--house-x);
-    top: var(--safe-top);
-}
-
-
-/*
- * Untere Beschriftungen
- */
-
-#gridText {
-    left: var(--grid-x);
-
-    top:
-        calc(
-            var(--main-y)
-            +
-            (var(--icon-size) / 2)
-            +
-            8px
-        );
-}
-
-
-#houseText {
-    left: var(--house-x);
-
-    top:
-        calc(
-            var(--main-y)
-            +
-            (var(--house-size) / 2)
-            +
-            8px
-        );
-}
-
-
-#batteryText {
-    left: var(--battery-x);
-
-    top:
-        calc(
-            var(--main-y)
-            +
-            (var(--icon-size) / 2)
-            +
-            8px
-        );
-}
-
-
-/* =========================================================
-   SCHRIFTEN
-   ========================================================= */
-
-.nodeTitle {
-    margin: 0;
-
-    font-size: var(--font-title);
-
-    line-height: 1.18;
-
-    font-weight: 500;
-
-    color:
-        var(--text-muted);
-}
-
-
-.nodeValue {
-    margin-top: 2px;
-
-    font-size: var(--font-value);
-
-    line-height: 1.08;
-
-    font-weight: 650;
-
-    white-space: nowrap;
-
-    color:
-        var(--text);
-}
-
-
-.nodeStatus {
-    min-height: 15px;
-
-    margin-top: 4px;
-
-    font-size: var(--font-status);
-
-    line-height: 1.15;
-
-    color:
-        var(--text-muted);
-}
-
-
-/* =========================================================
-   STATUSFARBEN
-   ========================================================= */
-
-.statusPV {
-    color:
-        var(--pv)
-        !important;
-}
-
-
-.statusGrid {
-    color:
-        var(--grid)
-        !important;
-}
-
-
-.statusBattery {
-    color:
-        var(--battery)
-        !important;
-}
-
-
-/* =========================================================
-   BATTERIE SOC
-   ========================================================= */
-
-.socRow {
-    width: 88px;
-
-    margin:
-        6px auto 0;
-}
-
-
-.socTrack {
-    width: 100%;
-    height: 7px;
-
-    overflow: hidden;
-
-    border-radius: 20px;
-
-    background:
-        var(--line);
-}
-
-
-#batteryFill {
-    width: 0;
-    height: 100%;
-
-    border-radius: 20px;
-
-    background:
-        var(--battery);
-
-    transition:
-        width
-        0.4s
-        ease;
-}
-
-
-#socValue {
-    margin-top: 5px;
-
-    font-size:
-        var(--font-soc);
-
-    line-height: 1.1;
-
-    font-weight: 700;
-
-    color:
-        var(--text);
-}
-
-
-/* =========================================================
-   GRAUE LINIEN
-   ========================================================= */
-
-.flowLine {
-    position: absolute;
-
-    z-index: 1;
-
-    border-radius: 20px;
-
-    background:
-        var(--line);
-}
-
-
-/*
- * PV -> HAUS
- *
- * beginnt exakt an Unterkante PV-Kreis
- * endet exakt an Oberkante Haus-Kreis
- */
-
-#linePV {
-    left: var(--house-x);
-
-    top:
-        calc(
-            var(--pv-y)
-            +
-            (var(--icon-size) / 2)
-        );
-
-    width: 4px;
-
-    height:
-        calc(
-            var(--main-y)
-            -
-            (var(--house-size) / 2)
-            -
-            var(--pv-y)
-            -
-            (var(--icon-size) / 2)
-        );
-
-    transform:
-        translateX(
-            -50%
-        );
-}
-
-
-/*
- * NETZ -> HAUS
- */
-
-#lineGrid {
-    top:
-        calc(
-            var(--main-y)
-            -
-            2px
-        );
-
-    left:
-        calc(
-            var(--grid-x)
-            +
-            (var(--icon-size) / 2)
-        );
-
-    right:
-        calc(
-            50%
-            +
-            (var(--house-size) / 2)
-        );
-
-    height: 4px;
-}
-
-
-/*
- * HAUS -> BATTERIE
- */
-
-#lineBattery {
-    top:
-        calc(
-            var(--main-y)
-            -
-            2px
-        );
-
-    left:
-        calc(
-            50%
-            +
-            (var(--house-size) / 2)
-        );
-
-    right:
-        calc(
-            100%
-            -
-            var(--battery-x)
-            +
-            (var(--icon-size) / 2)
-        );
-
-    height: 4px;
-}
-
-
-/* =========================================================
-   FLUSSPUNKTE
-   ========================================================= */
-
-.flowDot {
-    position: absolute;
-
-    width: 11px;
-    height: 11px;
-
-    border-radius: 50%;
-
-    opacity: 0;
-
-    z-index: 5;
-
-    pointer-events: none;
-
-    box-shadow:
-        0 0 7px currentColor,
-        0 0 14px currentColor;
-}
-
-
-.flowDot.active {
-    opacity: 1;
-}
-
-
-/* =========================================================
-   PV PUNKT
-   ========================================================= */
-
-#dotPV {
-    left:
-        calc(
-            50%
-            -
-            5.5px
-        );
-
-    top:
-        calc(
-            var(--pv-y)
-            +
-            (var(--icon-size) / 2)
-            -
-            5.5px
-        );
-
-    color: var(--pv);
-    background: var(--pv);
-}
-
-
-#dotPV.active {
-    animation:
-        pvFlow
-        1.7s
-        linear
-        infinite;
-}
-
-
-@keyframes pvFlow {
-
-    from {
-        top:
-            calc(
-                var(--pv-y)
-                +
-                (var(--icon-size) / 2)
-                -
-                5.5px
-            );
-    }
-
-    to {
-        top:
-            calc(
-                var(--main-y)
-                -
-                (var(--house-size) / 2)
-                -
-                5.5px
-            );
-    }
-}
-
-
-/* =========================================================
-   NETZ PUNKT
-   ========================================================= */
-
-#dotGrid {
-    top:
-        calc(
-            var(--main-y)
-            -
-            5.5px
-        );
-}
-
-
-#dotGrid.import {
-    animation:
-        gridImport
-        1.7s
-        linear
-        infinite;
-}
-
-
-#dotGrid.export {
-    animation:
-        gridExport
-        1.7s
-        linear
-        infinite;
-}
-
-
-@keyframes gridImport {
-
-    from {
-        left:
-            calc(
-                var(--grid-x)
-                +
-                (var(--icon-size) / 2)
-                -
-                5.5px
-            );
-    }
-
-    to {
-        left:
-            calc(
-                50%
-                -
-                (var(--house-size) / 2)
-                -
-                5.5px
-            );
-    }
-}
-
-
-@keyframes gridExport {
-
-    from {
-        left:
-            calc(
-                50%
-                -
-                (var(--house-size) / 2)
-                -
-                5.5px
-            );
-    }
-
-    to {
-        left:
-            calc(
-                var(--grid-x)
-                +
-                (var(--icon-size) / 2)
-                -
-                5.5px
-            );
-    }
-}
-
-
-/* =========================================================
-   BATTERIE PUNKT
-   ========================================================= */
-
-#dotBattery {
-    top:
-        calc(
-            var(--main-y)
-            -
-            5.5px
-        );
-}
-
-
-#dotBattery.charge {
-    animation:
-        batteryCharge
-        1.7s
-        linear
-        infinite;
-}
-
-
-#dotBattery.discharge {
-    animation:
-        batteryDischarge
-        1.7s
-        linear
-        infinite;
-}
-
-
-@keyframes batteryCharge {
-
-    from {
-        left:
-            calc(
-                50%
-                +
-                (var(--house-size) / 2)
-                -
-                5.5px
-            );
-    }
-
-    to {
-        left:
-            calc(
-                var(--battery-x)
-                -
-                (var(--icon-size) / 2)
-                -
-                5.5px
-            );
-    }
-}
-
-
-@keyframes batteryDischarge {
-
-    from {
-        left:
-            calc(
-                var(--battery-x)
-                -
-                (var(--icon-size) / 2)
-                -
-                5.5px
-            );
-    }
-
-    to {
-        left:
-            calc(
-                50%
-                +
-                (var(--house-size) / 2)
-                -
-                5.5px
-            );
-    }
 }
 
 </style>
 </head>
 
-
 <body>
 
-<div id="energyViewport">
+<div id="wrap">
+
+<svg
+    id="energySvg"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-label="Energieverteilung"
+>
+
+    <defs>
+
+        <clipPath id="batteryInnerClip">
+
+            <rect
+                id="batteryClipRect"
+                x="-15"
+                y="-7"
+                width="28"
+                height="14"
+                rx="2"
+            />
+
+        </clipPath>
+
+    </defs>
 
 
-    <!-- GRAUE LINIEN -->
+    <!-- ===================================================
+         VERBINDUNGSLINIEN
+         =================================================== -->
 
-    <div
-        class="flowLine"
-        id="linePV"
-    ></div>
+    <path
+        id="pathPvToHouse"
+        class="flow-line"
+    />
 
-    <div
-        class="flowLine"
-        id="lineGrid"
-    ></div>
+    <path
+        id="pathGridToHouse"
+        class="flow-line"
+    />
 
-    <div
-        class="flowLine"
-        id="lineBattery"
-    ></div>
+    <path
+        id="pathHouseToGrid"
+        class="flow-line"
+    />
 
+    <path
+        id="pathHouseToLoad"
+        class="flow-line"
+    />
 
-    <!-- FARBIGE PUNKTE -->
+    <path
+        id="pathBatteryToHouse"
+        class="flow-line"
+    />
 
-    <div
-        class="flowDot"
-        id="dotPV"
-    ></div>
-
-    <div
-        class="flowDot"
-        id="dotGrid"
-    ></div>
-
-    <div
-        class="flowDot"
-        id="dotBattery"
-    ></div>
-
-
-    <!-- HAUS HALO -->
-
-    <div class="houseHalo"></div>
+    <path
+        id="pathHouseToBattery"
+        class="flow-line"
+    />
 
 
-    <!-- =====================================================
-         PV TEXT
-         ===================================================== -->
+    <!-- ===================================================
+         ENERGIEPUNKTE
+         =================================================== -->
 
-    <div
-        class="labelBlock"
-        id="pvText"
-    >
+    <g id="pvDots"></g>
 
-        <div class="nodeTitle">
-            PV-Anlage
-        </div>
+    <g id="gridDots"></g>
 
-        <div
-            class="nodeValue"
+    <g id="loadDots"></g>
+
+    <g id="batteryDots"></g>
+
+
+    <!-- ===================================================
+         PV
+         =================================================== -->
+
+    <g id="pvNode">
+
+        <circle
+            id="pvRing"
+            class="node-ring"
+            stroke="var(--pv)"
+        />
+
+
+        <g
+            id="pvIcon"
+            class="node-icon"
+        >
+
+            <path
+                d="
+                    M-17,-11
+                    L15,-11
+                    L20,10
+                    L-22,10
+                    Z
+                "
+            />
+
+            <path
+                d="
+                    M-10,-11 L-13,10
+                    M0,-11 L0,10
+                    M10,-11 L13,10
+                    M-20,0 L18,0
+                "
+            />
+
+            <path
+                d="
+                    M-7,10 L-7,18
+                    M7,10 L7,18
+                    M-12,18 L12,18
+                "
+            />
+
+        </g>
+
+
+        <text
             id="pvValue"
+            class="value"
         >
             -- kW
-        </div>
+        </text>
 
-        <div
-            class="nodeStatus"
-            id="pvStatus"
+
+        <text
+            id="pvLabel"
+            class="label"
         >
-            -
-        </div>
-
-    </div>
+            PV-Anlage
+        </text>
 
 
-    <!-- =====================================================
-         PV KREIS
-         ===================================================== -->
+        <text
+            id="pvTemp"
+            class="sub"
+        >
+            WR --.- °C
+        </text>
 
-    <div
-        class="circleNode"
-        id="pvCircleNode"
-    >
-
-        <div class="iconCircle iconPV">
-
-            <svg viewBox="0 0 24 24">
-
-                <circle
-                    cx="12"
-                    cy="12"
-                    r="4"
-                ></circle>
-
-                <path d="M12 2v2"></path>
-                <path d="M12 20v2"></path>
-
-                <path d="M4.93 4.93l1.41 1.41"></path>
-                <path d="M17.66 17.66l1.41 1.41"></path>
-
-                <path d="M2 12h2"></path>
-                <path d="M20 12h2"></path>
-
-                <path d="M4.93 19.07l1.41-1.41"></path>
-                <path d="M17.66 6.34l1.41-1.41"></path>
-
-            </svg>
-
-        </div>
-
-    </div>
+    </g>
 
 
-    <!-- =====================================================
-         NETZ KREIS
-         ===================================================== -->
+    <!-- ===================================================
+         NETZ
+         =================================================== -->
 
-    <div
-        class="circleNode"
-        id="gridCircleNode"
-    >
+    <g id="gridNode">
 
-        <div class="iconCircle iconGrid">
-
-            <svg viewBox="0 0 24 24">
-
-                <path d="M4 9h16"></path>
-                <path d="M4 15h16"></path>
-
-                <path d="M7 6l-3 3 3 3"></path>
-                <path d="M17 12l3 3-3 3"></path>
-
-            </svg>
-
-        </div>
-
-    </div>
+        <circle
+            id="gridRing"
+            class="node-ring"
+            stroke="var(--grid)"
+        />
 
 
-    <!-- NETZ TEXT -->
+        <g
+            id="gridIcon"
+            class="node-icon"
+        >
 
-    <div
-        class="labelBlock"
-        id="gridText"
-    >
+            <path
+                d="
+                    M0,-18 L0,19
+                    M-8,-12 L8,-12
+                    M-12,-6 L12,-6
+                "
+            />
 
-        <div class="nodeTitle">
-            Stromnetz
-        </div>
+            <path
+                d="
+                    M-12,-6 L-17,-10
+                    M12,-6 L17,-10
+                    M-8,-12 L-12,-16
+                    M8,-12 L12,-16
+                "
+            />
 
-        <div
-            class="nodeValue"
+            <path
+                d="
+                    M-4,-6 L-4,19
+                    M4,-6 L4,19
+                "
+            />
+
+        </g>
+
+
+        <text
             id="gridValue"
+            class="value"
         >
             -- kW
-        </div>
+        </text>
 
-        <div
-            class="nodeStatus"
-            id="gridMode"
+
+        <text
+            id="gridLabel"
+            class="label"
         >
-            -
-        </div>
-
-    </div>
+            Stromnetz
+        </text>
 
 
-    <!-- =====================================================
-         HAUS KREIS
-         ===================================================== -->
+        <text
+            id="gridStatus"
+            class="sub"
+        >
+            --.- V · --.- Hz
+        </text>
 
-    <div
-        class="circleNode"
-        id="houseCircleNode"
-    >
-
-        <div class="iconCircle iconHouse">
-
-            <svg viewBox="0 0 24 24">
-
-                <path d="M3 11.5L12 4l9 7.5"></path>
-
-                <path d="M5.5 10v9h13v-9"></path>
-
-                <path d="M9.5 19v-5h5v5"></path>
-
-            </svg>
-
-        </div>
-
-    </div>
+    </g>
 
 
-    <!-- HAUS TEXT -->
+    <!-- ===================================================
+         VERBRAUCH
+         =================================================== -->
 
-    <div
-        class="labelBlock"
-        id="houseText"
-    >
+    <g id="loadNode">
 
-        <div class="nodeTitle">
-            Haus
-        </div>
+        <circle
+            id="loadRing"
+            class="node-ring"
+            stroke="var(--load)"
+        />
 
-        <div
-            class="nodeValue"
-            id="houseValue"
+
+        <path
+            id="loadIcon"
+            class="node-icon-fill"
+            d="
+                M3,-20
+                L-12,4
+                H-2
+                L-7,20
+                L13,-6
+                H2
+                Z
+            "
+        />
+
+
+        <text
+            id="loadValue"
+            class="value"
         >
             -- kW
-        </div>
+        </text>
 
-        <div class="nodeStatus">
+
+        <text
+            id="loadLabel"
+            class="label"
+        >
             Verbrauch
-        </div>
+        </text>
 
-    </div>
-
-
-    <!-- =====================================================
-         BATTERIE KREIS
-         ===================================================== -->
-
-    <div
-        class="circleNode"
-        id="batteryCircleNode"
-    >
-
-        <div class="iconCircle iconBattery">
-
-            <svg viewBox="0 0 24 24">
-
-                <rect
-                    x="4"
-                    y="7"
-                    width="15"
-                    height="10"
-                    rx="2"
-                ></rect>
-
-                <path d="M19 10h2v4h-2"></path>
-
-                <path d="M8 12h7"></path>
-
-            </svg>
-
-        </div>
-
-    </div>
+    </g>
 
 
-    <!-- BATTERIE TEXT -->
+    <!-- ===================================================
+         BATTERIE
+         =================================================== -->
 
-    <div
-        class="labelBlock"
-        id="batteryText"
-    >
+    <g id="batteryNode">
 
-        <div class="nodeTitle">
-            Batterie
-        </div>
+        <circle
+            id="batteryRing"
+            class="node-ring"
+            stroke="var(--battery)"
+        />
 
-        <div
-            class="nodeValue"
+
+        <g id="batteryIcon">
+
+            <!-- dynamische SOC-Füllung -->
+
+            <rect
+                id="batterySocFill"
+                x="-15"
+                y="-7"
+                width="0"
+                height="14"
+                rx="2"
+
+                fill="var(--battery)"
+
+                clip-path="url(#batteryInnerClip)"
+            />
+
+
+            <!-- Batterie-Umriss -->
+
+            <rect
+                x="-18"
+                y="-10"
+                width="32"
+                height="20"
+                rx="4"
+
+                fill="none"
+
+                stroke="var(--text)"
+                stroke-width="2.2"
+            />
+
+
+            <!-- Batterie-Anschluss -->
+
+            <path
+                d="M16,-4 L16,4"
+
+                stroke="var(--text)"
+                stroke-width="2.2"
+
+                stroke-linecap="round"
+            />
+
+        </g>
+
+
+        <text
             id="batteryValue"
+            class="value"
         >
             -- kW
-        </div>
+        </text>
 
-        <div
-            class="nodeStatus"
-            id="batteryMode"
+
+        <text
+            id="batteryLabel"
+            class="label"
         >
-            -
-        </div>
+            Batterie
+        </text>
 
 
-        <div class="socRow">
+        <text
+            id="batteryInfo"
+            class="sub"
+        >
+            -- % · --.- °C
+        </text>
 
-            <div class="socTrack">
+    </g>
 
-                <div
-                    id="batteryFill"
-                ></div>
 
-            </div>
+    <!-- ===================================================
+         HAUS / VERTEILPUNKT
+         =================================================== -->
 
-            <div id="socValue">
-                -- %
-            </div>
+    <g id="houseNode">
 
-        </div>
+        <circle
+            id="houseRing"
+            class="house-fill"
+        />
 
-    </div>
+
+        <g
+            id="houseIcon"
+            class="node-icon"
+        >
+
+            <path
+                d="
+                    M-18,1
+                    L0,-15
+                    L18,1
+                "
+            />
+
+            <path
+                d="
+                    M-14,-2
+                    L-14,17
+                    L14,17
+                    L14,-2
+                "
+            />
+
+            <path
+                d="
+                    M-5,17
+                    L-5,6
+                    L5,6
+                    L5,17
+                "
+            />
+
+        </g>
+
+    </g>
+
+</svg>
 
 </div>
 
 
 <script>
 
+const SVG_NS =
+    'http://www.w3.org/2000/svg';
 
-/* =========================================================
-   RESPONSIVES LAYOUT
-   ========================================================= */
 
-function applyResponsiveLayout()
-{
-    const viewport =
+const $ =
+    id =>
         document.getElementById(
-            "energyViewport"
+            id
         );
 
 
-    if (!viewport) {
-        return;
+let lastPayload = null;
+
+let resizeRAF = null;
+
+
+/* =========================================================
+   ANIMIERTER ENERGIEPUNKT
+   ========================================================= */
+
+function makeAnimatedDot(
+    groupId,
+    pathId,
+    color,
+    delay,
+    duration = 1.9
+)
+{
+    const group =
+        $(groupId);
+
+
+    const circle =
+        document.createElementNS(
+            SVG_NS,
+            'circle'
+        );
+
+
+    circle.setAttribute(
+        'r',
+        '5.2'
+    );
+
+
+    circle.setAttribute(
+        'fill',
+        color
+    );
+
+
+    circle.setAttribute(
+        'class',
+        'dot'
+    );
+
+
+    circle.style.color =
+        color;
+
+
+    const motion =
+        document.createElementNS(
+            SVG_NS,
+            'animateMotion'
+        );
+
+
+    motion.setAttribute(
+        'dur',
+        duration + 's'
+    );
+
+
+    motion.setAttribute(
+        'begin',
+        delay + 's'
+    );
+
+
+    motion.setAttribute(
+        'repeatCount',
+        'indefinite'
+    );
+
+
+    motion.setAttribute(
+        'calcMode',
+        'linear'
+    );
+
+
+    const motionPath =
+        document.createElementNS(
+            SVG_NS,
+            'mpath'
+        );
+
+
+    motionPath.setAttribute(
+        'href',
+        '#' + pathId
+    );
+
+
+    motion.appendChild(
+        motionPath
+    );
+
+
+    circle.appendChild(
+        motion
+    );
+
+
+    group.appendChild(
+        circle
+    );
+
+
+    return circle;
+}
+
+
+/* =========================================================
+   GRUPPE LEEREN
+   ========================================================= */
+
+function clearGroup(id)
+{
+    const group =
+        $(id);
+
+
+    while (
+        group.firstChild
+    ) {
+
+        group.removeChild(
+            group.firstChild
+        );
     }
+}
+
+
+/* =========================================================
+   NODE POSITIONIEREN
+   ========================================================= */
+
+function setNode(
+    groupID,
+    x,
+    y
+)
+{
+    $(groupID).setAttribute(
+        'transform',
+        `translate(${x} ${y})`
+    );
+}
+
+
+/* =========================================================
+   TEXT POSITIONIEREN
+   ========================================================= */
+
+function setText(
+    id,
+    x,
+    y,
+    size
+)
+{
+    const element =
+        $(id);
+
+
+    element.setAttribute(
+        'x',
+        x
+    );
+
+
+    element.setAttribute(
+        'y',
+        y
+    );
+
+
+    element.setAttribute(
+        'font-size',
+        size
+    );
+}
+
+
+/* =========================================================
+   LINIE ZWISCHEN ZWEI KREISEN
+   ========================================================= */
+
+function clippedPath(
+    a,
+    b,
+    radiusA,
+    radiusB
+)
+{
+    const dx =
+        b.x - a.x;
+
+
+    const dy =
+        b.y - a.y;
+
+
+    const length =
+        Math.hypot(
+            dx,
+            dy
+        ) || 1;
+
+
+    const unitX =
+        dx / length;
+
+
+    const unitY =
+        dy / length;
+
+
+    const start = {
+
+        x:
+            a.x
+            +
+            unitX
+            *
+            radiusA,
+
+        y:
+            a.y
+            +
+            unitY
+            *
+            radiusA
+    };
+
+
+    const end = {
+
+        x:
+            b.x
+            -
+            unitX
+            *
+            radiusB,
+
+        y:
+            b.y
+            -
+            unitY
+            *
+            radiusB
+    };
+
+
+    return {
+
+        start,
+
+        end,
+
+        d:
+            `M ${start.x} ${start.y} L ${end.x} ${end.y}`
+    };
+}
+
+
+/* =========================================================
+   GEOMETRIE
+   ========================================================= */
+
+function applyGeometry()
+{
+    const svg =
+        $('energySvg');
 
 
     const width =
-        viewport.clientWidth;
+        svg.clientWidth
+        ||
+        600;
 
 
     const height =
-        viewport.clientHeight;
+        svg.clientHeight
+        ||
+        400;
 
-
-    /*
-     * Die KACHEL entscheidet.
-     * Nicht PC / Natel / Browser.
-     */
 
     const mobile =
         width <= 520;
 
 
-    const verySmall =
-        width <= 360;
+    const tablet =
+        width > 520
+        &&
+        width <= 900;
 
-
-    /*
-     * -------------------------------------------------------
-     * ICONS
-     * -------------------------------------------------------
-     */
-
-    let iconSize;
-    let houseSize;
-
-
-    if (verySmall) {
-
-        iconSize = 52;
-        houseSize = 58;
-
-    } else if (mobile) {
-
-        iconSize = 58;
-        houseSize = 64;
-
-    } else {
-
-        iconSize = 64;
-        houseSize = 70;
-    }
-
-
-    /*
-     * -------------------------------------------------------
-     * HORIZONTAL
-     * -------------------------------------------------------
-     */
-
-    let gridX;
-    let batteryX;
-
-
-    if (verySmall) {
-
-        gridX = 21;
-        batteryX = 79;
-
-    } else if (mobile) {
-
-        gridX = 20;
-        batteryX = 80;
-
-    } else {
-
-        gridX = 19;
-        batteryX = 81;
-    }
-
-
-    /*
-     * -------------------------------------------------------
-     * SCHRIFT
-     *
-     * Mobile absichtlich größer.
-     * PC absichtlich ruhiger.
-     * -------------------------------------------------------
-     */
-
-    let fontTitle;
-    let fontValue;
-    let fontStatus;
-    let fontSoc;
-
-
-    if (verySmall) {
-
-        fontTitle = 14;
-        fontValue = 22;
-        fontStatus = 12;
-        fontSoc = 17;
-
-    } else if (mobile) {
-
-        fontTitle = 14;
-        fontValue = 23;
-        fontStatus = 12;
-        fontSoc = 17;
-
-    } else {
-
-        fontTitle = 11;
-        fontValue = 19;
-        fontStatus = 10;
-        fontSoc = 15;
-    }
-
-
-    /*
-     * -------------------------------------------------------
-     * OBERER SICHERHEITSBEREICH
-     *
-     * Platz für Symcon-Kacheltitel.
-     * -------------------------------------------------------
-     */
 
     const safeTop =
         mobile
-        ? 92
-        : 58;
-
-
-    /*
-     * -------------------------------------------------------
-     * PV-KREIS
-     *
-     * Text sitzt bei safeTop.
-     * Darunter genügend Abstand zum Kreis.
-     * -------------------------------------------------------
-     */
-
-    const pvCenterY =
-        safeTop
-        +
+        ? 72
+        :
         (
-            mobile
-            ? 92
-            : 88
+            tablet
+            ? 62
+            : 56
         );
 
 
-    /*
-     * -------------------------------------------------------
-     * HAUPTACHSE
-     *
-     * Wichtig:
-     * Unterhalb muss genug Platz bleiben für:
-     *
-     * - Titel
-     * - Leistung
-     * - Status
-     * - SOC-Balken
-     * - SOC-Prozent
-     * -------------------------------------------------------
-     */
+    const side =
+        mobile
+        ? 34
+        :
+        (
+            tablet
+            ? 48
+            : 58
+        );
+
+
+    const radius =
+        mobile
+        ? 31
+        :
+        (
+            tablet
+            ? 33
+            : 35
+        );
+
+
+    const houseRadius =
+        mobile
+        ? 39
+        :
+        (
+            tablet
+            ? 41
+            : 43
+        );
+
+
+    const iconScale =
+        mobile
+        ? 0.92
+        :
+        (
+            tablet
+            ? 0.98
+            : 1.04
+        );
+
+
+    const topY =
+        safeTop
+        +
+        Math.max(
+            radius + 22,
+            (height - safeTop)
+            *
+            0.18
+        );
+
 
     const bottomReserve =
         mobile
-        ? 115
-        : 95;
-
-
-    const maximumMainY =
-        height
-        -
-        bottomReserve
-        -
+        ? 98
+        :
         (
-            iconSize
-            /
-            2
+            tablet
+            ? 90
+            : 82
         );
 
 
-    /*
-     * gewünschte Position:
-     * ungefähr 63 % der nutzbaren Höhe
-     */
-
-    const preferredMainY =
-        safeTop
-        +
-        (
-            (
-                height
-                -
-                safeTop
-            )
-            *
-            (
-                mobile
-                ? 0.62
-                : 0.64
-            )
-        );
-
-
-    /*
-     * Mindestabstand zwischen PV und Haus
-     */
-
-    const minimumMainY =
-        pvCenterY
-        +
-        (
-            iconSize
-            /
-            2
-        )
-        +
-        (
-            houseSize
-            /
-            2
-        )
-        +
-        40;
-
-
-    let mainCenterY =
-        Math.min(
-            preferredMainY,
-            maximumMainY
-        );
-
-
-    mainCenterY =
+    const bottomY =
         Math.max(
-            mainCenterY,
-            minimumMainY
+            topY
+            +
+            2
+            *
+            radius
+            +
+            110,
+
+            height
+            -
+            bottomReserve
+            -
+            radius
         );
 
 
-    /*
-     * Wenn die Kachel extrem niedrig ist,
-     * gewinnt der verfügbare Platz.
-     */
+    const houseY =
+        (
+            topY
+            +
+            bottomY
+        )
+        /
+        2;
+
+
+    const leftX =
+        side
+        +
+        radius;
+
+
+    const rightX =
+        width
+        -
+        side
+        -
+        radius;
+
+
+    const houseX =
+        width / 2;
+
+
+    const points = {
+
+        pv: {
+            x: leftX,
+            y: topY
+        },
+
+        grid: {
+            x: rightX,
+            y: topY
+        },
+
+        load: {
+            x: leftX,
+            y: bottomY
+        },
+
+        battery: {
+            x: rightX,
+            y: bottomY
+        },
+
+        house: {
+            x: houseX,
+            y: houseY
+        }
+    };
+
+
+    setNode(
+        'pvNode',
+        points.pv.x,
+        points.pv.y
+    );
+
+
+    setNode(
+        'gridNode',
+        points.grid.x,
+        points.grid.y
+    );
+
+
+    setNode(
+        'loadNode',
+        points.load.x,
+        points.load.y
+    );
+
+
+    setNode(
+        'batteryNode',
+        points.battery.x,
+        points.battery.y
+    );
+
+
+    setNode(
+        'houseNode',
+        points.house.x,
+        points.house.y
+    );
+
+
+    [
+        'pvRing',
+        'gridRing',
+        'loadRing',
+        'batteryRing'
+    ].forEach(
+        id =>
+            $(id).setAttribute(
+                'r',
+                radius
+            )
+    );
+
+
+    $('houseRing').setAttribute(
+        'r',
+        houseRadius
+    );
+
+
+    $('pvIcon').setAttribute(
+        'transform',
+        `scale(${iconScale})`
+    );
+
+
+    $('gridIcon').setAttribute(
+        'transform',
+        `scale(${iconScale})`
+    );
+
+
+    $('loadIcon').setAttribute(
+        'transform',
+        `scale(${iconScale})`
+    );
+
+
+    $('batteryIcon').setAttribute(
+        'transform',
+        `scale(${iconScale})`
+    );
+
+
+    $('houseIcon').setAttribute(
+        'transform',
+        `scale(${iconScale * 1.08})`
+    );
+
+
+    const valueSize =
+        mobile
+        ? 19
+        :
+        (
+            tablet
+            ? 18
+            : 17
+        );
+
+
+    const labelSize =
+        mobile
+        ? 13
+        :
+        (
+            tablet
+            ? 12
+            : 11
+        );
+
+
+    const subSize =
+        mobile
+        ? 11.5
+        :
+        (
+            tablet
+            ? 11
+            : 10.5
+        );
+
+
+    const topTextGap =
+        mobile
+        ? 12
+        : 10;
+
+
+    const bottomTextGap =
+        mobile
+        ? 10
+        : 9;
+
+
+    [
+        [
+            'pvValue',
+            0,
+            radius + topTextGap,
+            valueSize
+        ],
+
+        [
+            'pvLabel',
+            0,
+            radius + topTextGap + 22,
+            labelSize
+        ],
+
+        [
+            'pvTemp',
+            0,
+            radius + topTextGap + 40,
+            subSize
+        ],
+
+        [
+            'gridValue',
+            0,
+            radius + topTextGap,
+            valueSize
+        ],
+
+        [
+            'gridLabel',
+            0,
+            radius + topTextGap + 22,
+            labelSize
+        ],
+
+        [
+            'gridStatus',
+            0,
+            radius + topTextGap + 40,
+            subSize
+        ],
+
+        [
+            'loadValue',
+            0,
+            radius + bottomTextGap,
+            valueSize
+        ],
+
+        [
+            'loadLabel',
+            0,
+            radius + bottomTextGap + 22,
+            labelSize
+        ],
+
+        [
+            'batteryValue',
+            0,
+            radius + bottomTextGap,
+            valueSize
+        ],
+
+        [
+            'batteryLabel',
+            0,
+            radius + bottomTextGap + 22,
+            labelSize
+        ],
+
+        [
+            'batteryInfo',
+            0,
+            radius + bottomTextGap + 40,
+            subSize
+        ]
+    ].forEach(
+        values =>
+            setText(
+                values[0],
+                values[1],
+                values[2],
+                values[3]
+            )
+    );
+
+
+    const pvToHouse =
+        clippedPath(
+            points.pv,
+            points.house,
+            radius,
+            houseRadius
+        );
+
+
+    const gridToHouse =
+        clippedPath(
+            points.grid,
+            points.house,
+            radius,
+            houseRadius
+        );
+
+
+    const houseToGrid =
+        clippedPath(
+            points.house,
+            points.grid,
+            houseRadius,
+            radius
+        );
+
+
+    const houseToLoad =
+        clippedPath(
+            points.house,
+            points.load,
+            houseRadius,
+            radius
+        );
+
+
+    const batteryToHouse =
+        clippedPath(
+            points.battery,
+            points.house,
+            radius,
+            houseRadius
+        );
+
+
+    const houseToBattery =
+        clippedPath(
+            points.house,
+            points.battery,
+            houseRadius,
+            radius
+        );
+
+
+    $('pathPvToHouse').setAttribute(
+        'd',
+        pvToHouse.d
+    );
+
+
+    $('pathGridToHouse').setAttribute(
+        'd',
+        gridToHouse.d
+    );
+
+
+    $('pathHouseToGrid').setAttribute(
+        'd',
+        houseToGrid.d
+    );
+
+
+    $('pathHouseToLoad').setAttribute(
+        'd',
+        houseToLoad.d
+    );
+
+
+    $('pathBatteryToHouse').setAttribute(
+        'd',
+        batteryToHouse.d
+    );
+
+
+    $('pathHouseToBattery').setAttribute(
+        'd',
+        houseToBattery.d
+    );
+
 
     if (
-        mainCenterY
-        >
-        maximumMainY
+        lastPayload
     ) {
 
-        mainCenterY =
-            maximumMainY;
+        renderFlows(
+            lastPayload
+        );
+    }
+}
+
+
+/* =========================================================
+   PUNKTE NACH QUELLANTEIL VERTEILEN
+   ========================================================= */
+
+function allocateDots(
+    weights,
+    numberOfDots = 6
+)
+{
+    const entries =
+        Object
+        .entries(
+            weights
+        )
+        .filter(
+            ([, value]) =>
+                value > 0.0001
+        );
+
+
+    if (
+        !entries.length
+    ) {
+        return [];
     }
 
 
-    /*
-     * -------------------------------------------------------
-     * CSS-VARIABLEN SETZEN
-     * -------------------------------------------------------
-     */
-
-    viewport.style.setProperty(
-        "--safe-top",
-        safeTop + "px"
-    );
-
-
-    viewport.style.setProperty(
-        "--pv-y",
-        pvCenterY + "px"
-    );
+    const total =
+        entries.reduce(
+            (
+                sum,
+                [, value]
+            ) =>
+                sum + value,
+            0
+        );
 
 
-    viewport.style.setProperty(
-        "--main-y",
-        mainCenterY + "px"
-    );
+    let allocation =
+        entries.map(
+            (
+                [key, value]
+            ) => ({
+                key,
+
+                raw:
+                    value
+                    /
+                    total
+                    *
+                    numberOfDots,
+
+                count:
+                    Math.floor(
+                        value
+                        /
+                        total
+                        *
+                        numberOfDots
+                    )
+            })
+        );
 
 
-    viewport.style.setProperty(
-        "--grid-x",
-        gridX + "%"
-    );
+    let used =
+        allocation.reduce(
+            (
+                sum,
+                item
+            ) =>
+                sum
+                +
+                item.count,
+            0
+        );
 
 
-    viewport.style.setProperty(
-        "--battery-x",
-        batteryX + "%"
-    );
-
-
-    viewport.style.setProperty(
-        "--icon-size",
-        iconSize + "px"
-    );
-
-
-    viewport.style.setProperty(
-        "--house-size",
-        houseSize + "px"
-    );
-
-
-    viewport.style.setProperty(
-        "--label-width",
+    allocation.sort(
         (
-            mobile
-            ? 118
-            : 125
-        )
-        +
-        "px"
+            a,
+            b
+        ) =>
+            (
+                b.raw
+                -
+                b.count
+            )
+            -
+            (
+                a.raw
+                -
+                a.count
+            )
     );
 
 
-    viewport.style.setProperty(
-        "--font-title",
-        fontTitle + "px"
-    );
+    for (
+        let index = 0;
+        index < numberOfDots - used;
+        index++
+    ) {
+
+        allocation[
+            index
+            %
+            allocation.length
+        ].count++;
+    }
 
 
-    viewport.style.setProperty(
-        "--font-value",
-        fontValue + "px"
-    );
+    const result = [];
 
 
-    viewport.style.setProperty(
-        "--font-status",
-        fontStatus + "px"
-    );
+    let remaining =
+        allocation.reduce(
+            (
+                sum,
+                item
+            ) =>
+                sum
+                +
+                item.count,
+            0
+        );
 
 
-    viewport.style.setProperty(
-        "--font-soc",
-        fontSoc + "px"
+    while (
+        remaining > 0
+    ) {
+
+        allocation.sort(
+            (
+                a,
+                b
+            ) =>
+                b.count
+                -
+                a.count
+        );
+
+
+        for (
+            const item
+            of allocation
+        ) {
+
+            if (
+                item.count > 0
+            ) {
+
+                result.push(
+                    item.key
+                );
+
+
+                item.count--;
+
+
+                remaining--;
+            }
+        }
+    }
+
+
+    return result.slice(
+        0,
+        numberOfDots
     );
 }
 
 
 /* =========================================================
-   RESIZE OBSERVER
+   ENERGIEFLÜSSE
    ========================================================= */
 
-let resizeFrame = null;
+function renderFlows(data)
+{
+    const pv =
+        Number(
+            data.pv || 0
+        );
 
 
-const resizeObserver =
-    new ResizeObserver(
-        function ()
-        {
-            /*
-             * requestAnimationFrame verhindert unnötige
-             * ResizeObserver-Schleifen.
-             */
-
-            if (resizeFrame !== null) {
-
-                cancelAnimationFrame(
-                    resizeFrame
-                );
-            }
+    const gridImport =
+        Number(
+            data.gridImport || 0
+        );
 
 
-            resizeFrame =
-                requestAnimationFrame(
-                    function ()
-                    {
-                        applyResponsiveLayout();
+    const gridExport =
+        Number(
+            data.gridExport || 0
+        );
 
-                        resizeFrame = null;
-                    }
-                );
-        }
+
+    const batteryCharge =
+        Number(
+            data.batteryCharge || 0
+        );
+
+
+    const batteryDischarge =
+        Number(
+            data.batteryDischarge || 0
+        );
+
+
+    const load =
+        Number(
+            data.house || 0
+        );
+
+
+    clearGroup(
+        'pvDots'
     );
 
 
+    clearGroup(
+        'gridDots'
+    );
+
+
+    clearGroup(
+        'loadDots'
+    );
+
+
+    clearGroup(
+        'batteryDots'
+    );
+
+
+    /*
+     * PV -> Haus
+     */
+
+    if (
+        pv > 0.05
+    ) {
+
+        for (
+            let index = 0;
+            index < 4;
+            index++
+        ) {
+
+            makeAnimatedDot(
+                'pvDots',
+                'pathPvToHouse',
+                'var(--pv)',
+                -index * 0.45
+            );
+        }
+    }
+
+
+    /*
+     * Netz
+     */
+
+    if (
+        gridImport > 0.05
+    ) {
+
+        for (
+            let index = 0;
+            index < 3;
+            index++
+        ) {
+
+            makeAnimatedDot(
+                'gridDots',
+                'pathGridToHouse',
+                'var(--grid)',
+                -index * 0.6
+            );
+        }
+
+    } else if (
+        gridExport > 0.05
+    ) {
+
+        for (
+            let index = 0;
+            index < 3;
+            index++
+        ) {
+
+            makeAnimatedDot(
+                'gridDots',
+                'pathHouseToGrid',
+                'var(--pv)',
+                -index * 0.6
+            );
+        }
+    }
+
+
+    /*
+     * Batterie
+     */
+
+    if (
+        batteryDischarge > 0.05
+    ) {
+
+        for (
+            let index = 0;
+            index < 3;
+            index++
+        ) {
+
+            makeAnimatedDot(
+                'batteryDots',
+                'pathBatteryToHouse',
+                'var(--battery)',
+                -index * 0.6
+            );
+        }
+
+    } else if (
+        batteryCharge > 0.05
+    ) {
+
+        const colors =
+            allocateDots(
+                {
+                    pv: pv,
+                    grid: gridImport
+                },
+                4
+            );
+
+
+        colors.forEach(
+            (
+                key,
+                index
+            ) => {
+
+                makeAnimatedDot(
+                    'batteryDots',
+                    'pathHouseToBattery',
+
+                    key === 'grid'
+                    ? 'var(--grid)'
+                    : 'var(--pv)',
+
+                    -index * 0.48
+                );
+            }
+        );
+    }
+
+
+    /*
+     * Verbrauch:
+     *
+     * Punkte werden entsprechend den aktuell
+     * beteiligten Quellen gemischt.
+     */
+
+    if (
+        load > 0.05
+    ) {
+
+        const mix =
+            allocateDots(
+                {
+                    pv: pv,
+                    grid: gridImport,
+                    battery: batteryDischarge
+                },
+                6
+            );
+
+
+        mix.forEach(
+            (
+                key,
+                index
+            ) => {
+
+                let color =
+                    'var(--pv)';
+
+
+                if (
+                    key === 'grid'
+                ) {
+
+                    color =
+                        'var(--grid)';
+
+                } else if (
+                    key === 'battery'
+                ) {
+
+                    color =
+                        'var(--battery)';
+                }
+
+
+                makeAnimatedDot(
+                    'loadDots',
+                    'pathHouseToLoad',
+                    color,
+                    -index * 0.32,
+                    1.95
+                );
+            }
+        );
+    }
+}
+
+
 /* =========================================================
-   HELFER
+   LEISTUNGSFORMAT
    ========================================================= */
 
 function kw(value)
 {
-    return (
+    const number =
         Number(
             value || 0
-        ).toFixed(1)
+        );
+
+
+    if (
+        number < 1
+    ) {
+
+        return (
+            number
+            *
+            1000
+        ).toFixed(0)
         +
-        " kW"
-    );
+        ' W';
+    }
+
+
+    return number.toFixed(2)
+        +
+        ' kW';
 }
 
 
 /* =========================================================
-   LIVE-DATEN
+   LIVE-WERTE
    ========================================================= */
 
 function handleMessage(data)
 {
-    if (!data) {
+    if (
+        !data
+    ) {
         return;
     }
 
 
     if (
-        typeof data === "string"
+        typeof data === 'string'
     ) {
 
         try {
@@ -1569,17 +1812,17 @@ function handleMessage(data)
                     data
                 );
 
-        } catch (error) {
-
-            console.error(
-                "EnergyFlowLive JSON Fehler:",
-                error,
-                data
-            );
+        } catch (
+            error
+        ) {
 
             return;
         }
     }
+
+
+    lastPayload =
+        data;
 
 
     const pv =
@@ -1588,7 +1831,7 @@ function handleMessage(data)
         );
 
 
-    const house =
+    const load =
         Number(
             data.house || 0
         );
@@ -1619,320 +1862,156 @@ function handleMessage(data)
 
 
     const soc =
-        Number(
-            data.soc || 0
-        );
-
-
-    /* =====================================================
-       WERTE
-       ===================================================== */
-
-    document
-        .getElementById(
-            "pvValue"
-        )
-        .textContent =
-            kw(
-                pv
-            );
-
-
-    document
-        .getElementById(
-            "houseValue"
-        )
-        .textContent =
-            kw(
-                house
-            );
-
-
-    document
-        .getElementById(
-            "socValue"
-        )
-        .textContent =
-            soc.toFixed(0)
-            +
-            " %";
-
-
-    document
-        .getElementById(
-            "batteryFill"
-        )
-        .style.width =
-            Math.max(
-                0,
-                Math.min(
-                    100,
-                    soc
+        Math.max(
+            0,
+            Math.min(
+                100,
+                Number(
+                    data.soc || 0
                 )
             )
-            +
-            "%";
-
-
-    /* =====================================================
-       PV
-       ===================================================== */
-
-    const dotPV =
-        document.getElementById(
-            "dotPV"
         );
 
 
-    const pvStatus =
-        document.getElementById(
-            "pvStatus"
+    const tempWR =
+        Number(
+            data.tempWR || 0
         );
 
 
-    if (
-        pv > 0.05
-    ) {
-
-        dotPV.style.background =
-            "var(--pv)";
-
-
-        dotPV.style.color =
-            "var(--pv)";
-
-
-        dotPV.className =
-            "flowDot active";
-
-
-        pvStatus.textContent =
-            "Produktion";
-
-
-        pvStatus.className =
-            "nodeStatus statusPV";
-
-    } else {
-
-        dotPV.className =
-            "flowDot";
-
-
-        pvStatus.textContent =
-            "kein Ertrag";
-
-
-        pvStatus.className =
-            "nodeStatus";
-    }
-
-
-    /* =====================================================
-       NETZ
-       ===================================================== */
-
-    const dotGrid =
-        document.getElementById(
-            "dotGrid"
+    const tempBattery =
+        Number(
+            data.tempBattery || 0
         );
 
 
-    const gridValue =
-        document.getElementById(
-            "gridValue"
+    const gridVoltage =
+        Number(
+            data.gridVoltage || 0
         );
 
 
-    const gridMode =
-        document.getElementById(
-            "gridMode"
+    const gridFrequency =
+        Number(
+            data.gridFrequency || 0
         );
 
 
-    if (
-        gridImport > 0.05
-    ) {
+    /* PV */
 
-        gridValue.textContent =
-            kw(
-                gridImport
-            );
-
-
-        gridMode.textContent =
-            "Netzbezug";
-
-
-        gridMode.className =
-            "nodeStatus statusGrid";
-
-
-        dotGrid.style.background =
-            "var(--grid)";
-
-
-        dotGrid.style.color =
-            "var(--grid)";
-
-
-        dotGrid.className =
-            "flowDot active import";
-
-    }
-
-    else if (
-        gridExport > 0.05
-    ) {
-
-        gridValue.textContent =
-            kw(
-                gridExport
-            );
-
-
-        gridMode.textContent =
-            "Einspeisung";
-
-
-        gridMode.className =
-            "nodeStatus statusPV";
-
-
-        dotGrid.style.background =
-            "var(--pv)";
-
-
-        dotGrid.style.color =
-            "var(--pv)";
-
-
-        dotGrid.className =
-            "flowDot active export";
-
-    }
-
-    else {
-
-        gridValue.textContent =
-            "0.0 kW";
-
-
-        gridMode.textContent =
-            "kein Austausch";
-
-
-        gridMode.className =
-            "nodeStatus";
-
-
-        dotGrid.className =
-            "flowDot";
-    }
-
-
-    /* =====================================================
-       BATTERIE
-       ===================================================== */
-
-    const dotBattery =
-        document.getElementById(
-            "dotBattery"
+    $('pvValue').textContent =
+        kw(
+            pv
         );
 
 
-    const batteryValue =
-        document.getElementById(
-            "batteryValue"
+    $('pvTemp').textContent =
+        `WR ${tempWR.toFixed(1)} °C`;
+
+
+    /* NETZ */
+
+    $('gridValue').textContent =
+        kw(
+            gridImport > 0.05
+            ? gridImport
+            : gridExport
         );
 
 
-    const batteryMode =
-        document.getElementById(
-            "batteryMode"
+    $('gridStatus').textContent =
+        `${gridVoltage.toFixed(1)} V · ${gridFrequency.toFixed(1)} Hz`;
+
+
+    /* VERBRAUCH */
+
+    $('loadValue').textContent =
+        kw(
+            load
         );
 
 
-    if (
-        batteryCharge > 0.05
-    ) {
+    /* BATTERIE */
 
-        batteryValue.textContent =
-            kw(
-                batteryCharge
-            );
-
-
-        batteryMode.textContent =
-            "Laden";
+    $('batteryValue').textContent =
+        kw(
+            batteryDischarge > 0.05
+            ? batteryDischarge
+            : batteryCharge
+        );
 
 
-        batteryMode.className =
-            "nodeStatus statusPV";
-
-
-        dotBattery.style.background =
-            "var(--pv)";
-
-
-        dotBattery.style.color =
-            "var(--pv)";
-
-
-        dotBattery.className =
-            "flowDot active charge";
-
-    }
-
-    else if (
+    $('batteryLabel').textContent =
         batteryDischarge > 0.05
-    ) {
-
-        batteryValue.textContent =
-            kw(
-                batteryDischarge
-            );
-
-
-        batteryMode.textContent =
-            "Entladen";
+        ? 'Entladen'
+        :
+        (
+            batteryCharge > 0.05
+            ? 'Laden'
+            : 'Batterie'
+        );
 
 
-        batteryMode.className =
-            "nodeStatus statusBattery";
+    $('batteryInfo').textContent =
+        `${soc.toFixed(0)} % · ${tempBattery.toFixed(1)} °C`;
 
 
-        dotBattery.style.background =
-            "var(--battery)";
+    /*
+     * Batteriesymbol proportional füllen.
+     */
+
+    const innerWidth =
+        28
+        *
+        (
+            soc
+            /
+            100
+        );
 
 
-        dotBattery.style.color =
-            "var(--battery)";
+    $('batterySocFill').setAttribute(
+        'x',
+        -15
+    );
 
 
-        dotBattery.className =
-            "flowDot active discharge";
-
-    }
-
-    else {
-
-        batteryValue.textContent =
-            "0.0 kW";
+    $('batterySocFill').setAttribute(
+        'width',
+        innerWidth
+    );
 
 
-        batteryMode.textContent =
-            "Standby";
-
-
-        batteryMode.className =
-            "nodeStatus";
-
-
-        dotBattery.className =
-            "flowDot";
-    }
+    renderFlows(
+        data
+    );
 }
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+const resizeObserver =
+    new ResizeObserver(
+        () => {
+
+            if (
+                resizeRAF
+            ) {
+
+                cancelAnimationFrame(
+                    resizeRAF
+                );
+            }
+
+
+            resizeRAF =
+                requestAnimationFrame(
+                    applyGeometry
+                );
+        }
+    );
 
 
 /* =========================================================
@@ -1940,30 +2019,28 @@ function handleMessage(data)
    ========================================================= */
 
 window.addEventListener(
-    "load",
-    function ()
-    {
-        const viewport =
-            document.getElementById(
-                "energyViewport"
-            );
+    'load',
+    () => {
+
+        applyGeometry();
 
 
-        applyResponsiveLayout();
+        resizeObserver.observe(
+            $('wrap')
+        );
 
 
-        if (viewport) {
+        if (
+            typeof requestAction
+            ===
+            'function'
+        ) {
 
-            resizeObserver.observe(
-                viewport
+            requestAction(
+                'Refresh',
+                true
             );
         }
-
-
-        requestAction(
-            "Refresh",
-            true
-        );
     }
 );
 
