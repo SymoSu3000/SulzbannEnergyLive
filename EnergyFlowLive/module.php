@@ -1,34 +1,39 @@
 <?php
 
+declare(strict_types=1);
+
 class EnergyFlowLive extends IPSModule
 {
-    private const ID_PV_W       = 24848;
-    private const ID_GRID_W     = 36592;
-    private const ID_BAT_CHARGE = 21945;
-    private const ID_BAT_DISCH  = 50622;
-    private const ID_SOC        = 46752;
+    private const ID_PV_W = 24848;
+    private const ID_GRID_W = 36592;
+    private const ID_BAT_CHARGE_W = 21945;
+    private const ID_BAT_DISCHARGE_W = 50622;
+    private const ID_SOC = 46752;
 
-    public function Create()
+    private const ID_TEMP_WR = 29292;
+    private const ID_TEMP_BAT = 35042;
+    private const ID_GRID_VOLTAGE = 58820;
+    private const ID_GRID_FREQUENCY = 40528;
+
+    public function Create(): void
     {
         parent::Create();
 
-        // Eigene HTML-Kacheldarstellung aktivieren
         $this->SetVisualizationType(1);
     }
 
-    public function ApplyChanges()
+    public function ApplyChanges(): void
     {
         parent::ApplyChanges();
 
-        // Live-Werte abonnieren
-        $this->RegisterMessage(self::ID_PV_W, VM_UPDATE);
-        $this->RegisterMessage(self::ID_GRID_W, VM_UPDATE);
-        $this->RegisterMessage(self::ID_BAT_CHARGE, VM_UPDATE);
-        $this->RegisterMessage(self::ID_BAT_DISCH, VM_UPDATE);
-        $this->RegisterMessage(self::ID_SOC, VM_UPDATE);
+        foreach ($this->GetObservedVariableIDs() as $variableID) {
+            if (IPS_VariableExists($variableID)) {
+                $this->RegisterMessage($variableID, VM_UPDATE);
+            }
+        }
     }
 
-    public function GetVisualizationTile()
+    public function GetVisualizationTile(): string
     {
         return file_get_contents(__DIR__ . '/module.html');
     }
@@ -38,7 +43,7 @@ class EnergyFlowLive extends IPSModule
         $SenderID,
         $Message,
         $Data
-    ) {
+    ): void {
         parent::MessageSink(
             $TimeStamp,
             $SenderID,
@@ -53,174 +58,133 @@ class EnergyFlowLive extends IPSModule
         $this->SendLiveValues();
     }
 
-    private function SendLiveValues()
+    public function RequestAction($Ident, $Value): void
     {
-        if (
-            !IPS_VariableExists(self::ID_PV_W) ||
-            !IPS_VariableExists(self::ID_GRID_W) ||
-            !IPS_VariableExists(self::ID_BAT_CHARGE) ||
-            !IPS_VariableExists(self::ID_BAT_DISCH) ||
-            !IPS_VariableExists(self::ID_SOC)
-        ) {
+        if ($Ident === 'Refresh') {
+            $this->SendLiveValues();
             return;
         }
 
-        /*
-         * PV-Leistung
-         * Variable liefert Watt
-         */
+        throw new Exception('Invalid Ident');
+    }
+
+    private function GetObservedVariableIDs(): array
+    {
+        return [
+            self::ID_PV_W,
+            self::ID_GRID_W,
+            self::ID_BAT_CHARGE_W,
+            self::ID_BAT_DISCHARGE_W,
+            self::ID_SOC,
+            self::ID_TEMP_WR,
+            self::ID_TEMP_BAT,
+            self::ID_GRID_VOLTAGE,
+            self::ID_GRID_FREQUENCY
+        ];
+    }
+
+    private function SendLiveValues(): void
+    {
+        foreach ($this->GetObservedVariableIDs() as $variableID) {
+            if (!IPS_VariableExists($variableID)) {
+                return;
+            }
+        }
+
         $pvKW = max(
-            0,
-            floatval(
-                GetValue(self::ID_PV_W)
-            ) / 1000
+            0.0,
+            (float) GetValue(self::ID_PV_W) / 1000.0
         );
 
         /*
-         * Netzleistung
-         *
-         * positiv  = Netzbezug
-         * negativ  = Einspeisung
+         * Fronius Smart Meter:
+         * positiv = Netzbezug
+         * negativ = Einspeisung
          */
-        $gridW = floatval(
-            GetValue(self::ID_GRID_W)
-        );
+        $gridW = (float) GetValue(self::ID_GRID_W);
 
         $gridImportKW = max(
-            0,
-            $gridW / 1000
+            0.0,
+            $gridW / 1000.0
         );
 
         $gridExportKW = max(
-            0,
-            -$gridW / 1000
+            0.0,
+            -$gridW / 1000.0
         );
 
-        /*
-         * Batterie laden
-         */
         $batteryChargeKW = max(
-            0,
-            floatval(
-                GetValue(self::ID_BAT_CHARGE)
-            ) / 1000
+            0.0,
+            (float) GetValue(self::ID_BAT_CHARGE_W) / 1000.0
         );
 
         /*
-         * Batterie entladen
-         *
-         * Bei deiner Fronius-Variable wurde
-         * Entladung als negativer Wert beobachtet.
+         * Dieser Fronius-Wert ist beim Entladen negativ.
          */
-        $rawDischarge = floatval(
-            GetValue(self::ID_BAT_DISCH)
+        $batteryDischargeRawW =
+            (float) GetValue(self::ID_BAT_DISCHARGE_W);
+
+        $batteryDischargeKW = max(
+            0.0,
+            -$batteryDischargeRawW / 1000.0
         );
 
-        $batteryDischargeKW = abs(
-            min(
-                0,
-                $rawDischarge
-            )
-        ) / 1000;
-
-        /*
-         * Ladezustand
-         */
         $soc = max(
-            0,
+            0.0,
             min(
-                100,
-                floatval(
-                    GetValue(self::ID_SOC)
-                )
+                100.0,
+                (float) GetValue(self::ID_SOC)
             )
         );
 
-        /*
-         * Hausverbrauch
-         *
-         * Haus =
-         * PV
-         * + Netzbezug
-         * + Batterieentladung
-         * - Netzeinspeisung
-         * - Batterieladung
-         */
-        $houseKW = max(
-            0,
+        $tempWR =
+            (float) GetValue(self::ID_TEMP_WR);
+
+        $tempBattery =
+            (float) GetValue(self::ID_TEMP_BAT);
+
+        $gridVoltage =
+            (float) GetValue(self::ID_GRID_VOLTAGE);
+
+        $gridFrequency =
+            (float) GetValue(self::ID_GRID_FREQUENCY);
+
+        $houseKW =
             $pvKW
             + $gridImportKW
             + $batteryDischargeKW
             - $gridExportKW
-            - $batteryChargeKW
+            - $batteryChargeKW;
+
+        $houseKW = max(
+            0.0,
+            $houseKW
         );
 
-        /*
-         * Daten für die Visualisierung
-         */
-        $values = [
-            'pv' => round(
-                $pvKW,
-                2
-            ),
-
-            'house' => round(
-                $houseKW,
-                2
-            ),
-
-            'gridImport' => round(
-                $gridImportKW,
-                2
-            ),
-
-            'gridExport' => round(
-                $gridExportKW,
-                2
-            ),
-
-            'batteryCharge' => round(
-                $batteryChargeKW,
-                2
-            ),
-
-            'batteryDischarge' => round(
-                $batteryDischargeKW,
-                2
-            ),
-
-            'soc' => round(
-                $soc,
-                1
-            )
+        $payload = [
+            'pv'               => round($pvKW, 3),
+            'house'            => round($houseKW, 3),
+            'gridImport'       => round($gridImportKW, 3),
+            'gridExport'       => round($gridExportKW, 3),
+            'batteryCharge'    => round($batteryChargeKW, 3),
+            'batteryDischarge' => round($batteryDischargeKW, 3),
+            'soc'              => round($soc, 1),
+            'tempWR'           => round($tempWR, 1),
+            'tempBattery'      => round($tempBattery, 1),
+            'gridVoltage'      => round($gridVoltage, 1),
+            'gridFrequency'    => round($gridFrequency, 1)
         ];
 
-        /*
-         * HTML SDK erwartet hier einen String.
-         * Deshalb Array als JSON übertragen.
-         */
-        $this->UpdateVisualizationValue(
-            json_encode(
-                $values,
-                JSON_UNESCAPED_UNICODE
-            )
+        $json = json_encode(
+            $payload,
+            JSON_UNESCAPED_UNICODE
+            | JSON_UNESCAPED_SLASHES
         );
-    }
 
-    public function RequestAction(
-        $Ident,
-        $Value
-    ) {
-        switch ($Ident) {
-            case 'Refresh':
-                $this->SendLiveValues();
-                break;
-
-            default:
-                throw new Exception(
-                    'Unbekannte Aktion: '
-                    . $Ident
-                );
+        if ($json === false) {
+            return;
         }
+
+        $this->UpdateVisualizationValue($json);
     }
 }
