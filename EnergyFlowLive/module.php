@@ -25,6 +25,7 @@ class EnergyFlowLive extends IPSModule
     public function Create(): void
     {
         parent::Create();
+
         $this->SetVisualizationType(1);
     }
 
@@ -34,14 +35,19 @@ class EnergyFlowLive extends IPSModule
 
         foreach ($this->GetObservedVariableIDs() as $variableID) {
             if (IPS_VariableExists($variableID)) {
-                $this->RegisterMessage($variableID, VM_UPDATE);
+                $this->RegisterMessage(
+                    $variableID,
+                    VM_UPDATE
+                );
             }
         }
     }
 
     public function GetVisualizationTile(): string
     {
-        return file_get_contents(__DIR__ . '/module.html');
+        return file_get_contents(
+            __DIR__ . '/module.html'
+        );
     }
 
     public function MessageSink(
@@ -79,15 +85,20 @@ class EnergyFlowLive extends IPSModule
         return [
             self::ID_PV_W,
             self::ID_GRID_W,
+
             self::ID_BAT_CHARGE_W,
             self::ID_BAT_DISCHARGE_W,
             self::ID_SOC,
+
             self::ID_TEMP_WR,
             self::ID_TEMP_BAT,
+
             self::ID_GRID_VOLTAGE,
             self::ID_GRID_FREQUENCY,
+
             self::ID_WEATHER_CONDITION,
             self::ID_WEATHER_ICON,
+
             self::ID_RAIN_SENSOR
         ];
     }
@@ -100,12 +111,22 @@ class EnergyFlowLive extends IPSModule
             }
         }
 
+        /*
+         * PV
+         */
         $pvKW = max(
             0.0,
             (float) GetValue(self::ID_PV_W) / 1000.0
         );
 
-        $gridW = (float) GetValue(self::ID_GRID_W);
+        /*
+         * Netz
+         *
+         * positiv = Netzbezug
+         * negativ = Einspeisung
+         */
+        $gridW =
+            (float) GetValue(self::ID_GRID_W);
 
         $gridImportKW = max(
             0.0,
@@ -117,48 +138,95 @@ class EnergyFlowLive extends IPSModule
             -$gridW / 1000.0
         );
 
+        /*
+         * Batterie Laden
+         */
         $batteryChargeKW = max(
             0.0,
-            (float) GetValue(self::ID_BAT_CHARGE_W) / 1000.0
+            (float) GetValue(
+                self::ID_BAT_CHARGE_W
+            ) / 1000.0
         );
 
+        /*
+         * Batterie Entladen
+         *
+         * Fronius liefert beim Entladen
+         * einen negativen Wert.
+         */
         $batteryDischargeRawW =
-            (float) GetValue(self::ID_BAT_DISCHARGE_W);
+            (float) GetValue(
+                self::ID_BAT_DISCHARGE_W
+            );
 
         $batteryDischargeKW = max(
             0.0,
             -$batteryDischargeRawW / 1000.0
         );
 
+        /*
+         * SOC
+         */
         $soc = max(
             0.0,
             min(
                 100.0,
-                (float) GetValue(self::ID_SOC)
+                (float) GetValue(
+                    self::ID_SOC
+                )
             )
         );
 
+        /*
+         * Temperaturen
+         */
         $tempWR =
-            (float) GetValue(self::ID_TEMP_WR);
+            (float) GetValue(
+                self::ID_TEMP_WR
+            );
 
         $tempBattery =
-            (float) GetValue(self::ID_TEMP_BAT);
+            (float) GetValue(
+                self::ID_TEMP_BAT
+            );
 
+        /*
+         * Netzwerte
+         */
         $gridVoltage =
-            (float) GetValue(self::ID_GRID_VOLTAGE);
+            (float) GetValue(
+                self::ID_GRID_VOLTAGE
+            );
 
         $gridFrequency =
-            (float) GetValue(self::ID_GRID_FREQUENCY);
+            (float) GetValue(
+                self::ID_GRID_FREQUENCY
+            );
 
+        /*
+         * Wetter
+         */
         $conditionID =
-            (int) GetValue(self::ID_WEATHER_CONDITION);
+            (int) GetValue(
+                self::ID_WEATHER_CONDITION
+            );
 
         $conditionIcon =
-            (string) GetValue(self::ID_WEATHER_ICON);
+            (string) GetValue(
+                self::ID_WEATHER_ICON
+            );
 
+        /*
+         * KNX Regensensor
+         */
         $rainDetected =
-            (bool) GetValue(self::ID_RAIN_SENSOR);
+            (bool) GetValue(
+                self::ID_RAIN_SENSOR
+            );
 
+        /*
+         * Hausverbrauch
+         */
         $houseKW =
             $pvKW
             + $gridImportKW
@@ -172,32 +240,95 @@ class EnergyFlowLive extends IPSModule
         );
 
         $payload = [
-            'pv'               => round($pvKW, 3),
-            'house'            => round($houseKW, 3),
-            'gridImport'       => round($gridImportKW, 3),
-            'gridExport'       => round($gridExportKW, 3),
-            'batteryCharge'    => round($batteryChargeKW, 3),
-            'batteryDischarge' => round($batteryDischargeKW, 3),
-            'soc'              => round($soc, 1),
-            'tempWR'           => round($tempWR, 1),
-            'tempBattery'      => round($tempBattery, 1),
-            'gridVoltage'      => round($gridVoltage, 1),
-            'gridFrequency'    => round($gridFrequency, 1),
-            'weatherConditionID' => $conditionID,
-            'weatherIcon'        => $conditionIcon,
-            'rainDetected'       => $rainDetected
+            'pv' =>
+                round(
+                    $pvKW,
+                    3
+                ),
+
+            'house' =>
+                round(
+                    $houseKW,
+                    3
+                ),
+
+            'gridImport' =>
+                round(
+                    $gridImportKW,
+                    3
+                ),
+
+            'gridExport' =>
+                round(
+                    $gridExportKW,
+                    3
+                ),
+
+            'batteryCharge' =>
+                round(
+                    $batteryChargeKW,
+                    3
+                ),
+
+            'batteryDischarge' =>
+                round(
+                    $batteryDischargeKW,
+                    3
+                ),
+
+            'soc' =>
+                round(
+                    $soc,
+                    1
+                ),
+
+            'tempWR' =>
+                round(
+                    $tempWR,
+                    1
+                ),
+
+            'tempBattery' =>
+                round(
+                    $tempBattery,
+                    1
+                ),
+
+            'gridVoltage' =>
+                round(
+                    $gridVoltage,
+                    1
+                ),
+
+            'gridFrequency' =>
+                round(
+                    $gridFrequency,
+                    1
+                ),
+
+            'weatherConditionID' =>
+                $conditionID,
+
+            'weatherIcon' =>
+                $conditionIcon,
+
+            'rainDetected' =>
+                $rainDetected
         ];
 
         $json = json_encode(
             $payload,
             JSON_UNESCAPED_UNICODE
-            | JSON_UNESCAPED_SLASHES
+            |
+            JSON_UNESCAPED_SLASHES
         );
 
         if ($json === false) {
             return;
         }
 
-        $this->UpdateVisualizationValue($json);
+        $this->UpdateVisualizationValue(
+            $json
+        );
     }
 }
