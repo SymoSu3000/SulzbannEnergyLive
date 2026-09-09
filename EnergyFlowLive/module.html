@@ -2,151 +2,105 @@
 <html>
 <head>
 <meta charset="UTF-8">
-
 <style>
-
 :root{
-    --pv:#35b657;
-    --grid:#f39a2d;
-    --battery:#22b8c7;
-    --load:#f39a2d;
-    --house:#10c7b1;
-
-    --text:#202020;
-    --muted:rgba(32,32,32,.68);
-    --line:rgba(110,110,110,.44);
-    --surface:rgba(255,255,255,.02);
+  --pv:#35b657;
+  --grid:#f39a2d;
+  --battery:#22b8c7;
+  --load:#f39a2d;
+  --house:#10c7b1;
+  --text:#202020;
+  --muted:rgba(32,32,32,.68);
+  --line:rgba(110,110,110,.44);
+  --surface:rgba(255,255,255,.02);
 }
-
 @media(prefers-color-scheme:dark){
-    :root{
-        --text:#f4f4f4;
-        --muted:rgba(244,244,244,.72);
-        --line:rgba(220,220,220,.48);
-        --surface:rgba(255,255,255,.025);
-    }
+  :root{
+    --text:#f4f4f4;
+    --muted:rgba(244,244,244,.72);
+    --line:rgba(220,220,220,.48);
+    --surface:rgba(255,255,255,.025)
+  }
 }
 
-*{
-    box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
-html,
-body{
-    margin:0;
-    width:100%;
-    height:100%;
-    overflow:hidden;
-
-    background:transparent;
-    color:var(--text);
-
-    font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Arial,
-        sans-serif;
+html,body{
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:transparent;
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif
 }
 
 #wrap{
-    position:relative;
-
-    width:100%;
-    height:100%;
-
-    overflow:hidden;
+  position:relative;
+  width:100%;
+  height:100%;
+  overflow:hidden
 }
 
 #energySvg{
-    width:100%;
-    height:100%;
-
-    display:block;
-
-    overflow:visible;
+  width:100%;
+  height:100%;
+  display:block;
+  overflow:visible
 }
 
 .flow-line{
-    stroke:var(--line);
-    stroke-width:2.4;
-    stroke-linecap:round;
-    fill:none;
+  stroke:var(--line);
+  stroke-width:2.4;
+  stroke-linecap:round;
+  fill:none
 }
 
 .node-ring{
-    fill:var(--surface);
-    stroke-width:2.4;
+  fill:var(--surface);
+  stroke-width:2.4
 }
 
 .node-icon{
-    fill:none;
-    stroke:var(--text);
-    stroke-width:2.2;
-
-    stroke-linecap:round;
-    stroke-linejoin:round;
+  fill:none;
+  stroke:var(--text);
+  stroke-width:2.2;
+  stroke-linecap:round;
+  stroke-linejoin:round
 }
 
 .node-icon-fill{
-    fill:var(--text);
-    stroke:none;
+  fill:var(--text);
+  stroke:none
 }
 
 .label{
-    fill:var(--muted);
-
-    font-weight:500;
-
-    text-anchor:middle;
+  fill:var(--muted);
+  font-weight:500;
+  text-anchor:middle
 }
 
 .value{
-    fill:var(--text);
-
-    font-weight:700;
-
-    text-anchor:middle;
+  fill:var(--text);
+  font-weight:700;
+  text-anchor:middle
 }
 
 .sub{
-    fill:var(--muted);
-
-    font-weight:500;
-
-    text-anchor:middle;
-}
-
-.status-pv{
-    fill:var(--pv);
-}
-
-.status-grid{
-    fill:var(--grid);
-}
-
-.status-bat{
-    fill:var(--battery);
+  fill:var(--muted);
+  font-weight:500;
+  text-anchor:middle
 }
 
 .house-fill{
-    fill:color-mix(
-        in srgb,
-        var(--house) 30%,
-        transparent
-    );
-
-    stroke:var(--house);
-    stroke-width:3;
+  fill:color-mix(in srgb,var(--house) 30%,transparent);
+  stroke:var(--house);
+  stroke-width:3
 }
 
 .dot{
-    filter:
-        drop-shadow(
-            0 0 4px currentColor
-        );
+  filter:drop-shadow(0 0 4px currentColor)
 }
-
 </style>
 </head>
 
@@ -155,401 +109,184 @@ body{
 <div id="wrap">
 
 <svg
-    id="energySvg"
-    xmlns="http://www.w3.org/2000/svg"
-    aria-label="Energieverteilung"
+  id="energySvg"
+  xmlns="http://www.w3.org/2000/svg"
+  aria-label="Energieverteilung"
 >
 
-    <defs>
+<defs>
 
-        <clipPath id="batteryInnerClip">
+  <clipPath id="batteryInnerClip">
+    <rect
+      id="batteryClipRect"
+      x="-15"
+      y="-7"
+      width="28"
+      height="14"
+      rx="2"
+    />
+  </clipPath>
 
-            <rect
-                id="batteryClipRect"
-                x="-15"
-                y="-7"
-                width="28"
-                height="14"
-                rx="2"
-            />
+</defs>
 
-        </clipPath>
+<path id="pathPvToHouse" class="flow-line"/>
+<path id="pathGridToHouse" class="flow-line"/>
+<path id="pathHouseToGrid" class="flow-line"/>
+<path id="pathHouseToLoad" class="flow-line"/>
+<path id="pathBatteryToHouse" class="flow-line"/>
+<path id="pathHouseToBattery" class="flow-line"/>
 
-    </defs>
+<g id="pvDots"></g>
+<g id="gridDots"></g>
+<g id="loadDots"></g>
+<g id="batteryDots"></g>
 
 
-    <!-- ===================================================
-         VERBINDUNGSLINIEN
-         =================================================== -->
+<!-- PV -->
 
-    <path
-        id="pathPvToHouse"
-        class="flow-line"
+<g id="pvNode">
+
+  <circle
+    id="pvRing"
+    class="node-ring"
+    stroke="var(--pv)"
+  />
+
+  <g
+    id="pvIcon"
+    class="node-icon"
+  >
+    <path d="M-17,-11 L15,-11 L20,10 L-22,10 Z"/>
+    <path d="M-10,-11 L-13,10 M0,-11 L0,10 M10,-11 L13,10 M-20,0 L18,0"/>
+    <path d="M-7,10 L-7,18 M7,10 L7,18 M-12,18 L12,18"/>
+  </g>
+
+  <text id="pvValue" class="value">-- kW</text>
+  <text id="pvLabel" class="label">PV-Anlage</text>
+  <text id="pvTemp" class="sub">WR --.- °C</text>
+
+</g>
+
+
+<!-- Netz -->
+
+<g id="gridNode">
+
+  <circle
+    id="gridRing"
+    class="node-ring"
+    stroke="var(--grid)"
+  />
+
+  <g
+    id="gridIcon"
+    class="node-icon"
+  >
+    <path d="M0,-18 L0,19 M-8,-12 L8,-12 M-12,-6 L12,-6"/>
+    <path d="M-12,-6 L-17,-10 M12,-6 L17,-10 M-8,-12 L-12,-16 M8,-12 L12,-16"/>
+    <path d="M-4,-6 L-4,19 M4,-6 L4,19"/>
+  </g>
+
+  <text id="gridValue" class="value">-- kW</text>
+  <text id="gridLabel" class="label">Stromnetz</text>
+  <text id="gridStatus" class="sub">-</text>
+
+</g>
+
+
+<!-- Verbrauch -->
+
+<g id="loadNode">
+
+  <circle
+    id="loadRing"
+    class="node-ring"
+    stroke="var(--load)"
+  />
+
+  <path
+    id="loadIcon"
+    class="node-icon-fill"
+    d="M3,-20 L-12,4 H-2 L-7,20 L13,-6 H2 Z"
+  />
+
+  <text id="loadValue" class="value">-- kW</text>
+  <text id="loadLabel" class="label">Verbrauch</text>
+
+</g>
+
+
+<!-- Batterie -->
+
+<g id="batteryNode">
+
+  <circle
+    id="batteryRing"
+    class="node-ring"
+    stroke="var(--battery)"
+  />
+
+  <g id="batteryIcon">
+
+    <rect
+      id="batterySocFill"
+      x="-15"
+      y="-7"
+      width="0"
+      height="14"
+      rx="2"
+      fill="var(--battery)"
+      clip-path="url(#batteryInnerClip)"
+    />
+
+    <rect
+      x="-18"
+      y="-10"
+      width="32"
+      height="20"
+      rx="4"
+      fill="none"
+      stroke="var(--text)"
+      stroke-width="2.2"
     />
 
     <path
-        id="pathGridToHouse"
-        class="flow-line"
+      d="M16,-4 L16,4"
+      stroke="var(--text)"
+      stroke-width="2.2"
+      stroke-linecap="round"
     />
 
-    <path
-        id="pathHouseToGrid"
-        class="flow-line"
-    />
+  </g>
 
-    <path
-        id="pathHouseToLoad"
-        class="flow-line"
-    />
+  <text id="batteryValue" class="value">-- kW</text>
+  <text id="batteryLabel" class="label">Batterie</text>
+  <text id="batteryInfo" class="sub">-- % · --.- °C</text>
 
-    <path
-        id="pathBatteryToHouse"
-        class="flow-line"
-    />
+</g>
 
-    <path
-        id="pathHouseToBattery"
-        class="flow-line"
-    />
 
+<!-- Haus -->
 
-    <!-- ===================================================
-         ENERGIEPUNKTE
-         =================================================== -->
+<g id="houseNode">
 
-    <g id="pvDots"></g>
+  <circle
+    id="houseRing"
+    class="house-fill"
+  />
 
-    <g id="gridDots"></g>
+  <g
+    id="houseIcon"
+    class="node-icon"
+  >
 
-    <g id="loadDots"></g>
+    <path d="M-18,1 L0,-15 L18,1"/>
+    <path d="M-14,-2 L-14,17 L14,17 L14,-2"/>
+    <path d="M-5,17 L-5,6 L5,6 L5,17"/>
 
-    <g id="batteryDots"></g>
+  </g>
 
-
-    <!-- ===================================================
-         PV
-         =================================================== -->
-
-    <g id="pvNode">
-
-        <circle
-            id="pvRing"
-            class="node-ring"
-            stroke="var(--pv)"
-        />
-
-
-        <g
-            id="pvIcon"
-            class="node-icon"
-        >
-
-            <path
-                d="
-                    M-17,-11
-                    L15,-11
-                    L20,10
-                    L-22,10
-                    Z
-                "
-            />
-
-            <path
-                d="
-                    M-10,-11 L-13,10
-                    M0,-11 L0,10
-                    M10,-11 L13,10
-                    M-20,0 L18,0
-                "
-            />
-
-            <path
-                d="
-                    M-7,10 L-7,18
-                    M7,10 L7,18
-                    M-12,18 L12,18
-                "
-            />
-
-        </g>
-
-
-        <text
-            id="pvValue"
-            class="value"
-        >
-            -- kW
-        </text>
-
-
-        <text
-            id="pvLabel"
-            class="label"
-        >
-            PV-Anlage
-        </text>
-
-
-        <text
-            id="pvTemp"
-            class="sub"
-        >
-            WR --.- °C
-        </text>
-
-    </g>
-
-
-    <!-- ===================================================
-         NETZ
-         =================================================== -->
-
-    <g id="gridNode">
-
-        <circle
-            id="gridRing"
-            class="node-ring"
-            stroke="var(--grid)"
-        />
-
-
-        <g
-            id="gridIcon"
-            class="node-icon"
-        >
-
-            <path
-                d="
-                    M0,-18 L0,19
-                    M-8,-12 L8,-12
-                    M-12,-6 L12,-6
-                "
-            />
-
-            <path
-                d="
-                    M-12,-6 L-17,-10
-                    M12,-6 L17,-10
-                    M-8,-12 L-12,-16
-                    M8,-12 L12,-16
-                "
-            />
-
-            <path
-                d="
-                    M-4,-6 L-4,19
-                    M4,-6 L4,19
-                "
-            />
-
-        </g>
-
-
-        <text
-            id="gridValue"
-            class="value"
-        >
-            -- kW
-        </text>
-
-
-        <text
-            id="gridLabel"
-            class="label"
-        >
-            Stromnetz
-        </text>
-
-
-        <text
-            id="gridStatus"
-            class="sub"
-        >
-            --.- V · --.- Hz
-        </text>
-
-    </g>
-
-
-    <!-- ===================================================
-         VERBRAUCH
-         =================================================== -->
-
-    <g id="loadNode">
-
-        <circle
-            id="loadRing"
-            class="node-ring"
-            stroke="var(--load)"
-        />
-
-
-        <path
-            id="loadIcon"
-            class="node-icon-fill"
-            d="
-                M3,-20
-                L-12,4
-                H-2
-                L-7,20
-                L13,-6
-                H2
-                Z
-            "
-        />
-
-
-        <text
-            id="loadValue"
-            class="value"
-        >
-            -- kW
-        </text>
-
-
-        <text
-            id="loadLabel"
-            class="label"
-        >
-            Verbrauch
-        </text>
-
-    </g>
-
-
-    <!-- ===================================================
-         BATTERIE
-         =================================================== -->
-
-    <g id="batteryNode">
-
-        <circle
-            id="batteryRing"
-            class="node-ring"
-            stroke="var(--battery)"
-        />
-
-
-        <g id="batteryIcon">
-
-            <!-- dynamische SOC-Füllung -->
-
-            <rect
-                id="batterySocFill"
-                x="-15"
-                y="-7"
-                width="0"
-                height="14"
-                rx="2"
-
-                fill="var(--battery)"
-
-                clip-path="url(#batteryInnerClip)"
-            />
-
-
-            <!-- Batterie-Umriss -->
-
-            <rect
-                x="-18"
-                y="-10"
-                width="32"
-                height="20"
-                rx="4"
-
-                fill="none"
-
-                stroke="var(--text)"
-                stroke-width="2.2"
-            />
-
-
-            <!-- Batterie-Anschluss -->
-
-            <path
-                d="M16,-4 L16,4"
-
-                stroke="var(--text)"
-                stroke-width="2.2"
-
-                stroke-linecap="round"
-            />
-
-        </g>
-
-
-        <text
-            id="batteryValue"
-            class="value"
-        >
-            -- kW
-        </text>
-
-
-        <text
-            id="batteryLabel"
-            class="label"
-        >
-            Batterie
-        </text>
-
-
-        <text
-            id="batteryInfo"
-            class="sub"
-        >
-            -- % · --.- °C
-        </text>
-
-    </g>
-
-
-    <!-- ===================================================
-         HAUS / VERTEILPUNKT
-         =================================================== -->
-
-    <g id="houseNode">
-
-        <circle
-            id="houseRing"
-            class="house-fill"
-        />
-
-
-        <g
-            id="houseIcon"
-            class="node-icon"
-        >
-
-            <path
-                d="
-                    M-18,1
-                    L0,-15
-                    L18,1
-                "
-            />
-
-            <path
-                d="
-                    M-14,-2
-                    L-14,17
-                    L14,17
-                    L14,-2
-                "
-            />
-
-            <path
-                d="
-                    M-5,17
-                    L-5,6
-                    L5,6
-                    L5,17
-                "
-            />
-
-        </g>
-
-    </g>
+</g>
 
 </svg>
 
@@ -559,1489 +296,1352 @@ body{
 <script>
 
 const SVG_NS =
-    'http://www.w3.org/2000/svg';
-
+  'http://www.w3.org/2000/svg';
 
 const $ =
-    id =>
-        document.getElementById(
-            id
-        );
-
+  id =>
+    document.getElementById(id);
 
 let lastPayload = null;
-
 let resizeRAF = null;
 
 
-/* =========================================================
-   ANIMIERTER ENERGIEPUNKT
-   ========================================================= */
-
 function makeAnimatedDot(
-    groupId,
-    pathId,
-    color,
-    delay,
-    duration = 1.9
+  groupId,
+  pathId,
+  color,
+  delay,
+  duration = 1.9
 )
 {
-    const group =
-        $(groupId);
+  const group =
+    $(groupId);
 
-
-    const circle =
-        document.createElementNS(
-            SVG_NS,
-            'circle'
-        );
-
-
-    circle.setAttribute(
-        'r',
-        '5.2'
+  const circle =
+    document.createElementNS(
+      SVG_NS,
+      'circle'
     );
 
+  circle.setAttribute(
+    'r',
+    '5.2'
+  );
 
-    circle.setAttribute(
-        'fill',
-        color
+  circle.setAttribute(
+    'fill',
+    color
+  );
+
+  circle.setAttribute(
+    'class',
+    'dot'
+  );
+
+  circle.style.color =
+    color;
+
+  const motion =
+    document.createElementNS(
+      SVG_NS,
+      'animateMotion'
     );
 
+  motion.setAttribute(
+    'dur',
+    duration + 's'
+  );
 
-    circle.setAttribute(
-        'class',
-        'dot'
+  motion.setAttribute(
+    'begin',
+    delay + 's'
+  );
+
+  motion.setAttribute(
+    'repeatCount',
+    'indefinite'
+  );
+
+  motion.setAttribute(
+    'calcMode',
+    'linear'
+  );
+
+  const motionPath =
+    document.createElementNS(
+      SVG_NS,
+      'mpath'
     );
 
+  motionPath.setAttribute(
+    'href',
+    '#' + pathId
+  );
 
-    circle.style.color =
-        color;
+  motion.appendChild(
+    motionPath
+  );
 
+  circle.appendChild(
+    motion
+  );
 
-    const motion =
-        document.createElementNS(
-            SVG_NS,
-            'animateMotion'
-        );
-
-
-    motion.setAttribute(
-        'dur',
-        duration + 's'
-    );
-
-
-    motion.setAttribute(
-        'begin',
-        delay + 's'
-    );
-
-
-    motion.setAttribute(
-        'repeatCount',
-        'indefinite'
-    );
-
-
-    motion.setAttribute(
-        'calcMode',
-        'linear'
-    );
-
-
-    const motionPath =
-        document.createElementNS(
-            SVG_NS,
-            'mpath'
-        );
-
-
-    motionPath.setAttribute(
-        'href',
-        '#' + pathId
-    );
-
-
-    motion.appendChild(
-        motionPath
-    );
-
-
-    circle.appendChild(
-        motion
-    );
-
-
-    group.appendChild(
-        circle
-    );
-
-
-    return circle;
+  group.appendChild(
+    circle
+  );
 }
 
-
-/* =========================================================
-   GRUPPE LEEREN
-   ========================================================= */
 
 function clearGroup(id)
 {
-    const group =
-        $(id);
+  const group =
+    $(id);
 
-
-    while (
-        group.firstChild
-    ) {
-
-        group.removeChild(
-            group.firstChild
-        );
-    }
+  while (group.firstChild) {
+    group.removeChild(
+      group.firstChild
+    );
+  }
 }
 
-
-/* =========================================================
-   NODE POSITIONIEREN
-   ========================================================= */
 
 function setNode(
-    groupID,
-    x,
-    y
+  groupID,
+  x,
+  y
 )
 {
-    $(groupID).setAttribute(
-        'transform',
-        `translate(${x} ${y})`
-    );
+  $(groupID).setAttribute(
+    'transform',
+    `translate(${x} ${y})`
+  );
 }
 
-
-/* =========================================================
-   TEXT POSITIONIEREN
-   ========================================================= */
-
-function setText(
-    id,
-    x,
-    y,
-    size
-)
-{
-    const element =
-        $(id);
-
-
-    element.setAttribute(
-        'x',
-        x
-    );
-
-
-    element.setAttribute(
-        'y',
-        y
-    );
-
-
-    element.setAttribute(
-        'font-size',
-        size
-    );
-}
-
-
-/* =========================================================
-   LINIE ZWISCHEN ZWEI KREISEN
-   ========================================================= */
 
 function clippedPath(
-    a,
-    b,
-    radiusA,
-    radiusB
+  a,
+  b,
+  radiusA,
+  radiusB
 )
 {
-    const dx =
-        b.x - a.x;
+  const dx =
+    b.x - a.x;
 
+  const dy =
+    b.y - a.y;
 
-    const dy =
-        b.y - a.y;
+  const length =
+    Math.hypot(
+      dx,
+      dy
+    ) || 1;
 
+  const unitX =
+    dx / length;
 
-    const length =
-        Math.hypot(
-            dx,
-            dy
-        ) || 1;
+  const unitY =
+    dy / length;
 
+  const start = {
+    x:
+      a.x
+      +
+      unitX
+      *
+      radiusA,
 
-    const unitX =
-        dx / length;
+    y:
+      a.y
+      +
+      unitY
+      *
+      radiusA
+  };
 
+  const end = {
+    x:
+      b.x
+      -
+      unitX
+      *
+      radiusB,
 
-    const unitY =
-        dy / length;
+    y:
+      b.y
+      -
+      unitY
+      *
+      radiusB
+  };
 
-
-    const start = {
-
-        x:
-            a.x
-            +
-            unitX
-            *
-            radiusA,
-
-        y:
-            a.y
-            +
-            unitY
-            *
-            radiusA
-    };
-
-
-    const end = {
-
-        x:
-            b.x
-            -
-            unitX
-            *
-            radiusB,
-
-        y:
-            b.y
-            -
-            unitY
-            *
-            radiusB
-    };
-
-
-    return {
-
-        start,
-
-        end,
-
-        d:
-            `M ${start.x} ${start.y} L ${end.x} ${end.y}`
-    };
+  return {
+    d:
+      `M ${start.x} ${start.y} L ${end.x} ${end.y}`
+  };
 }
 
-
-/* =========================================================
-   GEOMETRIE
-   ========================================================= */
 
 function applyGeometry()
 {
-    const svg =
-        $('energySvg');
+  const svg =
+    $('energySvg');
+
+  const width =
+    svg.clientWidth || 600;
+
+  const height =
+    svg.clientHeight || 400;
 
 
-    const width =
-        svg.clientWidth
-        ||
-        600;
+  const mobile =
+    width < 560;
+
+  const tablet =
+    width >= 560
+    &&
+    width < 950;
 
 
-    const height =
-        svg.clientHeight
-        ||
-        400;
-
-
-    const mobile =
-        width <= 520;
-
-
-    const tablet =
-        width > 520
-        &&
-        width <= 900;
-
-
-    const safeTop =
-        mobile
-        ? 72
-        :
-        (
-            tablet
-            ? 62
-            : 56
-        );
-
-
-    const side =
-        mobile
-        ? 34
-        :
-        (
-            tablet
-            ? 48
-            : 58
-        );
-
-
-    const radius =
-        mobile
-        ? 31
-        :
-        (
-            tablet
-            ? 33
-            : 35
-        );
-
-
-    const houseRadius =
-        mobile
-        ? 39
-        :
-        (
-            tablet
-            ? 41
-            : 43
-        );
-
-
-    const iconScale =
-        mobile
-        ? 0.92
-        :
-        (
-            tablet
-            ? 0.98
-            : 1.04
-        );
-
-
-    const topY =
-        safeTop
-        +
-        Math.max(
-            radius + 22,
-            (height - safeTop)
-            *
-            0.18
-        );
-
-
-    const bottomReserve =
-        mobile
-        ? 98
-        :
-        (
-            tablet
-            ? 90
-            : 82
-        );
-
-
-    const bottomY =
-        Math.max(
-            topY
-            +
-            2
-            *
-            radius
-            +
-            110,
-
-            height
-            -
-            bottomReserve
-            -
-            radius
-        );
-
-
-    const houseY =
-        (
-            topY
-            +
-            bottomY
-        )
-        /
-        2;
-
-
-    const leftX =
-        side
-        +
-        radius;
-
-
-    const rightX =
-        width
-        -
-        side
-        -
-        radius;
-
-
-    const houseX =
-        width / 2;
-
-
-    const points = {
-
-        pv: {
-            x: leftX,
-            y: topY
-        },
-
-        grid: {
-            x: rightX,
-            y: topY
-        },
-
-        load: {
-            x: leftX,
-            y: bottomY
-        },
-
-        battery: {
-            x: rightX,
-            y: bottomY
-        },
-
-        house: {
-            x: houseX,
-            y: houseY
-        }
-    };
-
-
-    setNode(
-        'pvNode',
-        points.pv.x,
-        points.pv.y
+  const safeTop =
+    mobile
+    ? 76
+    :
+    (
+      tablet
+      ? 66
+      : 58
     );
 
 
-    setNode(
-        'gridNode',
-        points.grid.x,
-        points.grid.y
+  const radius =
+    mobile
+    ? 29
+    :
+    (
+      tablet
+      ? 32
+      : 34
     );
 
 
-    setNode(
-        'loadNode',
-        points.load.x,
-        points.load.y
+  const houseRadius =
+    mobile
+    ? 38
+    :
+    (
+      tablet
+      ? 40
+      : 42
     );
 
 
-    setNode(
-        'batteryNode',
-        points.battery.x,
-        points.battery.y
+  const iconScale =
+    mobile
+    ? 1.02
+    :
+    (
+      tablet
+      ? 1.06
+      : 1.10
     );
 
 
-    setNode(
-        'houseNode',
-        points.house.x,
-        points.house.y
+  const side =
+    mobile
+    ? 28
+    :
+    (
+      tablet
+      ? 44
+      : 56
     );
 
 
-    [
-        'pvRing',
-        'gridRing',
-        'loadRing',
-        'batteryRing'
-    ].forEach(
-        id =>
-            $(id).setAttribute(
-                'r',
-                radius
-            )
+  const leftX =
+    side + radius;
+
+  const rightX =
+    width
+    -
+    side
+    -
+    radius;
+
+
+  const topY =
+    safeTop
+    +
+    radius
+    +
+    14;
+
+
+  const bottomLabelRoom =
+    mobile
+    ? 76
+    :
+    (
+      tablet
+      ? 72
+      : 70
     );
 
 
-    $('houseRing').setAttribute(
-        'r',
-        houseRadius
+  const maxBottomY =
+    height
+    -
+    bottomLabelRoom
+    -
+    radius;
+
+
+  const minVerticalSpan =
+    mobile
+    ? 126
+    :
+    (
+      tablet
+      ? 144
+      : 154
     );
 
 
-    $('pvIcon').setAttribute(
-        'transform',
-        `scale(${iconScale})`
+  const bottomY =
+    Math.max(
+      topY + minVerticalSpan,
+      maxBottomY
     );
 
 
-    $('gridIcon').setAttribute(
-        'transform',
-        `scale(${iconScale})`
+  const usableBottom =
+    Math.min(
+      bottomY,
+      maxBottomY
     );
 
 
-    $('loadIcon').setAttribute(
-        'transform',
-        `scale(${iconScale})`
-    );
+  const houseX =
+    width / 2;
 
 
-    $('batteryIcon').setAttribute(
-        'transform',
-        `scale(${iconScale})`
-    );
+  const houseY =
+    (
+      topY
+      +
+      usableBottom
+    )
+    /
+    2;
 
 
-    $('houseIcon').setAttribute(
-        'transform',
-        `scale(${iconScale * 1.08})`
-    );
+  const points = {
 
+    pv: {
+      x:leftX,
+      y:topY
+    },
 
-    const valueSize =
-        mobile
-        ? 19
-        :
-        (
-            tablet
-            ? 18
-            : 17
-        );
+    grid: {
+      x:rightX,
+      y:topY
+    },
 
+    load: {
+      x:leftX,
+      y:usableBottom
+    },
 
-    const labelSize =
-        mobile
-        ? 13
-        :
-        (
-            tablet
-            ? 12
-            : 11
-        );
+    battery: {
+      x:rightX,
+      y:usableBottom
+    },
 
-
-    const subSize =
-        mobile
-        ? 11.5
-        :
-        (
-            tablet
-            ? 11
-            : 10.5
-        );
-
-
-    const topTextGap =
-        mobile
-        ? 12
-        : 10;
-
-
-    const bottomTextGap =
-        mobile
-        ? 10
-        : 9;
-
-
-    [
-        [
-            'pvValue',
-            0,
-            radius + topTextGap,
-            valueSize
-        ],
-
-        [
-            'pvLabel',
-            0,
-            radius + topTextGap + 22,
-            labelSize
-        ],
-
-        [
-            'pvTemp',
-            0,
-            radius + topTextGap + 40,
-            subSize
-        ],
-
-        [
-            'gridValue',
-            0,
-            radius + topTextGap,
-            valueSize
-        ],
-
-        [
-            'gridLabel',
-            0,
-            radius + topTextGap + 22,
-            labelSize
-        ],
-
-        [
-            'gridStatus',
-            0,
-            radius + topTextGap + 40,
-            subSize
-        ],
-
-        [
-            'loadValue',
-            0,
-            radius + bottomTextGap,
-            valueSize
-        ],
-
-        [
-            'loadLabel',
-            0,
-            radius + bottomTextGap + 22,
-            labelSize
-        ],
-
-        [
-            'batteryValue',
-            0,
-            radius + bottomTextGap,
-            valueSize
-        ],
-
-        [
-            'batteryLabel',
-            0,
-            radius + bottomTextGap + 22,
-            labelSize
-        ],
-
-        [
-            'batteryInfo',
-            0,
-            radius + bottomTextGap + 40,
-            subSize
-        ]
-    ].forEach(
-        values =>
-            setText(
-                values[0],
-                values[1],
-                values[2],
-                values[3]
-            )
-    );
-
-
-    const pvToHouse =
-        clippedPath(
-            points.pv,
-            points.house,
-            radius,
-            houseRadius
-        );
-
-
-    const gridToHouse =
-        clippedPath(
-            points.grid,
-            points.house,
-            radius,
-            houseRadius
-        );
-
-
-    const houseToGrid =
-        clippedPath(
-            points.house,
-            points.grid,
-            houseRadius,
-            radius
-        );
-
-
-    const houseToLoad =
-        clippedPath(
-            points.house,
-            points.load,
-            houseRadius,
-            radius
-        );
-
-
-    const batteryToHouse =
-        clippedPath(
-            points.battery,
-            points.house,
-            radius,
-            houseRadius
-        );
-
-
-    const houseToBattery =
-        clippedPath(
-            points.house,
-            points.battery,
-            houseRadius,
-            radius
-        );
-
-
-    $('pathPvToHouse').setAttribute(
-        'd',
-        pvToHouse.d
-    );
-
-
-    $('pathGridToHouse').setAttribute(
-        'd',
-        gridToHouse.d
-    );
-
-
-    $('pathHouseToGrid').setAttribute(
-        'd',
-        houseToGrid.d
-    );
-
-
-    $('pathHouseToLoad').setAttribute(
-        'd',
-        houseToLoad.d
-    );
-
-
-    $('pathBatteryToHouse').setAttribute(
-        'd',
-        batteryToHouse.d
-    );
-
-
-    $('pathHouseToBattery').setAttribute(
-        'd',
-        houseToBattery.d
-    );
-
-
-    if (
-        lastPayload
-    ) {
-
-        renderFlows(
-            lastPayload
-        );
+    house: {
+      x:houseX,
+      y:houseY
     }
+  };
+
+
+  setNode(
+    'pvNode',
+    points.pv.x,
+    points.pv.y
+  );
+
+  setNode(
+    'gridNode',
+    points.grid.x,
+    points.grid.y
+  );
+
+  setNode(
+    'loadNode',
+    points.load.x,
+    points.load.y
+  );
+
+  setNode(
+    'batteryNode',
+    points.battery.x,
+    points.battery.y
+  );
+
+  setNode(
+    'houseNode',
+    points.house.x,
+    points.house.y
+  );
+
+
+  [
+    'pvRing',
+    'gridRing',
+    'loadRing',
+    'batteryRing'
+  ].forEach(
+    id =>
+      $(id).setAttribute(
+        'r',
+        radius
+      )
+  );
+
+
+  $('houseRing').setAttribute(
+    'r',
+    houseRadius
+  );
+
+
+  $('pvIcon').setAttribute(
+    'transform',
+    `scale(${iconScale})`
+  );
+
+  $('gridIcon').setAttribute(
+    'transform',
+    `scale(${iconScale})`
+  );
+
+  $('loadIcon').setAttribute(
+    'transform',
+    `scale(${iconScale})`
+  );
+
+  $('batteryIcon').setAttribute(
+    'transform',
+    `scale(${iconScale})`
+  );
+
+  $('houseIcon').setAttribute(
+    'transform',
+    `scale(${iconScale * 1.06})`
+  );
+
+
+  const valueSize =
+    mobile
+    ? 18
+    :
+    (
+      tablet
+      ? 17
+      : 17
+    );
+
+
+  const labelSize =
+    mobile
+    ? 12.5
+    :
+    (
+      tablet
+      ? 11.5
+      : 11
+    );
+
+
+  const subSize =
+    mobile
+    ? 10.5
+    :
+    (
+      tablet
+      ? 10.5
+      : 10
+    );
+
+
+  function positionText(
+    id,
+    x,
+    y,
+    size,
+    anchor = 'middle'
+  )
+  {
+    const element =
+      $(id);
+
+    element.setAttribute(
+      'x',
+      x
+    );
+
+    element.setAttribute(
+      'y',
+      y
+    );
+
+    element.setAttribute(
+      'font-size',
+      size
+    );
+
+    element.setAttribute(
+      'text-anchor',
+      anchor
+    );
+  }
+
+
+  if (width >= 950) {
+
+    const gap =
+      16;
+
+    const leftTextX =
+      -(radius + gap);
+
+    const rightTextX =
+      radius + gap;
+
+    const base =
+      -5;
+
+
+    positionText(
+      'pvValue',
+      leftTextX,
+      base,
+      valueSize,
+      'end'
+    );
+
+    positionText(
+      'pvLabel',
+      leftTextX,
+      base + 23,
+      labelSize,
+      'end'
+    );
+
+    positionText(
+      'pvTemp',
+      leftTextX,
+      base + 43,
+      subSize,
+      'end'
+    );
+
+
+    positionText(
+      'gridValue',
+      rightTextX,
+      base,
+      valueSize,
+      'start'
+    );
+
+    positionText(
+      'gridLabel',
+      rightTextX,
+      base + 23,
+      labelSize,
+      'start'
+    );
+
+    positionText(
+      'gridStatus',
+      rightTextX,
+      base + 43,
+      subSize,
+      'start'
+    );
+
+
+    positionText(
+      'loadValue',
+      leftTextX,
+      base,
+      valueSize,
+      'end'
+    );
+
+    positionText(
+      'loadLabel',
+      leftTextX,
+      base + 23,
+      labelSize,
+      'end'
+    );
+
+
+    positionText(
+      'batteryValue',
+      rightTextX,
+      base,
+      valueSize,
+      'start'
+    );
+
+    positionText(
+      'batteryLabel',
+      rightTextX,
+      base + 23,
+      labelSize,
+      'start'
+    );
+
+    positionText(
+      'batteryInfo',
+      rightTextX,
+      base + 43,
+      subSize,
+      'start'
+    );
+
+  } else {
+
+    const valueY =
+      radius + 30;
+
+
+    positionText(
+      'pvValue',
+      0,
+      valueY,
+      valueSize
+    );
+
+    positionText(
+      'pvLabel',
+      0,
+      valueY + 21,
+      labelSize
+    );
+
+    positionText(
+      'pvTemp',
+      0,
+      valueY + 39,
+      subSize
+    );
+
+
+    positionText(
+      'gridValue',
+      0,
+      valueY,
+      valueSize
+    );
+
+    positionText(
+      'gridLabel',
+      0,
+      valueY + 21,
+      labelSize
+    );
+
+    positionText(
+      'gridStatus',
+      0,
+      valueY + 39,
+      subSize
+    );
+
+
+    positionText(
+      'loadValue',
+      0,
+      valueY,
+      valueSize
+    );
+
+    positionText(
+      'loadLabel',
+      0,
+      valueY + 21,
+      labelSize
+    );
+
+
+    positionText(
+      'batteryValue',
+      0,
+      valueY,
+      valueSize
+    );
+
+    positionText(
+      'batteryLabel',
+      0,
+      valueY + 21,
+      labelSize
+    );
+
+    positionText(
+      'batteryInfo',
+      0,
+      valueY + 39,
+      subSize
+    );
+  }
+
+
+  $('pathPvToHouse').setAttribute(
+    'd',
+    clippedPath(
+      points.pv,
+      points.house,
+      radius,
+      houseRadius
+    ).d
+  );
+
+
+  $('pathGridToHouse').setAttribute(
+    'd',
+    clippedPath(
+      points.grid,
+      points.house,
+      radius,
+      houseRadius
+    ).d
+  );
+
+
+  $('pathHouseToGrid').setAttribute(
+    'd',
+    clippedPath(
+      points.house,
+      points.grid,
+      houseRadius,
+      radius
+    ).d
+  );
+
+
+  $('pathHouseToLoad').setAttribute(
+    'd',
+    clippedPath(
+      points.house,
+      points.load,
+      houseRadius,
+      radius
+    ).d
+  );
+
+
+  $('pathBatteryToHouse').setAttribute(
+    'd',
+    clippedPath(
+      points.battery,
+      points.house,
+      radius,
+      houseRadius
+    ).d
+  );
+
+
+  $('pathHouseToBattery').setAttribute(
+    'd',
+    clippedPath(
+      points.house,
+      points.battery,
+      houseRadius,
+      radius
+    ).d
+  );
+
+
+  if (lastPayload) {
+    renderFlows(
+      lastPayload
+    );
+  }
 }
 
 
-/* =========================================================
-   PUNKTE NACH QUELLANTEIL VERTEILEN
-   ========================================================= */
-
 function allocateDots(
-    weights,
-    numberOfDots = 6
+  weights,
+  numberOfDots = 6
 )
 {
-    const entries =
-        Object
-        .entries(
-            weights
-        )
-        .filter(
-            ([, value]) =>
-                value > 0.0001
-        );
+  const entries =
+    Object
+    .entries(
+      weights
+    )
+    .filter(
+      ([, value]) =>
+        value > 0.0001
+    );
 
 
-    if (
-        !entries.length
-    ) {
-        return [];
-    }
+  if (!entries.length) {
+    return [];
+  }
 
 
-    const total =
-        entries.reduce(
-            (
-                sum,
-                [, value]
-            ) =>
-                sum + value,
-            0
-        );
+  const total =
+    entries.reduce(
+      (
+        sum,
+        [, value]
+      ) =>
+        sum + value,
+      0
+    );
 
 
-    let allocation =
-        entries.map(
-            (
-                [key, value]
-            ) => ({
-                key,
-
-                raw:
-                    value
-                    /
-                    total
-                    *
-                    numberOfDots,
-
-                count:
-                    Math.floor(
-                        value
-                        /
-                        total
-                        *
-                        numberOfDots
-                    )
-            })
-        );
+  let allocation =
+    entries.map(
+      ([key, value]) => ({
+        key,
+        raw:
+          value
+          /
+          total
+          *
+          numberOfDots,
+        count:
+          Math.floor(
+            value
+            /
+            total
+            *
+            numberOfDots
+          )
+      })
+    );
 
 
-    let used =
-        allocation.reduce(
-            (
-                sum,
-                item
-            ) =>
-                sum
-                +
-                item.count,
-            0
-        );
+  let used =
+    allocation.reduce(
+      (
+        sum,
+        item
+      ) =>
+        sum
+        +
+        item.count,
+      0
+    );
 
+
+  allocation.sort(
+    (
+      a,
+      b
+    ) =>
+      (
+        b.raw
+        -
+        b.count
+      )
+      -
+      (
+        a.raw
+        -
+        a.count
+      )
+  );
+
+
+  for (
+    let index = 0;
+    index < numberOfDots - used;
+    index++
+  ) {
+
+    allocation[
+      index
+      %
+      allocation.length
+    ].count++;
+  }
+
+
+  const result = [];
+
+  let remaining =
+    allocation.reduce(
+      (
+        sum,
+        item
+      ) =>
+        sum
+        +
+        item.count,
+      0
+    );
+
+
+  while (remaining > 0) {
 
     allocation.sort(
-        (
-            a,
-            b
-        ) =>
-            (
-                b.raw
-                -
-                b.count
-            )
-            -
-            (
-                a.raw
-                -
-                a.count
-            )
+      (
+        a,
+        b
+      ) =>
+        b.count
+        -
+        a.count
     );
 
 
     for (
-        let index = 0;
-        index < numberOfDots - used;
-        index++
+      const item
+      of allocation
     ) {
 
-        allocation[
-            index
-            %
-            allocation.length
-        ].count++;
-    }
+      if (item.count > 0) {
 
-
-    const result = [];
-
-
-    let remaining =
-        allocation.reduce(
-            (
-                sum,
-                item
-            ) =>
-                sum
-                +
-                item.count,
-            0
+        result.push(
+          item.key
         );
 
+        item.count--;
 
-    while (
-        remaining > 0
-    ) {
-
-        allocation.sort(
-            (
-                a,
-                b
-            ) =>
-                b.count
-                -
-                a.count
-        );
-
-
-        for (
-            const item
-            of allocation
-        ) {
-
-            if (
-                item.count > 0
-            ) {
-
-                result.push(
-                    item.key
-                );
-
-
-                item.count--;
-
-
-                remaining--;
-            }
-        }
+        remaining--;
+      }
     }
+  }
 
 
-    return result.slice(
-        0,
-        numberOfDots
-    );
+  return result.slice(
+    0,
+    numberOfDots
+  );
 }
 
-
-/* =========================================================
-   ENERGIEFLÜSSE
-   ========================================================= */
 
 function renderFlows(data)
 {
-    const pv =
-        Number(
-            data.pv || 0
-        );
+  const pv =
+    Number(
+      data.pv || 0
+    );
 
+  const gridImport =
+    Number(
+      data.gridImport || 0
+    );
 
-    const gridImport =
-        Number(
-            data.gridImport || 0
-        );
+  const gridExport =
+    Number(
+      data.gridExport || 0
+    );
 
+  const batteryCharge =
+    Number(
+      data.batteryCharge || 0
+    );
 
-    const gridExport =
-        Number(
-            data.gridExport || 0
-        );
+  const batteryDischarge =
+    Number(
+      data.batteryDischarge || 0
+    );
 
-
-    const batteryCharge =
-        Number(
-            data.batteryCharge || 0
-        );
-
-
-    const batteryDischarge =
-        Number(
-            data.batteryDischarge || 0
-        );
-
-
-    const load =
-        Number(
-            data.house || 0
-        );
-
-
-    clearGroup(
-        'pvDots'
+  const load =
+    Number(
+      data.house || 0
     );
 
 
-    clearGroup(
-        'gridDots'
-    );
+  clearGroup('pvDots');
+  clearGroup('gridDots');
+  clearGroup('loadDots');
+  clearGroup('batteryDots');
 
 
-    clearGroup(
-        'loadDots'
-    );
+  if (pv > 0.05) {
 
-
-    clearGroup(
-        'batteryDots'
-    );
-
-
-    /*
-     * PV -> Haus
-     */
-
-    if (
-        pv > 0.05
+    for (
+      let index = 0;
+      index < 4;
+      index++
     ) {
 
-        for (
-            let index = 0;
-            index < 4;
-            index++
-        ) {
+      makeAnimatedDot(
+        'pvDots',
+        'pathPvToHouse',
+        'var(--pv)',
+        -index * 0.45
+      );
+    }
+  }
 
-            makeAnimatedDot(
-                'pvDots',
-                'pathPvToHouse',
-                'var(--pv)',
-                -index * 0.45
-            );
-        }
+
+  if (gridImport > 0.05) {
+
+    for (
+      let index = 0;
+      index < 3;
+      index++
+    ) {
+
+      makeAnimatedDot(
+        'gridDots',
+        'pathGridToHouse',
+        'var(--grid)',
+        -index * 0.6
+      );
     }
 
+  } else if (gridExport > 0.05) {
 
-    /*
-     * Netz
-     */
-
-    if (
-        gridImport > 0.05
+    for (
+      let index = 0;
+      index < 3;
+      index++
     ) {
 
-        for (
-            let index = 0;
-            index < 3;
-            index++
-        ) {
+      makeAnimatedDot(
+        'gridDots',
+        'pathHouseToGrid',
+        'var(--pv)',
+        -index * 0.6
+      );
+    }
+  }
 
-            makeAnimatedDot(
-                'gridDots',
-                'pathGridToHouse',
-                'var(--grid)',
-                -index * 0.6
-            );
-        }
 
-    } else if (
-        gridExport > 0.05
+  if (batteryDischarge > 0.05) {
+
+    for (
+      let index = 0;
+      index < 3;
+      index++
     ) {
 
-        for (
-            let index = 0;
-            index < 3;
-            index++
-        ) {
-
-            makeAnimatedDot(
-                'gridDots',
-                'pathHouseToGrid',
-                'var(--pv)',
-                -index * 0.6
-            );
-        }
+      makeAnimatedDot(
+        'batteryDots',
+        'pathBatteryToHouse',
+        'var(--battery)',
+        -index * 0.6
+      );
     }
 
+  } else if (batteryCharge > 0.05) {
 
-    /*
-     * Batterie
-     */
-
-    if (
-        batteryDischarge > 0.05
-    ) {
-
-        for (
-            let index = 0;
-            index < 3;
-            index++
-        ) {
-
-            makeAnimatedDot(
-                'batteryDots',
-                'pathBatteryToHouse',
-                'var(--battery)',
-                -index * 0.6
-            );
-        }
-
-    } else if (
-        batteryCharge > 0.05
-    ) {
-
-        const colors =
-            allocateDots(
-                {
-                    pv: pv,
-                    grid: gridImport
-                },
-                4
-            );
+    const colors =
+      allocateDots(
+        {
+          pv:pv,
+          grid:gridImport
+        },
+        4
+      );
 
 
-        colors.forEach(
-            (
-                key,
-                index
-            ) => {
+    colors.forEach(
+      (
+        key,
+        index
+      ) => {
 
-                makeAnimatedDot(
-                    'batteryDots',
-                    'pathHouseToBattery',
+        makeAnimatedDot(
+          'batteryDots',
+          'pathHouseToBattery',
 
-                    key === 'grid'
-                    ? 'var(--grid)'
-                    : 'var(--pv)',
+          key === 'grid'
+          ? 'var(--grid)'
+          : 'var(--pv)',
 
-                    -index * 0.48
-                );
-            }
+          -index * 0.48
         );
-    }
+      }
+    );
+  }
 
 
-    /*
-     * Verbrauch:
-     *
-     * Punkte werden entsprechend den aktuell
-     * beteiligten Quellen gemischt.
-     */
+  if (load > 0.05) {
 
-    if (
-        load > 0.05
-    ) {
-
-        const mix =
-            allocateDots(
-                {
-                    pv: pv,
-                    grid: gridImport,
-                    battery: batteryDischarge
-                },
-                6
-            );
+    const mix =
+      allocateDots(
+        {
+          pv:pv,
+          grid:gridImport,
+          battery:batteryDischarge
+        },
+        6
+      );
 
 
-        mix.forEach(
-            (
-                key,
-                index
-            ) => {
+    mix.forEach(
+      (
+        key,
+        index
+      ) => {
 
-                let color =
-                    'var(--pv)';
-
-
-                if (
-                    key === 'grid'
-                ) {
-
-                    color =
-                        'var(--grid)';
-
-                } else if (
-                    key === 'battery'
-                ) {
-
-                    color =
-                        'var(--battery)';
-                }
+        let color =
+          'var(--pv)';
 
 
-                makeAnimatedDot(
-                    'loadDots',
-                    'pathHouseToLoad',
-                    color,
-                    -index * 0.32,
-                    1.95
-                );
-            }
+        if (key === 'grid') {
+          color =
+            'var(--grid)';
+        }
+
+        else if (key === 'battery') {
+          color =
+            'var(--battery)';
+        }
+
+
+        makeAnimatedDot(
+          'loadDots',
+          'pathHouseToLoad',
+          color,
+          -index * 0.32,
+          1.95
         );
-    }
+      }
+    );
+  }
 }
 
-
-/* =========================================================
-   LEISTUNGSFORMAT
-   ========================================================= */
 
 function kw(value)
 {
-    const number =
-        Number(
-            value || 0
-        );
+  const number =
+    Number(
+      value || 0
+    );
 
 
-    if (
-        number < 1
-    ) {
+  if (number < 1) {
 
-        return (
-            number
-            *
-            1000
-        ).toFixed(0)
-        +
-        ' W';
-    }
+    return (
+      number
+      *
+      1000
+    ).toFixed(0)
+    +
+    ' W';
+  }
 
 
-    return number.toFixed(2)
-        +
-        ' kW';
+  return number.toFixed(2)
+  +
+  ' kW';
 }
 
-
-/* =========================================================
-   LIVE-WERTE
-   ========================================================= */
 
 function handleMessage(data)
 {
-    if (
-        !data
-    ) {
-        return;
+  if (!data) {
+    return;
+  }
+
+
+  if (
+    typeof data === 'string'
+  ) {
+
+    try {
+
+      data =
+        JSON.parse(
+          data
+        );
+
+    } catch (error) {
+
+      return;
     }
+  }
 
 
-    if (
-        typeof data === 'string'
-    ) {
-
-        try {
-
-            data =
-                JSON.parse(
-                    data
-                );
-
-        } catch (
-            error
-        ) {
-
-            return;
-        }
-    }
+  lastPayload =
+    data;
 
 
-    lastPayload =
-        data;
+  const pv =
+    Number(
+      data.pv || 0
+    );
 
+  const load =
+    Number(
+      data.house || 0
+    );
 
-    const pv =
+  const gridImport =
+    Number(
+      data.gridImport || 0
+    );
+
+  const gridExport =
+    Number(
+      data.gridExport || 0
+    );
+
+  const batteryCharge =
+    Number(
+      data.batteryCharge || 0
+    );
+
+  const batteryDischarge =
+    Number(
+      data.batteryDischarge || 0
+    );
+
+  const soc =
+    Math.max(
+      0,
+      Math.min(
+        100,
         Number(
-            data.pv || 0
-        );
+          data.soc || 0
+        )
+      )
+    );
 
+  const tempWR =
+    Number(
+      data.tempWR || 0
+    );
 
-    const load =
-        Number(
-            data.house || 0
-        );
+  const tempBattery =
+    Number(
+      data.tempBattery || 0
+    );
 
+  const gridVoltage =
+    Number(
+      data.gridVoltage || 0
+    );
 
-    const gridImport =
-        Number(
-            data.gridImport || 0
-        );
-
-
-    const gridExport =
-        Number(
-            data.gridExport || 0
-        );
-
-
-    const batteryCharge =
-        Number(
-            data.batteryCharge || 0
-        );
-
-
-    const batteryDischarge =
-        Number(
-            data.batteryDischarge || 0
-        );
-
-
-    const soc =
-        Math.max(
-            0,
-            Math.min(
-                100,
-                Number(
-                    data.soc || 0
-                )
-            )
-        );
-
-
-    const tempWR =
-        Number(
-            data.tempWR || 0
-        );
-
-
-    const tempBattery =
-        Number(
-            data.tempBattery || 0
-        );
-
-
-    const gridVoltage =
-        Number(
-            data.gridVoltage || 0
-        );
-
-
-    const gridFrequency =
-        Number(
-            data.gridFrequency || 0
-        );
-
-
-    /* PV */
-
-    $('pvValue').textContent =
-        kw(
-            pv
-        );
-
-
-    $('pvTemp').textContent =
-        `WR ${tempWR.toFixed(1)} °C`;
-
-
-    /* NETZ */
-
-    $('gridValue').textContent =
-        kw(
-            gridImport > 0.05
-            ? gridImport
-            : gridExport
-        );
-
-
-    $('gridStatus').textContent =
-        `${gridVoltage.toFixed(1)} V · ${gridFrequency.toFixed(1)} Hz`;
-
-
-    /* VERBRAUCH */
-
-    $('loadValue').textContent =
-        kw(
-            load
-        );
-
-
-    /* BATTERIE */
-
-    $('batteryValue').textContent =
-        kw(
-            batteryDischarge > 0.05
-            ? batteryDischarge
-            : batteryCharge
-        );
-
-
-    $('batteryLabel').textContent =
-        batteryDischarge > 0.05
-        ? 'Entladen'
-        :
-        (
-            batteryCharge > 0.05
-            ? 'Laden'
-            : 'Batterie'
-        );
-
-
-    $('batteryInfo').textContent =
-        `${soc.toFixed(0)} % · ${tempBattery.toFixed(1)} °C`;
-
-
-    /*
-     * Batteriesymbol proportional füllen.
-     */
-
-    const innerWidth =
-        28
-        *
-        (
-            soc
-            /
-            100
-        );
-
-
-    $('batterySocFill').setAttribute(
-        'x',
-        -15
+  const gridFrequency =
+    Number(
+      data.gridFrequency || 0
     );
 
 
-    $('batterySocFill').setAttribute(
-        'width',
-        innerWidth
+  $('pvValue').textContent =
+    kw(pv);
+
+  $('pvTemp').textContent =
+    `WR ${tempWR.toFixed(1)} °C`;
+
+
+  $('gridValue').textContent =
+    kw(
+      gridImport > 0.05
+      ? gridImport
+      : gridExport
+    );
+
+  $('gridStatus').textContent =
+    `${gridVoltage.toFixed(1)} V · ${gridFrequency.toFixed(1)} Hz`;
+
+
+  $('loadValue').textContent =
+    kw(load);
+
+
+  $('batteryValue').textContent =
+    kw(
+      batteryDischarge > 0.05
+      ? batteryDischarge
+      : batteryCharge
     );
 
 
-    renderFlows(
-        data
+  $('batteryLabel').textContent =
+    batteryDischarge > 0.05
+    ? 'Entladen'
+    :
+    (
+      batteryCharge > 0.05
+      ? 'Laden'
+      : 'Batterie'
     );
+
+
+  $('batteryInfo').textContent =
+    `${soc.toFixed(0)} % · ${tempBattery.toFixed(1)} °C`;
+
+
+  const innerWidth =
+    28
+    *
+    (
+      soc
+      /
+      100
+    );
+
+
+  $('batterySocFill').setAttribute(
+    'width',
+    innerWidth
+  );
+
+
+  renderFlows(data);
 }
 
 
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
-
 const resizeObserver =
-    new ResizeObserver(
-        () => {
+  new ResizeObserver(
+    () => {
 
-            if (
-                resizeRAF
-            ) {
+      if (resizeRAF) {
 
-                cancelAnimationFrame(
-                    resizeRAF
-                );
-            }
+        cancelAnimationFrame(
+          resizeRAF
+        );
+      }
 
 
-            resizeRAF =
-                requestAnimationFrame(
-                    applyGeometry
-                );
-        }
+      resizeRAF =
+        requestAnimationFrame(
+          applyGeometry
+        );
+    }
+  );
+
+
+window.addEventListener(
+  'load',
+  () => {
+
+    applyGeometry();
+
+
+    resizeObserver.observe(
+      $('wrap')
     );
 
 
-/* =========================================================
-   START
-   ========================================================= */
+    if (
+      typeof requestAction
+      ===
+      'function'
+    ) {
 
-window.addEventListener(
-    'load',
-    () => {
-
-        applyGeometry();
-
-
-        resizeObserver.observe(
-            $('wrap')
-        );
-
-
-        if (
-            typeof requestAction
-            ===
-            'function'
-        ) {
-
-            requestAction(
-                'Refresh',
-                true
-            );
-        }
+      requestAction(
+        'Refresh',
+        true
+      );
     }
+  }
 );
 
 </script>
