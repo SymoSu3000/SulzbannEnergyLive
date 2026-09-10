@@ -5,6 +5,11 @@
 
 <meta charset="UTF-8">
 
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+>
+
 <style>
 
     :root {
@@ -15,7 +20,6 @@
         --grid: #f5aa2a;
         --battery: #36a7ff;
         --house: #18c3c8;
-
         --neutral: #8b949e;
 
         --foreground:
@@ -24,11 +28,13 @@
                 #202020
             );
 
-        /*
-         * Verbindungslinie bewusst direkt definiert.
-         * Damit bleibt sie auch in der Desktop-Kachel sichtbar.
-         */
-        --base-line: rgba(175, 181, 188, 0.62);
+        --base-line:
+            rgba(
+                175,
+                181,
+                188,
+                .62
+            );
     }
 
 
@@ -57,7 +63,8 @@
             Arial,
             sans-serif;
 
-        color: var(--foreground);
+        color:
+            var(--foreground);
     }
 
 
@@ -66,7 +73,8 @@
         width: 100%;
         height: 100%;
 
-        color: var(--foreground);
+        color:
+            var(--foreground);
     }
 
 
@@ -77,7 +85,8 @@
         width: 100%;
         height: 100%;
 
-        color: var(--foreground);
+        color:
+            var(--foreground);
     }
 
 
@@ -89,18 +98,22 @@
 
         fill: none;
 
-        stroke: var(--base-line);
+        stroke:
+            var(--base-line);
 
-        stroke-width: 3.0;
+        stroke-width:
+            3.0;
 
-        stroke-linecap: round;
+        stroke-linecap:
+            round;
 
-        opacity: 1;
+        opacity:
+            1;
     }
 
 
     /* ================================================================ */
-    /* Grundkreise                                                      */
+    /* Kreise                                                           */
     /* ================================================================ */
 
     .node-base {
@@ -116,20 +129,27 @@
         stroke:
             var(--neutral);
 
-        stroke-width: 3;
+        stroke-width:
+            3;
     }
 
 
     .ring {
 
-        fill: none;
+        fill:
+            none;
 
-        stroke-width: 4;
+        stroke-width:
+            4;
 
-        stroke-linecap: butt;
+        stroke-linecap:
+            butt;
 
-        transform-box: fill-box;
-        transform-origin: center;
+        transform-box:
+            fill-box;
+
+        transform-origin:
+            center;
 
         transform:
             rotate(-90deg);
@@ -157,24 +177,36 @@
 
 
     /* ================================================================ */
-    /* Texte                                                            */
+    /* Beschriftungen                                                   */
     /* ================================================================ */
 
     .node-title {
 
-        font-size: 26px;
-        font-weight: 650;
+        font-size:
+            26px;
 
-        fill: var(--foreground);
+        font-weight:
+            650;
+
+        fill:
+            var(--foreground);
     }
 
 
+    /*
+     * Desktop:
+     * Leistungswerte bewusst ungefähr gleich gross wie die Titel.
+     */
     .node-value {
 
-        font-size: 35px;
-        font-weight: 760;
+        font-size:
+            27px;
 
-        fill: var(--foreground);
+        font-weight:
+            760;
+
+        fill:
+            var(--foreground);
     }
 
 
@@ -195,31 +227,40 @@
 
     .node-sub {
 
-        font-size: 20px;
+        font-size:
+            20px;
 
-        fill: var(--foreground);
+        fill:
+            var(--foreground);
 
-        opacity: .72;
+        opacity:
+            .76;
     }
 
 
     .node-sub-small {
 
-        font-size: 17px;
+        font-size:
+            17px;
 
-        fill: var(--foreground);
+        fill:
+            var(--foreground);
 
-        opacity: .64;
+        opacity:
+            .70;
     }
 
 
     .weather-text {
 
-        font-size: 18px;
+        font-size:
+            18px;
 
-        fill: var(--foreground);
+        fill:
+            var(--foreground);
 
-        opacity: .72;
+        opacity:
+            .76;
     }
 
 
@@ -229,32 +270,46 @@
 
     .icon-line {
 
-        fill: none;
+        fill:
+            none;
 
-        stroke: var(--foreground);
+        stroke:
+            var(--foreground);
 
-        stroke-width: 5;
+        stroke-width:
+            5;
 
-        stroke-linecap: round;
-        stroke-linejoin: round;
+        stroke-linecap:
+            round;
+
+        stroke-linejoin:
+            round;
     }
 
 
     .house-icon {
 
-        stroke: var(--house);
+        stroke:
+            var(--house);
 
-        stroke-width: 8;
+        stroke-width:
+            8;
     }
 
 
+    /*
+     * Wettersymbol etwas grösser als bisher.
+     */
     .weather-main {
 
-        font-size: 36px;
+        font-size:
+            44px;
 
-        text-anchor: middle;
+        text-anchor:
+            middle;
 
-        dominant-baseline: middle;
+        dominant-baseline:
+            middle;
     }
 
 
@@ -264,9 +319,11 @@
 
     .flow-dot {
 
-        r: 6;
+        r:
+            6;
 
-        pointer-events: none;
+        pointer-events:
+            none;
     }
 
 
@@ -275,17 +332,26 @@
     /* ================================================================ */
 
     .battery-fill-bg {
-        fill: rgba(128,128,128,.18);
+
+        fill:
+            rgba(
+                128,
+                128,
+                128,
+                .18
+            );
     }
 
 
     .battery-fill {
-        fill: var(--battery);
+
+        fill:
+            var(--battery);
     }
 
 
     /* ================================================================ */
-    /* DARK                                                             */
+    /* Dark                                                             */
     /* ================================================================ */
 
     @media (prefers-color-scheme: dark) {
@@ -298,10 +364,6 @@
                     #f3f5f7
                 );
 
-            /*
-             * Auf dunklem Symcon-Hintergrund deutlich sichtbar,
-             * aber bewusst nicht zu dominant.
-             */
             --base-line:
                 rgba(
                     205,
@@ -314,7 +376,7 @@
 
 
     /* ================================================================ */
-    /* LIGHT                                                            */
+    /* Light                                                            */
     /* ================================================================ */
 
     @media (prefers-color-scheme: light) {
@@ -339,77 +401,96 @@
 
 
     /* ================================================================ */
-    /* MOBILE                                                           */
+    /* Mobile                                                           */
     /*
-     * Nur moderat grössere Zusatztexte.
-     *
-     * Die Werte bleiben bewusst wesentlich kleiner als bei den
-     * vorherigen Versuchen, damit nichts über den Rand läuft.
+     * Nur die kleinen Zusatzinformationen werden grösser.
+     * Geometrie bleibt unverändert.
      * ================================================================ */
 
     @media (max-width: 700px) {
 
+        /*
+         * Auf Mobile dürfen die Leistungswerte wieder etwas
+         * grösser sein als auf Desktop.
+         */
+        .node-value {
+
+            font-size:
+                30px;
+        }
+
+
         .node-sub {
 
-            font-size: 23px;
+            font-size:
+                24px;
 
-            font-weight: 450;
+            font-weight:
+                500;
 
-            opacity: .80;
+            opacity:
+                .86;
         }
 
 
         .node-sub-small {
 
-            font-size: 20px;
+            font-size:
+                21px;
 
-            font-weight: 450;
+            font-weight:
+                500;
 
-            opacity: .76;
+            opacity:
+                .82;
         }
 
 
         .weather-text {
 
-            font-size: 21px;
+            font-size:
+                22px;
 
-            font-weight: 450;
+            font-weight:
+                500;
 
-            opacity: .80;
+            opacity:
+                .86;
         }
 
 
-        .base-line {
+        .weather-main {
 
-            stroke-width: 3.2;
+            font-size:
+                46px;
         }
     }
 
 
     /*
      * Sehr schmale Mobile-Ansicht:
-     * bewusst NICHT weiter vergrössern.
-     *
-     * So verhindern wir das Abschneiden rechts/links.
+     * nicht weiter aufblasen.
      */
-
     @media (max-width: 430px) {
 
         .node-sub {
 
-            font-size: 22px;
+            font-size:
+                23px;
         }
 
 
         .node-sub-small {
 
-            font-size: 19px;
+            font-size:
+                20px;
         }
 
 
         .weather-text {
 
-            font-size: 20px;
+            font-size:
+                21px;
         }
     }
 
@@ -417,7 +498,9 @@
     @media (prefers-reduced-motion: reduce) {
 
         .flow-dot {
-            display: none !important;
+
+            display:
+                none !important;
         }
     }
 
@@ -693,8 +776,6 @@
     <g id="consumerRing"></g>
 
 
-    <!-- Stecker -->
-
     <g transform="translate(285 500)">
 
         <path
@@ -856,7 +937,7 @@
 
 
     <!-- ================================================================ -->
-    <!-- Punkt-Pools                                                     -->
+    <!-- Punkte                                                          -->
     <!-- ================================================================ -->
 
     <g id="pvDots"></g>
@@ -955,13 +1036,9 @@ const flows = {
     pv: {
 
         path: null,
-
         dots: [],
-
         phase: 0,
-
         power: 0,
-
         direction: 1,
 
         colors: [
@@ -973,13 +1050,9 @@ const flows = {
     grid: {
 
         path: null,
-
         dots: [],
-
         phase: 0,
-
         power: 0,
-
         direction: 1,
 
         colors: [
@@ -991,13 +1064,9 @@ const flows = {
     consumer: {
 
         path: null,
-
         dots: [],
-
         phase: 0,
-
         power: 0,
-
         direction: 1,
 
         colors: [
@@ -1009,13 +1078,9 @@ const flows = {
     battery: {
 
         path: null,
-
         dots: [],
-
         phase: 0,
-
         power: 0,
-
         direction: 1,
 
         colors: [
@@ -1025,7 +1090,8 @@ const flows = {
 };
 
 
-const MAX_DOTS = 6;
+const MAX_DOTS =
+    6;
 
 
 let lastFrameTime =
@@ -1033,7 +1099,7 @@ let lastFrameTime =
 
 
 // ============================================================================
-// Start
+// Initialisierung
 // ============================================================================
 
 function init()
@@ -1164,14 +1230,16 @@ function createDotPool(
 // Nachricht von Symcon
 // ============================================================================
 
-function handleMessage(message)
+function handleMessage(
+    message
+)
 {
     let data =
         message;
 
 
     if (
-        typeof message
+        typeof data
         ===
         'string'
     ) {
@@ -1180,7 +1248,7 @@ function handleMessage(message)
 
             data =
                 JSON.parse(
-                    message
+                    data
                 );
 
         } catch (e) {
@@ -1234,6 +1302,7 @@ function updateTexts()
 
     setText(
         'pvTemp',
+
         '('
         +
         Number(
@@ -1304,6 +1373,7 @@ function updateTexts()
     ) {
 
         gridValueElement.style.fill =
+
             v.gridState === 'export'
                 ?
                 COLORS.pv
@@ -1455,7 +1525,6 @@ function updateRings()
         state.values;
 
 
-    // Netz
     const gridRing =
         document.getElementById(
             'gridRing'
@@ -1488,7 +1557,6 @@ function updateRings()
     }
 
 
-    // Batterie
     const batteryRing =
         document.getElementById(
             'batteryRing'
@@ -1521,7 +1589,6 @@ function updateRings()
     }
 
 
-    // Verbraucher
     drawSegmentedRing(
         'consumerRing',
         285,
@@ -1555,7 +1622,6 @@ function updateRings()
     );
 
 
-    // Haus
     drawSegmentedRing(
         'houseRing',
         500,
@@ -1839,7 +1905,6 @@ function updateFlowTargets()
         state.values;
 
 
-    // PVA
     flows.pv.power =
         Math.max(
             0,
@@ -1861,7 +1926,6 @@ function updateFlowTargets()
         ];
 
 
-    // Netz
     if (
         v.gridState === 'import'
     ) {
@@ -1903,7 +1967,6 @@ function updateFlowTargets()
     }
 
 
-    // Verbraucher
     flows.consumer.power =
         Math.max(
             0,
@@ -1949,7 +2012,6 @@ function updateFlowTargets()
         );
 
 
-    // Batterie
     if (
         v.batteryState === 'charge'
     ) {
@@ -1993,7 +2055,7 @@ function updateFlowTargets()
 
 
 // ============================================================================
-// Gemischte Farben
+// Gemischte Quellenfarben
 // ============================================================================
 
 function createColorSequence(
@@ -2103,6 +2165,7 @@ function createColorSequence(
                 bestScore =
                     score;
 
+
                 selected =
                     counter;
             }
@@ -2126,7 +2189,9 @@ function createColorSequence(
 // Permanente Animation
 // ============================================================================
 
-function animate(now)
+function animate(
+    now
+)
 {
     let delta =
         (
@@ -2180,7 +2245,7 @@ function animate(now)
 
 
 // ============================================================================
-// Einzelner Fluss
+// Einzelner Energiefluss
 // ============================================================================
 
 function animateFlow(
@@ -2570,7 +2635,7 @@ function updateBatteryFill()
 
 
 // ============================================================================
-// Dominante Farbe
+// Dominante Quellenfarbe
 // ============================================================================
 
 function getDominantColor(
@@ -2583,7 +2648,9 @@ function getDominantColor(
         [
             {
                 value:
-                    Number(pv) || 0,
+                    Number(pv)
+                    ||
+                    0,
 
                 color:
                     COLORS.pv
@@ -2591,7 +2658,9 @@ function getDominantColor(
 
             {
                 value:
-                    Number(battery) || 0,
+                    Number(battery)
+                    ||
+                    0,
 
                 color:
                     COLORS.battery
@@ -2599,7 +2668,9 @@ function getDominantColor(
 
             {
                 value:
-                    Number(grid) || 0,
+                    Number(grid)
+                    ||
+                    0,
 
                 color:
                     COLORS.grid
@@ -2831,7 +2902,7 @@ function getWeather(
 
 
 // ============================================================================
-// Leistung formatieren
+// Leistung
 // ============================================================================
 
 function formatPower(
@@ -2906,7 +2977,9 @@ function formatGridInfo(
 
 
     if (
-        Number.isFinite(v)
+        Number.isFinite(
+            v
+        )
         &&
         v > 0
     ) {
@@ -2920,7 +2993,9 @@ function formatGridInfo(
 
 
     if (
-        Number.isFinite(f)
+        Number.isFinite(
+            f
+        )
         &&
         f > 0
     ) {
@@ -2978,7 +3053,6 @@ document.addEventListener(
 );
 
 </script>
-
 
 </body>
 
