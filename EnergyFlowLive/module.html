@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="de">
 
 <head>
@@ -25,19 +24,11 @@
                 #202020
             );
 
-        --muted:
-            color-mix(
-                in srgb,
-                var(--foreground) 62%,
-                transparent
-            );
-
-        --base-line:
-            color-mix(
-                in srgb,
-                var(--foreground) 35%,
-                transparent
-            );
+        /*
+         * Verbindungslinie bewusst direkt definiert.
+         * Damit bleibt sie auch in der Desktop-Kachel sichtbar.
+         */
+        --base-line: rgba(175, 181, 188, 0.62);
     }
 
 
@@ -90,17 +81,27 @@
     }
 
 
+    /* ================================================================ */
+    /* Verbindungslinien                                                */
+    /* ================================================================ */
+
     .base-line {
 
         fill: none;
 
         stroke: var(--base-line);
 
-        stroke-width: 2.4;
+        stroke-width: 3.0;
 
         stroke-linecap: round;
+
+        opacity: 1;
     }
 
+
+    /* ================================================================ */
+    /* Grundkreise                                                      */
+    /* ================================================================ */
 
     .node-base {
 
@@ -155,6 +156,10 @@
     }
 
 
+    /* ================================================================ */
+    /* Texte                                                            */
+    /* ================================================================ */
+
     .node-title {
 
         font-size: 26px;
@@ -208,6 +213,20 @@
     }
 
 
+    .weather-text {
+
+        font-size: 18px;
+
+        fill: var(--foreground);
+
+        opacity: .72;
+    }
+
+
+    /* ================================================================ */
+    /* Icons                                                            */
+    /* ================================================================ */
+
     .icon-line {
 
         fill: none;
@@ -239,15 +258,9 @@
     }
 
 
-    .weather-text {
-
-        font-size: 18px;
-
-        fill: var(--foreground);
-
-        opacity: .72;
-    }
-
+    /* ================================================================ */
+    /* Punkte                                                           */
+    /* ================================================================ */
 
     .flow-dot {
 
@@ -256,6 +269,10 @@
         pointer-events: none;
     }
 
+
+    /* ================================================================ */
+    /* Batterie                                                         */
+    /* ================================================================ */
 
     .battery-fill-bg {
         fill: rgba(128,128,128,.18);
@@ -268,7 +285,7 @@
 
 
     /* ================================================================ */
-    /* Dark-Fallback                                                    */
+    /* DARK                                                             */
     /* ================================================================ */
 
     @media (prefers-color-scheme: dark) {
@@ -281,19 +298,23 @@
                     #f3f5f7
                 );
 
+            /*
+             * Auf dunklem Symcon-Hintergrund deutlich sichtbar,
+             * aber bewusst nicht zu dominant.
+             */
             --base-line:
                 rgba(
-                    220,
-                    228,
-                    238,
-                    .42
+                    205,
+                    211,
+                    217,
+                    .58
                 );
         }
     }
 
 
     /* ================================================================ */
-    /* Light-Fallback                                                   */
+    /* LIGHT                                                            */
     /* ================================================================ */
 
     @media (prefers-color-scheme: light) {
@@ -308,11 +329,87 @@
 
             --base-line:
                 rgba(
-                    50,
-                    55,
-                    60,
-                    .38
+                    75,
+                    80,
+                    86,
+                    .55
                 );
+        }
+    }
+
+
+    /* ================================================================ */
+    /* MOBILE                                                           */
+    /*
+     * Nur moderat grössere Zusatztexte.
+     *
+     * Die Werte bleiben bewusst wesentlich kleiner als bei den
+     * vorherigen Versuchen, damit nichts über den Rand läuft.
+     * ================================================================ */
+
+    @media (max-width: 700px) {
+
+        .node-sub {
+
+            font-size: 23px;
+
+            font-weight: 450;
+
+            opacity: .80;
+        }
+
+
+        .node-sub-small {
+
+            font-size: 20px;
+
+            font-weight: 450;
+
+            opacity: .76;
+        }
+
+
+        .weather-text {
+
+            font-size: 21px;
+
+            font-weight: 450;
+
+            opacity: .80;
+        }
+
+
+        .base-line {
+
+            stroke-width: 3.2;
+        }
+    }
+
+
+    /*
+     * Sehr schmale Mobile-Ansicht:
+     * bewusst NICHT weiter vergrössern.
+     *
+     * So verhindern wir das Abschneiden rechts/links.
+     */
+
+    @media (max-width: 430px) {
+
+        .node-sub {
+
+            font-size: 22px;
+        }
+
+
+        .node-sub-small {
+
+            font-size: 19px;
+        }
+
+
+        .weather-text {
+
+            font-size: 20px;
         }
     }
 
@@ -346,17 +443,12 @@
     <!-- Wege                                                            -->
     <!-- ================================================================ -->
 
-
-    <!-- PV -> Haus -->
-
     <path
         id="pathPV"
         class="base-line"
         d="M332.60 206.53 L441.30 289.95"
     />
 
-
-    <!-- Netz <-> Haus -->
 
     <path
         id="pathGrid"
@@ -365,16 +457,12 @@
     />
 
 
-    <!-- Haus -> Verbraucher -->
-
     <path
         id="pathConsumer"
         class="base-line"
         d="M441.30 380.05 L332.60 463.47"
     />
 
-
-    <!-- Haus <-> Batterie -->
 
     <path
         id="pathBattery"
@@ -557,9 +645,7 @@
     />
 
 
-    <g
-        id="houseRing"
-    ></g>
+    <g id="houseRing"></g>
 
 
     <g transform="translate(500 335)">
@@ -604,10 +690,10 @@
     />
 
 
-    <g
-        id="consumerRing"
-    ></g>
+    <g id="consumerRing"></g>
 
+
+    <!-- Stecker -->
 
     <g transform="translate(285 500)">
 
@@ -941,6 +1027,7 @@ const flows = {
 
 const MAX_DOTS = 6;
 
+
 let lastFrameTime =
     performance.now();
 
@@ -1007,6 +1094,7 @@ function init()
         );
 
     } catch (e) {
+
     }
 
 
@@ -1182,18 +1270,14 @@ function updateTexts()
 
 
     if (
-        v.gridState
-        ===
-        'import'
+        v.gridState === 'import'
     ) {
 
         gridPower =
             v.gridImport;
 
     } else if (
-        v.gridState
-        ===
-        'export'
+        v.gridState === 'export'
     ) {
 
         gridPower =
@@ -1253,7 +1337,6 @@ function updateTexts()
 
     setText(
         'gridInfo',
-
         formatGridInfo(
             v.voltage,
             v.frequency
@@ -1263,7 +1346,6 @@ function updateTexts()
 
     setText(
         'consumerValue',
-
         formatPower(
             v.house
         )
@@ -1315,7 +1397,6 @@ function updateTexts()
 
     setText(
         'batteryPower',
-
         formatPower(
             batteryPower
         )
@@ -1419,18 +1500,14 @@ function updateRings()
     ) {
 
         if (
-            v.batteryState
-            ===
-            'charge'
+            v.batteryState === 'charge'
         ) {
 
             batteryRing.style.stroke =
                 COLORS.pv;
 
         } else if (
-            v.batteryState
-            ===
-            'discharge'
+            v.batteryState === 'discharge'
         ) {
 
             batteryRing.style.stroke =
@@ -1444,7 +1521,7 @@ function updateRings()
     }
 
 
-    // Verbraucher proportional
+    // Verbraucher
     drawSegmentedRing(
         'consumerRing',
         285,
@@ -1478,7 +1555,7 @@ function updateRings()
     );
 
 
-    // Haus proportional
+    // Haus
     drawSegmentedRing(
         'houseRing',
         500,
@@ -1534,6 +1611,7 @@ function drawSegmentedRing(
     if (
         !container
     ) {
+
         return;
     }
 
@@ -1639,7 +1717,7 @@ function drawSegmentedRing(
 
 
 // ============================================================================
-// Ein Ringsegment
+// Ringsegment
 // ============================================================================
 
 function createRingSegment(
@@ -1733,7 +1811,6 @@ function createRingSegment(
 
     circle.setAttribute(
         'transform',
-
         'rotate(-90 '
         +
         cx
@@ -1753,7 +1830,7 @@ function createRingSegment(
 
 
 // ============================================================================
-// Fluss-Zielwerte
+// Flüsse
 // ============================================================================
 
 function updateFlowTargets()
@@ -1762,13 +1839,7 @@ function updateFlowTargets()
         state.values;
 
 
-    // ------------------------------------------------------------------------
-    // PVA -> Haus
-    //
-    // Die Linie PVA-Haus zeigt die gesamte aktuell erzeugte PV-Energie,
-    // die in das System fliesst.
-    // ------------------------------------------------------------------------
-
+    // PVA
     flows.pv.power =
         Math.max(
             0,
@@ -1790,24 +1861,9 @@ function updateFlowTargets()
         ];
 
 
-    // ------------------------------------------------------------------------
     // Netz
-    //
-    // Pfad läuft Netz -> Haus.
-    //
-    // Bezug:
-    // orange und vorwärts.
-    //
-    // Einspeisung:
-    // PV -> Netz = grün und rückwärts.
-    //
-    // Batterie -> Netz wird NICHT dargestellt.
-    // ------------------------------------------------------------------------
-
     if (
-        v.gridState
-        ===
-        'import'
+        v.gridState === 'import'
     ) {
 
         flows.grid.power =
@@ -1824,9 +1880,7 @@ function updateFlowTargets()
             ];
 
     } else if (
-        v.gridState
-        ===
-        'export'
+        v.gridState === 'export'
     ) {
 
         flows.grid.power =
@@ -1849,10 +1903,7 @@ function updateFlowTargets()
     }
 
 
-    // ------------------------------------------------------------------------
     // Verbraucher
-    // ------------------------------------------------------------------------
-
     flows.consumer.power =
         Math.max(
             0,
@@ -1898,20 +1949,9 @@ function updateFlowTargets()
         );
 
 
-    // ------------------------------------------------------------------------
     // Batterie
-    //
-    // Laden:
-    // PV -> Batterie = grün
-    //
-    // Entladen:
-    // Batterie -> Haus = blau
-    // ------------------------------------------------------------------------
-
     if (
-        v.batteryState
-        ===
-        'charge'
+        v.batteryState === 'charge'
     ) {
 
         flows.battery.power =
@@ -1928,9 +1968,7 @@ function updateFlowTargets()
             ];
 
     } else if (
-        v.batteryState
-        ===
-        'discharge'
+        v.batteryState === 'discharge'
     ) {
 
         flows.battery.power =
@@ -1955,7 +1993,7 @@ function updateFlowTargets()
 
 
 // ============================================================================
-// Quellenfarben gleichmässig mischen
+// Gemischte Farben
 // ============================================================================
 
 function createColorSequence(
@@ -1998,9 +2036,6 @@ function createColorSequence(
         );
 
 
-    // 12 virtuelle Plätze sorgen dafür,
-    // dass auch kleinere Anteile sichtbar bleiben.
-
     const slots =
         12;
 
@@ -2012,6 +2047,7 @@ function createColorSequence(
     const counters =
         valid.map(
             part => ({
+
                 color:
                     part.color,
 
@@ -2066,7 +2102,6 @@ function createColorSequence(
 
                 bestScore =
                     score;
-
 
                 selected =
                     counter;
@@ -2315,11 +2350,9 @@ function animateFlow(
 
         const sequencePosition =
             Math.floor(
-                (
-                    phase
-                    *
-                    colorSequence.length
-                )
+                phase
+                *
+                colorSequence.length
             )
             %
             colorSequence.length;
@@ -2337,11 +2370,11 @@ function animateFlow(
 
 // ============================================================================
 // Punktanzahl
-//
-// Deutlich näher an der originalen Symcon-Verteilung
 // ============================================================================
 
-function getDotCount(powerW)
+function getDotCount(
+    powerW
+)
 {
     if (
         powerW <= 0
@@ -2488,7 +2521,7 @@ function getSecondsPerPath(
 
 
 // ============================================================================
-// Batterie-Füllstand
+// Batteriefüllstand
 // ============================================================================
 
 function updateBatteryFill()
@@ -2633,6 +2666,7 @@ function getWeather(
     ) {
 
         return {
+
             symbol:
                 '🌧️',
 
@@ -2649,6 +2683,7 @@ function getWeather(
     ) {
 
         return {
+
             symbol:
                 '⛈️',
 
@@ -2665,6 +2700,7 @@ function getWeather(
     ) {
 
         return {
+
             symbol:
                 '🌧️',
 
@@ -2681,6 +2717,7 @@ function getWeather(
     ) {
 
         return {
+
             symbol:
                 '🌨️',
 
@@ -2697,6 +2734,7 @@ function getWeather(
     ) {
 
         return {
+
             symbol:
                 '🌫️',
 
@@ -2793,7 +2831,7 @@ function getWeather(
 
 
 // ============================================================================
-// Formatierung
+// Leistung formatieren
 // ============================================================================
 
 function formatPower(
