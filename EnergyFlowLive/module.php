@@ -72,9 +72,7 @@ class EnergyFlowLive extends IPSModule
             return;
         }
 
-        throw new Exception(
-            'Ungültige Aktion: ' . $Ident
-        );
+        throw new Exception('Ungültige Aktion: ' . $Ident);
     }
 
 
@@ -122,9 +120,7 @@ class EnergyFlowLive extends IPSModule
         ];
 
         foreach ($ids as $id) {
-
             if (IPS_VariableExists($id)) {
-
                 $this->RegisterMessage(
                     $id,
                     VM_UPDATE
@@ -140,8 +136,7 @@ class EnergyFlowLive extends IPSModule
 
     private function SendLiveValues(): void
     {
-        $payload =
-            $this->BuildPayload();
+        $payload = $this->BuildPayload();
 
         $this->UpdateVisualizationValue(
             json_encode(
@@ -179,12 +174,12 @@ class EnergyFlowLive extends IPSModule
             );
 
 
-        // ====================================================================
+        // --------------------------------------------------------------------
         // Netz
         //
-        // positiv = Netzbezug
+        // positiv = Bezug
         // negativ = Einspeisung
-        // ====================================================================
+        // --------------------------------------------------------------------
 
         $gridImport =
             max(
@@ -199,15 +194,12 @@ class EnergyFlowLive extends IPSModule
             );
 
 
-        // ====================================================================
+        // --------------------------------------------------------------------
         // Batterie
         //
-        // #21945:
-        // positiv beim Laden
-        //
-        // #50622:
-        // negativ beim Entladen
-        // ====================================================================
+        // Laden positiv in #21945
+        // Entladen negativ in #50622
+        // --------------------------------------------------------------------
 
         $batteryCharge =
             max(
@@ -222,9 +214,9 @@ class EnergyFlowLive extends IPSModule
             );
 
 
-        // ====================================================================
+        // --------------------------------------------------------------------
         // Hausverbrauch
-        // ====================================================================
+        // --------------------------------------------------------------------
 
         $house =
             $pvRaw
@@ -244,13 +236,14 @@ class EnergyFlowLive extends IPSModule
             );
 
 
-        // ====================================================================
+        // --------------------------------------------------------------------
         // Energiequellen des Hausverbrauchs
         //
-        // Netzbezug    = Netz -> Haus
-        // Batterieentl.= Batterie -> Haus
-        // Rest         = PV -> Haus
-        // ====================================================================
+        // Netzbezug ist sicher Netz -> Haus
+        // Batterieentladung ist sicher Batterie -> Haus
+        //
+        // Restlicher Hausverbrauch wird aus PV gedeckt.
+        // --------------------------------------------------------------------
 
         $houseFromGrid =
             min(
@@ -258,7 +251,7 @@ class EnergyFlowLive extends IPSModule
                 $gridImport
             );
 
-        $houseRemaining =
+        $houseRemainingAfterGrid =
             max(
                 0.0,
                 $house
@@ -268,7 +261,7 @@ class EnergyFlowLive extends IPSModule
 
         $houseFromBattery =
             min(
-                $houseRemaining,
+                $houseRemainingAfterGrid,
                 $batteryDischarge
             );
 
@@ -283,8 +276,8 @@ class EnergyFlowLive extends IPSModule
             );
 
 
-        // ====================================================================
-        // PV-Ziele
+        // --------------------------------------------------------------------
+        // PV-Verteilung
         //
         // Bei deiner Anlage:
         //
@@ -292,8 +285,9 @@ class EnergyFlowLive extends IPSModule
         // PV -> Batterie
         // PV -> Netz
         //
-        // Batterie -> Netz wird nicht dargestellt.
-        // ====================================================================
+        // Netzladung Batterie = deaktiviert
+        // Batterieexport Netz = deaktiviert
+        // --------------------------------------------------------------------
 
         $pvToHouse =
             $houseFromPV;
@@ -305,106 +299,55 @@ class EnergyFlowLive extends IPSModule
             $gridExport;
 
 
-        // ====================================================================
-        // Netzstatus
-        // ====================================================================
+        // --------------------------------------------------------------------
+        // Zustände
+        // --------------------------------------------------------------------
 
         if ($gridImport > 0.5) {
-
-            $gridState =
-                'import';
-
+            $gridState = 'import';
         } elseif ($gridExport > 0.5) {
-
-            $gridState =
-                'export';
-
+            $gridState = 'export';
         } else {
-
-            $gridState =
-                'idle';
+            $gridState = 'idle';
         }
 
 
-        // ====================================================================
-        // Batteriestatus
-        // ====================================================================
-
         if ($batteryCharge > 0.5) {
-
-            $batteryState =
-                'charge';
-
+            $batteryState = 'charge';
         } elseif ($batteryDischarge > 0.5) {
-
-            $batteryState =
-                'discharge';
-
+            $batteryState = 'discharge';
         } else {
-
-            $batteryState =
-                'idle';
+            $batteryState = 'idle';
         }
 
 
         return [
+            'type' => 'energy',
 
-            'type' =>
-                'energy',
+            'timestamp' => time(),
 
-            'timestamp' =>
-                time(),
+            'pv' => $pvRaw,
 
-            'pv' =>
-                $pvRaw,
+            'gridRaw' => $gridRaw,
+            'gridImport' => $gridImport,
+            'gridExport' => $gridExport,
+            'gridState' => $gridState,
 
-            'gridRaw' =>
-                $gridRaw,
+            'batteryCharge' => $batteryCharge,
+            'batteryDischarge' => $batteryDischarge,
+            'batteryState' => $batteryState,
 
-            'gridImport' =>
-                $gridImport,
+            'house' => $house,
 
-            'gridExport' =>
-                $gridExport,
+            // Quellenmix Haus
+            'houseFromPV' => $houseFromPV,
+            'houseFromBattery' => $houseFromBattery,
+            'houseFromGrid' => $houseFromGrid,
 
-            'gridState' =>
-                $gridState,
-
-            'batteryCharge' =>
-                $batteryCharge,
-
-            'batteryDischarge' =>
-                $batteryDischarge,
-
-            'batteryState' =>
-                $batteryState,
-
-            'house' =>
-                $house,
-
-            // Quellen des Hausverbrauchs
-
-            'houseFromPV' =>
-                $houseFromPV,
-
-            'houseFromBattery' =>
-                $houseFromBattery,
-
-            'houseFromGrid' =>
-                $houseFromGrid,
-
-            // PV-Verteilung
-
-            'pvToHouse' =>
-                $pvToHouse,
-
-            'pvToBattery' =>
-                $pvToBattery,
-
-            'pvToGrid' =>
-                $pvToGrid,
-
-            // Zusatzwerte
+            // PV-Ziele
+            'pvToHouse' => $pvToHouse,
+            'pvToBattery' => $pvToBattery,
+            'pvToGrid' => $pvToGrid,
 
             'soc' =>
                 $this->ReadFloat(
