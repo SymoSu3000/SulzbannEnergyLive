@@ -77,7 +77,7 @@ class EnergyFlowLive extends IPSModule
 
 
     // ========================================================================
-    // Symcon Nachrichten
+    // Nachrichten
     // ========================================================================
 
     public function MessageSink(
@@ -151,8 +151,11 @@ class EnergyFlowLive extends IPSModule
     private function BuildPayload(): array
     {
         $pvRaw =
-            $this->ReadFloat(
-                self::ID_PV
+            max(
+                0.0,
+                $this->ReadFloat(
+                    self::ID_PV
+                )
             );
 
         $gridRaw =
@@ -171,13 +174,12 @@ class EnergyFlowLive extends IPSModule
             );
 
 
-        // ====================================================================
+        // --------------------------------------------------------------------
         // Netz
         //
-        // #36592:
-        // positiv = Netzbezug
+        // positiv = Bezug
         // negativ = Einspeisung
-        // ====================================================================
+        // --------------------------------------------------------------------
 
         $gridImport =
             max(
@@ -192,17 +194,12 @@ class EnergyFlowLive extends IPSModule
             );
 
 
-        // ====================================================================
+        // --------------------------------------------------------------------
         // Batterie
         //
-        // Diagnose bestätigt:
-        //
-        // Laden:
-        // #21945 positiv
-        //
-        // Entladen:
-        // #50622 negativ
-        // ====================================================================
+        // Laden positiv in #21945
+        // Entladen negativ in #50622
+        // --------------------------------------------------------------------
 
         $batteryCharge =
             max(
@@ -217,16 +214,9 @@ class EnergyFlowLive extends IPSModule
             );
 
 
-        // ====================================================================
+        // --------------------------------------------------------------------
         // Hausverbrauch
-        //
-        // Haus =
-        // PV
-        // + Netzbezug
-        // + Batterieentladung
-        // - Einspeisung
-        // - Batterieladung
-        // ====================================================================
+        // --------------------------------------------------------------------
 
         $house =
             $pvRaw
@@ -246,22 +236,72 @@ class EnergyFlowLive extends IPSModule
             );
 
 
-        // ====================================================================
-        // Batterie-Zustand
-        // ====================================================================
+        // --------------------------------------------------------------------
+        // Energiequellen des Hausverbrauchs
+        //
+        // Netzbezug ist sicher Netz -> Haus
+        // Batterieentladung ist sicher Batterie -> Haus
+        //
+        // Restlicher Hausverbrauch wird aus PV gedeckt.
+        // --------------------------------------------------------------------
 
-        if ($batteryCharge > 0.5) {
-            $batteryState = 'charge';
-        } elseif ($batteryDischarge > 0.5) {
-            $batteryState = 'discharge';
-        } else {
-            $batteryState = 'idle';
-        }
+        $houseFromGrid =
+            min(
+                $house,
+                $gridImport
+            );
+
+        $houseRemainingAfterGrid =
+            max(
+                0.0,
+                $house
+                -
+                $houseFromGrid
+            );
+
+        $houseFromBattery =
+            min(
+                $houseRemainingAfterGrid,
+                $batteryDischarge
+            );
+
+        $houseFromPV =
+            max(
+                0.0,
+                $house
+                -
+                $houseFromGrid
+                -
+                $houseFromBattery
+            );
 
 
-        // ====================================================================
-        // Netz-Zustand
-        // ====================================================================
+        // --------------------------------------------------------------------
+        // PV-Verteilung
+        //
+        // Bei deiner Anlage:
+        //
+        // PV -> Haus
+        // PV -> Batterie
+        // PV -> Netz
+        //
+        // Netzladung Batterie = deaktiviert
+        // Batterieexport Netz = deaktiviert
+        // --------------------------------------------------------------------
+
+        $pvToHouse =
+            $houseFromPV;
+
+        $pvToBattery =
+            $batteryCharge;
+
+        $pvToGrid =
+            $gridExport;
+
+
+        // --------------------------------------------------------------------
+        // Zustände
+        // --------------------------------------------------------------------
 
         if ($gridImport > 0.5) {
             $gridState = 'import';
@@ -269,6 +309,15 @@ class EnergyFlowLive extends IPSModule
             $gridState = 'export';
         } else {
             $gridState = 'idle';
+        }
+
+
+        if ($batteryCharge > 0.5) {
+            $batteryState = 'charge';
+        } elseif ($batteryDischarge > 0.5) {
+            $batteryState = 'discharge';
+        } else {
+            $batteryState = 'idle';
         }
 
 
@@ -289,6 +338,16 @@ class EnergyFlowLive extends IPSModule
             'batteryState' => $batteryState,
 
             'house' => $house,
+
+            // Quellenmix Haus
+            'houseFromPV' => $houseFromPV,
+            'houseFromBattery' => $houseFromBattery,
+            'houseFromGrid' => $houseFromGrid,
+
+            // PV-Ziele
+            'pvToHouse' => $pvToHouse,
+            'pvToBattery' => $pvToBattery,
+            'pvToGrid' => $pvToGrid,
 
             'soc' =>
                 $this->ReadFloat(
