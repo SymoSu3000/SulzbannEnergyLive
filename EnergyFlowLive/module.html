@@ -193,7 +193,6 @@
     }
 
 
-    /* Desktop bewusst ruhiger */
     .node-value {
 
         font-size:
@@ -294,7 +293,6 @@
     }
 
 
-    /* Standard Wettersymbol */
     .weather-main {
 
         font-size:
@@ -308,10 +306,6 @@
     }
 
 
-    /*
-     * Der Mond wirkt optisch kleiner als Wolke/Sonne.
-     * Deshalb nur den Mond separat etwas grösser.
-     */
     .weather-main.moon {
 
         font-size:
@@ -536,437 +530,440 @@
 
 
     <!-- ================================================================ -->
-    <!-- Wege                                                            -->
+    <!-- Gesamte Szene 22 px nach links                                  -->
     <!-- ================================================================ -->
 
-    <path
-        id="pathPV"
-        class="base-line"
-        d="M332.60 206.53 L441.30 289.95"
-    />
-
-
-    <path
-        id="pathGrid"
-        class="base-line"
-        d="M667.40 206.53 L558.70 289.95"
-    />
-
-
-    <path
-        id="pathConsumer"
-        class="base-line"
-        d="M441.30 380.05 L332.60 463.47"
-    />
-
-
-    <path
-        id="pathBattery"
-        class="base-line"
-        d="M558.70 380.05 L667.40 463.47"
-    />
-
-
-
-    <!-- ================================================================ -->
-    <!-- PVA                                                             -->
-    <!-- ================================================================ -->
-
-    <circle
-        class="node-base"
-        cx="285"
-        cy="170"
-        r="60"
-    />
-
-
-    <circle
-        class="ring ring-pv"
-        cx="285"
-        cy="170"
-        r="60"
-    />
-
-
-    <text
-        id="weatherSymbol"
-        class="weather-main"
-        x="285"
-        y="169"
+    <g
+        id="energyScene"
+        transform="translate(-22 0)"
     >
-        ☀️
-    </text>
 
 
-    <!--
-        Vorher x = 175
-        Jetzt etwas Richtung Mitte.
-    -->
-
-    <text
-        class="node-title"
-        x="200"
-        y="132"
-        text-anchor="end"
-    >
-        PVA
-    </text>
-
-
-    <text
-        id="pvValue"
-        class="node-value pv-value"
-        x="200"
-        y="171"
-        text-anchor="end"
-    >
-        0 W
-    </text>
-
-
-    <text
-        id="pvTemp"
-        class="node-sub"
-        x="200"
-        y="202"
-        text-anchor="end"
-    >
-        -
-    </text>
-
-
-    <text
-        id="weatherText"
-        class="weather-text"
-        x="200"
-        y="231"
-        text-anchor="end"
-    >
-        -
-    </text>
-
-
-
-    <!-- ================================================================ -->
-    <!-- Netz                                                            -->
-    <!-- ================================================================ -->
-
-    <circle
-        class="node-base"
-        cx="715"
-        cy="170"
-        r="60"
-    />
-
-
-    <circle
-        id="gridRing"
-        class="ring ring-neutral"
-        cx="715"
-        cy="170"
-        r="60"
-    />
-
-
-    <g transform="translate(715 170)">
+        <!-- ============================================================ -->
+        <!-- Wege                                                        -->
+        <!-- ============================================================ -->
 
         <path
-            class="icon-line"
-            d="
-                M0 -34
-                L0 34
-
-                M-22 -15
-                L22 -15
-
-                M-15 0
-                L15 0
-
-                M-7 -34
-                L7 -34
-
-                M-17 34
-                L0 -34
-                L17 34
-            "
-        />
-
-    </g>
-
-
-    <!--
-        Vorher x = 825
-        Jetzt Richtung Mitte.
-    -->
-
-    <text
-        class="node-title"
-        x="800"
-        y="132"
-    >
-        Netz
-    </text>
-
-
-    <text
-        id="gridValue"
-        class="node-value"
-        x="800"
-        y="171"
-    >
-        0 W
-    </text>
-
-
-    <text
-        id="gridMode"
-        class="node-sub"
-        x="800"
-        y="202"
-    >
-        Ruhe
-    </text>
-
-
-    <text
-        id="gridInfo"
-        class="node-sub-small"
-        x="800"
-        y="229"
-    >
-        -
-    </text>
-
-
-
-    <!-- ================================================================ -->
-    <!-- Haus                                                            -->
-    <!-- ================================================================ -->
-
-    <circle
-        class="node-base"
-        cx="500"
-        cy="335"
-        r="74"
-    />
-
-
-    <g id="houseRing"></g>
-
-
-    <g transform="translate(500 335)">
-
-        <path
-            class="icon-line house-icon"
-            d="
-                M-38 2
-                L0 -34
-                L38 2
-
-                M-29 -5
-                L-29 37
-
-                M29 -5
-                L29 37
-
-                M-29 37
-                L29 37
-
-                M-8 37
-                L-8 10
-
-                M8 37
-                L8 10
-            "
-        />
-
-    </g>
-
-
-
-    <!-- ================================================================ -->
-    <!-- Verbrauch                                                       -->
-    <!-- ================================================================ -->
-
-    <circle
-        class="node-base"
-        cx="285"
-        cy="500"
-        r="60"
-    />
-
-
-    <g id="consumerRing"></g>
-
-
-    <g transform="translate(285 500)">
-
-        <path
-            class="icon-line"
-            d="
-                M-15 -24
-                L-15 -7
-
-                M15 -24
-                L15 -7
-
-                M-26 -7
-                L26 -7
-
-                M-22 -7
-                L-22 5
-
-                M22 -7
-                L22 5
-
-                M-22 5
-                C-22 25 22 25 22 5
-
-                M0 22
-                L0 36
-            "
-        />
-
-    </g>
-
-
-    <text
-        class="node-title"
-        x="200"
-        y="482"
-        text-anchor="end"
-    >
-        Verbrauch
-    </text>
-
-
-    <text
-        id="consumerValue"
-        class="node-value"
-        x="200"
-        y="521"
-        text-anchor="end"
-    >
-        0 W
-    </text>
-
-
-
-    <!-- ================================================================ -->
-    <!-- Batterie                                                        -->
-    <!-- ================================================================ -->
-
-    <circle
-        class="node-base"
-        cx="715"
-        cy="500"
-        r="60"
-    />
-
-
-    <circle
-        id="batteryRing"
-        class="ring ring-neutral"
-        cx="715"
-        cy="500"
-        r="60"
-    />
-
-
-    <g transform="translate(715 500)">
-
-        <rect
-            class="battery-fill-bg"
-            x="-29"
-            y="-17"
-            width="48"
-            height="34"
-            rx="5"
-        />
-
-
-        <rect
-            id="batteryFill"
-            class="battery-fill"
-            x="-29"
-            y="-17"
-            width="0"
-            height="34"
-            rx="4"
-        />
-
-
-        <rect
-            class="icon-line"
-            x="-32"
-            y="-20"
-            width="54"
-            height="40"
-            rx="6"
+            id="pathPV"
+            class="base-line"
+            d="M332.60 206.53 L441.30 289.95"
         />
 
 
         <path
-            class="icon-line"
-            d="
-                M23 -8
-                L29 -8
-                L29 8
-                L23 8
-            "
+            id="pathGrid"
+            class="base-line"
+            d="M667.40 206.53 L558.70 289.95"
         />
 
+
+        <path
+            id="pathConsumer"
+            class="base-line"
+            d="M441.30 380.05 L332.60 463.47"
+        />
+
+
+        <path
+            id="pathBattery"
+            class="base-line"
+            d="M558.70 380.05 L667.40 463.47"
+        />
+
+
+
+        <!-- ============================================================ -->
+        <!-- PVA                                                         -->
+        <!-- ============================================================ -->
+
+        <circle
+            class="node-base"
+            cx="285"
+            cy="170"
+            r="60"
+        />
+
+
+        <circle
+            class="ring ring-pv"
+            cx="285"
+            cy="170"
+            r="60"
+        />
+
+
+        <text
+            id="weatherSymbol"
+            class="weather-main"
+            x="285"
+            y="169"
+        >
+            ☀️
+        </text>
+
+
+        <text
+            class="node-title"
+            x="200"
+            y="132"
+            text-anchor="end"
+        >
+            PVA
+        </text>
+
+
+        <text
+            id="pvValue"
+            class="node-value pv-value"
+            x="200"
+            y="171"
+            text-anchor="end"
+        >
+            0 W
+        </text>
+
+
+        <text
+            id="pvTemp"
+            class="node-sub"
+            x="200"
+            y="202"
+            text-anchor="end"
+        >
+            -
+        </text>
+
+
+        <text
+            id="weatherText"
+            class="weather-text"
+            x="200"
+            y="231"
+            text-anchor="end"
+        >
+            -
+        </text>
+
+
+
+        <!-- ============================================================ -->
+        <!-- Netz                                                        -->
+        <!-- ============================================================ -->
+
+        <circle
+            class="node-base"
+            cx="715"
+            cy="170"
+            r="60"
+        />
+
+
+        <circle
+            id="gridRing"
+            class="ring ring-neutral"
+            cx="715"
+            cy="170"
+            r="60"
+        />
+
+
+        <g transform="translate(715 170)">
+
+            <path
+                class="icon-line"
+                d="
+                    M0 -34
+                    L0 34
+
+                    M-22 -15
+                    L22 -15
+
+                    M-15 0
+                    L15 0
+
+                    M-7 -34
+                    L7 -34
+
+                    M-17 34
+                    L0 -34
+                    L17 34
+                "
+            />
+
+        </g>
+
+
+        <text
+            class="node-title"
+            x="800"
+            y="132"
+        >
+            Netz
+        </text>
+
+
+        <text
+            id="gridValue"
+            class="node-value"
+            x="800"
+            y="171"
+        >
+            0 W
+        </text>
+
+
+        <text
+            id="gridMode"
+            class="node-sub"
+            x="800"
+            y="202"
+        >
+            Ruhe
+        </text>
+
+
+        <text
+            id="gridInfo"
+            class="node-sub-small"
+            x="800"
+            y="229"
+        >
+            -
+        </text>
+
+
+
+        <!-- ============================================================ -->
+        <!-- Haus                                                        -->
+        <!-- ============================================================ -->
+
+        <circle
+            class="node-base"
+            cx="500"
+            cy="335"
+            r="74"
+        />
+
+
+        <g id="houseRing"></g>
+
+
+        <g transform="translate(500 335)">
+
+            <path
+                class="icon-line house-icon"
+                d="
+                    M-38 2
+                    L0 -34
+                    L38 2
+
+                    M-29 -5
+                    L-29 37
+
+                    M29 -5
+                    L29 37
+
+                    M-29 37
+                    L29 37
+
+                    M-8 37
+                    L-8 10
+
+                    M8 37
+                    L8 10
+                "
+            />
+
+        </g>
+
+
+
+        <!-- ============================================================ -->
+        <!-- Verbrauch                                                   -->
+        <!-- ============================================================ -->
+
+        <circle
+            class="node-base"
+            cx="285"
+            cy="500"
+            r="60"
+        />
+
+
+        <g id="consumerRing"></g>
+
+
+        <g transform="translate(285 500)">
+
+            <path
+                class="icon-line"
+                d="
+                    M-15 -24
+                    L-15 -7
+
+                    M15 -24
+                    L15 -7
+
+                    M-26 -7
+                    L26 -7
+
+                    M-22 -7
+                    L-22 5
+
+                    M22 -7
+                    L22 5
+
+                    M-22 5
+                    C-22 25 22 25 22 5
+
+                    M0 22
+                    L0 36
+                "
+            />
+
+        </g>
+
+
+        <text
+            class="node-title"
+            x="200"
+            y="482"
+            text-anchor="end"
+        >
+            Verbrauch
+        </text>
+
+
+        <text
+            id="consumerValue"
+            class="node-value"
+            x="200"
+            y="521"
+            text-anchor="end"
+        >
+            0 W
+        </text>
+
+
+
+        <!-- ============================================================ -->
+        <!-- Batterie                                                    -->
+        <!-- ============================================================ -->
+
+        <circle
+            class="node-base"
+            cx="715"
+            cy="500"
+            r="60"
+        />
+
+
+        <circle
+            id="batteryRing"
+            class="ring ring-neutral"
+            cx="715"
+            cy="500"
+            r="60"
+        />
+
+
+        <g transform="translate(715 500)">
+
+            <rect
+                class="battery-fill-bg"
+                x="-29"
+                y="-17"
+                width="48"
+                height="34"
+                rx="5"
+            />
+
+
+            <rect
+                id="batteryFill"
+                class="battery-fill"
+                x="-29"
+                y="-17"
+                width="0"
+                height="34"
+                rx="4"
+            />
+
+
+            <rect
+                class="icon-line"
+                x="-32"
+                y="-20"
+                width="54"
+                height="40"
+                rx="6"
+            />
+
+
+            <path
+                class="icon-line"
+                d="
+                    M23 -8
+                    L29 -8
+                    L29 8
+                    L23 8
+                "
+            />
+
+        </g>
+
+
+        <text
+            class="node-title"
+            x="800"
+            y="467"
+        >
+            Batterie
+        </text>
+
+
+        <text
+            id="batteryPower"
+            class="node-value battery-value"
+            x="800"
+            y="506"
+        >
+            0 W
+        </text>
+
+
+        <text
+            id="batteryMode"
+            class="node-sub"
+            x="800"
+            y="536"
+        >
+            Ruhe
+        </text>
+
+
+        <text
+            id="batteryInfo"
+            class="node-sub-small"
+            x="800"
+            y="563"
+        >
+            SOC: -
+        </text>
+
+
+
+        <!-- ============================================================ -->
+        <!-- Punkte                                                      -->
+        <!-- ============================================================ -->
+
+        <g id="pvDots"></g>
+        <g id="gridDots"></g>
+        <g id="consumerDots"></g>
+        <g id="batteryDots"></g>
+
+
     </g>
-
-
-    <text
-        class="node-title"
-        x="800"
-        y="467"
-    >
-        Batterie
-    </text>
-
-
-    <text
-        id="batteryPower"
-        class="node-value battery-value"
-        x="800"
-        y="506"
-    >
-        0 W
-    </text>
-
-
-    <text
-        id="batteryMode"
-        class="node-sub"
-        x="800"
-        y="536"
-    >
-        Ruhe
-    </text>
-
-
-    <text
-        id="batteryInfo"
-        class="node-sub-small"
-        x="800"
-        y="563"
-    >
-        SOC: -
-    </text>
-
-
-
-    <!-- ================================================================ -->
-    <!-- Punkte                                                          -->
-    <!-- ================================================================ -->
-
-    <g id="pvDots"></g>
-    <g id="gridDots"></g>
-    <g id="consumerDots"></g>
-    <g id="batteryDots"></g>
 
 
 </svg>
@@ -1559,11 +1556,6 @@ function updateWeatherSymbol(
     element.textContent =
         symbol;
 
-
-    /*
-     * Mond optisch etwas vergrössern.
-     * Alle anderen Wettericons behalten die normale Grösse.
-     */
 
     if (
         symbol === '🌙'
@@ -2501,7 +2493,7 @@ function animateFlow(
 
 
 // ============================================================================
-// Punktanzahl - UNVERÄNDERT
+// Punktanzahl
 // ============================================================================
 
 function getDotCount(
@@ -2561,7 +2553,7 @@ function getDotCount(
 
 
 // ============================================================================
-// Geschwindigkeit - UNVERÄNDERT
+// Geschwindigkeit
 // ============================================================================
 
 function getSecondsPerPath(
