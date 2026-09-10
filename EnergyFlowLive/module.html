@@ -19,23 +19,10 @@
 
         --neutral: #8b949e;
 
-        --foreground:
-            var(
-                --content-color,
-                #202020
-            );
-
         /*
-         * Feste Grundfarbe.
-         * Kein color-mix für die Linien.
+         * Standard = Dark Mode
          */
-        --base-line:
-            rgba(
-                105,
-                112,
-                120,
-                0.72
-            );
+        --foreground: #f3f5f7;
     }
 
 
@@ -64,8 +51,7 @@
             Arial,
             sans-serif;
 
-        color:
-            var(--foreground);
+        color: var(--foreground);
     }
 
 
@@ -74,8 +60,7 @@
         width: 100%;
         height: 100%;
 
-        color:
-            var(--foreground);
+        color: var(--foreground);
     }
 
 
@@ -86,46 +71,47 @@
         width: 100%;
         height: 100%;
 
-        color:
-            var(--foreground);
+        color: var(--foreground);
     }
 
 
     /* ================================================================ */
-    /* Verbindungslinien                                                */
-    /* ================================================================ */
+    /* VERBINDUNGSLINIEN                                                */
+    /*
+     * Bewusst DIREKTE Farbe.
+     *
+     * Keine Symcon-Variable.
+     * Kein color-mix.
+     *
+     * Damit die Linie zuverlässig auf Desktop, App und Mobile
+     * dargestellt wird.
+     * ================================================================ */
 
     .base-line {
 
-        fill: none;
+        fill: none !important;
 
-        stroke:
-            var(--base-line);
+        stroke: #a0a6ad !important;
 
-        stroke-width: 3.2;
+        stroke-width: 3.2 !important;
 
         stroke-linecap: round;
 
-        opacity: 1;
+        opacity: 0.72 !important;
+
+        vector-effect: non-scaling-stroke;
     }
 
 
     /* ================================================================ */
-    /* Kreis-Grundelemente                                              */
+    /* KREISE                                                           */
     /* ================================================================ */
 
     .node-base {
 
-        fill:
-            rgba(
-                128,
-                128,
-                128,
-                .025
-            );
+        fill: rgba(128,128,128,.025);
 
-        stroke:
-            var(--neutral);
+        stroke: var(--neutral);
 
         stroke-width: 3;
     }
@@ -139,29 +125,15 @@
 
         stroke-linecap: butt;
 
-        transform-box:
-            fill-box;
+        transform-box: fill-box;
+        transform-origin: center;
 
-        transform-origin:
-            center;
-
-        transform:
-            rotate(-90deg);
+        transform: rotate(-90deg);
     }
 
 
     .ring-pv {
         stroke: var(--pv);
-    }
-
-
-    .ring-grid {
-        stroke: var(--grid);
-    }
-
-
-    .ring-battery {
-        stroke: var(--battery);
     }
 
 
@@ -171,7 +143,7 @@
 
 
     /* ================================================================ */
-    /* Texte                                                            */
+    /* SCHRIFT DESKTOP / STANDARD                                      */
     /* ================================================================ */
 
     .node-title {
@@ -180,8 +152,7 @@
 
         font-weight: 650;
 
-        fill:
-            var(--foreground);
+        fill: var(--foreground);
     }
 
 
@@ -191,18 +162,12 @@
 
         font-weight: 760;
 
-        fill:
-            var(--foreground);
+        fill: var(--foreground);
     }
 
 
     .pv-value {
         fill: var(--pv);
-    }
-
-
-    .grid-value {
-        fill: var(--grid);
     }
 
 
@@ -217,8 +182,7 @@
 
         font-weight: 400;
 
-        fill:
-            var(--foreground);
+        fill: var(--foreground);
 
         opacity: .78;
     }
@@ -230,8 +194,7 @@
 
         font-weight: 400;
 
-        fill:
-            var(--foreground);
+        fill: var(--foreground);
 
         opacity: .72;
     }
@@ -243,23 +206,21 @@
 
         font-weight: 400;
 
-        fill:
-            var(--foreground);
+        fill: var(--foreground);
 
         opacity: .78;
     }
 
 
     /* ================================================================ */
-    /* Icons                                                            */
+    /* ICONS                                                            */
     /* ================================================================ */
 
     .icon-line {
 
         fill: none;
 
-        stroke:
-            var(--foreground);
+        stroke: var(--foreground);
 
         stroke-width: 5;
 
@@ -270,8 +231,7 @@
 
     .house-icon {
 
-        stroke:
-            var(--house);
+        stroke: var(--house);
 
         stroke-width: 8;
     }
@@ -288,7 +248,7 @@
 
 
     /* ================================================================ */
-    /* Punkte                                                           */
+    /* PUNKTE                                                           */
     /* ================================================================ */
 
     .flow-dot {
@@ -300,50 +260,18 @@
 
 
     /* ================================================================ */
-    /* Batterie                                                         */
+    /* BATTERIE                                                         */
     /* ================================================================ */
 
     .battery-fill-bg {
 
-        fill:
-            rgba(
-                128,
-                128,
-                128,
-                .18
-            );
+        fill: rgba(128,128,128,.18);
     }
 
 
     .battery-fill {
 
-        fill:
-            var(--battery);
-    }
-
-
-    /* ================================================================ */
-    /* DARK MODE                                                        */
-    /* ================================================================ */
-
-    @media (prefers-color-scheme: dark) {
-
-        :root {
-
-            --foreground:
-                var(
-                    --content-color,
-                    #f3f5f7
-                );
-
-            --base-line:
-                rgba(
-                    205,
-                    211,
-                    217,
-                    .58
-                );
-        }
+        fill: var(--battery);
     }
 
 
@@ -355,19 +283,36 @@
 
         :root {
 
-            --foreground:
-                var(
-                    --content-color,
-                    #202124
-                );
+            --foreground: #202124;
+        }
 
-            --base-line:
-                rgba(
-                    65,
-                    70,
-                    76,
-                    .58
-                );
+
+        .base-line {
+
+            stroke: #70767d !important;
+
+            opacity: 0.68 !important;
+        }
+    }
+
+
+    /* ================================================================ */
+    /* DARK MODE                                                        */
+    /* ================================================================ */
+
+    @media (prefers-color-scheme: dark) {
+
+        :root {
+
+            --foreground: #f3f5f7;
+        }
+
+
+        .base-line {
+
+            stroke: #aab0b7 !important;
+
+            opacity: 0.72 !important;
         }
     }
 
@@ -375,86 +320,89 @@
     /* ================================================================ */
     /* MOBILE                                                           */
     /*
-     * Hauptwerte und Kreise bleiben gleich.
+     * WICHTIG:
      *
-     * Nur die kleinen Zusatzinformationen werden deutlich
-     * besser lesbar.
+     * NICHT mehr max-width alleine.
+     *
+     * Sonst wird eine schmale Desktop-Kachel ebenfalls als Mobile
+     * erkannt.
+     *
+     * Mobile-Vergrösserung nur auf Geräten mit grobem Touch-Pointer.
      * ================================================================ */
 
-    @media (max-width: 700px) {
+    @media (pointer: coarse) {
 
         .node-sub {
 
-            font-size: 31px;
+            font-size: 29px;
 
             font-weight: 500;
 
-            opacity: .88;
+            opacity: .90;
         }
 
 
         .node-sub-small {
 
-            font-size: 28px;
+            font-size: 26px;
 
             font-weight: 500;
 
-            opacity: .84;
+            opacity: .86;
         }
 
 
         .weather-text {
 
-            font-size: 28px;
+            font-size: 26px;
 
             font-weight: 500;
 
-            opacity: .88;
+            opacity: .90;
         }
 
 
         .base-line {
 
-            stroke-width: 3.8;
+            stroke-width: 3.8 !important;
         }
     }
 
 
     /* ================================================================ */
-    /* SEHR SCHMALES NATEL                                              */
+    /* SEHR KLEINES TOUCH-GERÄT                                        */
     /* ================================================================ */
 
-    @media (max-width: 430px) {
+    @media (pointer: coarse) and (max-width: 430px) {
 
         .node-sub {
 
-            font-size: 33px;
+            font-size: 31px;
         }
 
 
         .node-sub-small {
 
-            font-size: 30px;
+            font-size: 28px;
         }
 
 
         .weather-text {
 
-            font-size: 30px;
+            font-size: 28px;
         }
     }
 
 
     /* ================================================================ */
-    /* Bewegungsreduktion                                               */
+    /* REDUZIERTE BEWEGUNG                                              */
     /* ================================================================ */
 
     @media (prefers-reduced-motion: reduce) {
 
         .flow-dot {
 
-            display:
-                none !important;
+            display: none !important;
         }
     }
 
@@ -477,7 +425,7 @@
 
 
     <!-- ================================================================ -->
-    <!-- Wege                                                            -->
+    <!-- WEGE                                                            -->
     <!-- ================================================================ -->
 
 
@@ -593,7 +541,7 @@
 
 
     <!-- ================================================================ -->
-    <!-- Netz                                                            -->
+    <!-- NETZ                                                            -->
     <!-- ================================================================ -->
 
     <circle
@@ -680,7 +628,7 @@
 
 
     <!-- ================================================================ -->
-    <!-- Haus                                                            -->
+    <!-- HAUS                                                            -->
     <!-- ================================================================ -->
 
     <circle
@@ -725,7 +673,7 @@
 
 
     <!-- ================================================================ -->
-    <!-- Verbraucher                                                     -->
+    <!-- VERBRAUCHER                                                      -->
     <!-- ================================================================ -->
 
     <circle
@@ -795,7 +743,7 @@
 
 
     <!-- ================================================================ -->
-    <!-- Batterie                                                        -->
+    <!-- BATTERIE                                                        -->
     <!-- ================================================================ -->
 
     <circle
@@ -902,7 +850,7 @@
 
 
     <!-- ================================================================ -->
-    <!-- Punkt-Pools                                                     -->
+    <!-- PUNKT-POOLS                                                     -->
     <!-- ================================================================ -->
 
     <g id="pvDots"></g>
@@ -927,7 +875,7 @@
 
 
 // ============================================================================
-// Farben
+// FARBEN
 // ============================================================================
 
 const COLORS = {
@@ -947,7 +895,7 @@ const COLORS = {
 
 
 // ============================================================================
-// Zustand
+// ZUSTAND
 // ============================================================================
 
 const state = {
@@ -993,7 +941,7 @@ const state = {
 
 
 // ============================================================================
-// Flüsse
+// FLÜSSE
 // ============================================================================
 
 const flows = {
@@ -1080,7 +1028,7 @@ let lastFrameTime =
 
 
 // ============================================================================
-// Start
+// INITIALISIERUNG
 // ============================================================================
 
 function init()
@@ -1152,7 +1100,7 @@ function init()
 
 
 // ============================================================================
-// Punkt-Pool
+// PUNKT-POOL
 // ============================================================================
 
 function createDotPool(
@@ -1208,7 +1156,7 @@ function createDotPool(
 
 
 // ============================================================================
-// Nachricht von IP-Symcon
+// NACHRICHT VON SYMCON
 // ============================================================================
 
 function handleMessage(message)
@@ -1240,7 +1188,9 @@ function handleMessage(message)
     if (
         !data
         ||
-        data.type !== 'energy'
+        data.type
+        !==
+        'energy'
     ) {
 
         return;
@@ -1262,7 +1212,7 @@ function handleMessage(message)
 
 
 // ============================================================================
-// Texte
+// TEXTE
 // ============================================================================
 
 function updateTexts()
@@ -1271,9 +1221,7 @@ function updateTexts()
         state.values;
 
 
-    // ------------------------------------------------------------------------
     // PVA
-    // ------------------------------------------------------------------------
 
     setText(
         'pvValue',
@@ -1285,6 +1233,7 @@ function updateTexts()
 
     setText(
         'pvTemp',
+
         '('
         +
         Number(
@@ -1316,9 +1265,7 @@ function updateTexts()
     );
 
 
-    // ------------------------------------------------------------------------
     // Netz
-    // ------------------------------------------------------------------------
 
     let gridPower =
         0;
@@ -1346,6 +1293,7 @@ function updateTexts()
 
     setText(
         'gridValue',
+
         formatPower(
             gridPower
         )
@@ -1363,15 +1311,28 @@ function updateTexts()
     ) {
 
         gridValueElement.style.fill =
-            v.gridState === 'export'
+
+            v.gridState
+            ===
+            'export'
+
                 ?
+
                 COLORS.pv
+
                 :
+
                 (
-                    v.gridState === 'import'
+                    v.gridState
+                    ===
+                    'import'
+
                         ?
+
                         COLORS.grid
+
                         :
+
                         COLORS.neutral
                 );
     }
@@ -1380,15 +1341,27 @@ function updateTexts()
     setText(
         'gridMode',
 
-        v.gridState === 'import'
+        v.gridState
+        ===
+        'import'
+
             ?
+
             'Netzbezug'
+
             :
+
             (
-                v.gridState === 'export'
+                v.gridState
+                ===
+                'export'
+
                     ?
+
                     'Einspeisung'
+
                     :
+
                     'Ruhe'
             )
     );
@@ -1396,6 +1369,7 @@ function updateTexts()
 
     setText(
         'gridInfo',
+
         formatGridInfo(
             v.voltage,
             v.frequency
@@ -1403,12 +1377,11 @@ function updateTexts()
     );
 
 
-    // ------------------------------------------------------------------------
     // Verbraucher
-    // ------------------------------------------------------------------------
 
     setText(
         'consumerValue',
+
         formatPower(
             v.house
         )
@@ -1438,9 +1411,7 @@ function updateTexts()
     }
 
 
-    // ------------------------------------------------------------------------
     // Batterie
-    // ------------------------------------------------------------------------
 
     let batteryPower =
         0;
@@ -1468,6 +1439,7 @@ function updateTexts()
 
     setText(
         'batteryPower',
+
         formatPower(
             batteryPower
         )
@@ -1477,15 +1449,27 @@ function updateTexts()
     setText(
         'batteryMode',
 
-        v.batteryState === 'charge'
+        v.batteryState
+        ===
+        'charge'
+
             ?
+
             'Laden'
+
             :
+
             (
-                v.batteryState === 'discharge'
+                v.batteryState
+                ===
+                'discharge'
+
                     ?
+
                     'Entladen'
+
                     :
+
                     'Ruhe'
             )
     );
@@ -1517,7 +1501,7 @@ function updateTexts()
 
 
 // ============================================================================
-// Kreisfarben
+// RINGE
 // ============================================================================
 
 function updateRings()
@@ -1526,13 +1510,7 @@ function updateRings()
         state.values;
 
 
-    // ------------------------------------------------------------------------
-    // Netz-Kreis
-    //
-    // Bezug       = orange
-    // PV-Einspeisung = grün
-    // Ruhe        = grau
-    // ------------------------------------------------------------------------
+    // Netzring
 
     const gridRing =
         document.getElementById(
@@ -1570,13 +1548,7 @@ function updateRings()
     }
 
 
-    // ------------------------------------------------------------------------
-    // Batterie-Kreis
-    //
-    // Laden aus PV = grün
-    // Entladen     = blau
-    // Ruhe         = grau
-    // ------------------------------------------------------------------------
+    // Batteriering
 
     const batteryRing =
         document.getElementById(
@@ -1614,21 +1586,16 @@ function updateRings()
     }
 
 
-    // ------------------------------------------------------------------------
-    // Verbraucher-Kreis
-    //
-    // proportional:
-    //
-    // PV       = grün
-    // Batterie = blau
-    // Netz     = orange
-    // ------------------------------------------------------------------------
+    // Verbraucherkreis proportional
 
     drawSegmentedRing(
+
         'consumerRing',
+
         285,
         500,
         60,
+
         [
             {
                 value:
@@ -1657,15 +1624,16 @@ function updateRings()
     );
 
 
-    // ------------------------------------------------------------------------
-    // Haus-Kreis
-    // ------------------------------------------------------------------------
+    // Hauskreis proportional
 
     drawSegmentedRing(
+
         'houseRing',
+
         500,
         335,
         74,
+
         [
             {
                 value:
@@ -1696,7 +1664,7 @@ function updateRings()
 
 
 // ============================================================================
-// Segmentierter Ring
+// SEGMENTIERTER KREIS
 // ============================================================================
 
 function drawSegmentedRing(
@@ -1737,6 +1705,7 @@ function drawSegmentedRing(
                 sum,
                 segment
             ) =>
+
                 sum
                 +
                 Math.max(
@@ -1747,6 +1716,7 @@ function drawSegmentedRing(
                     ||
                     0
                 ),
+
             0
         );
 
@@ -1756,12 +1726,15 @@ function drawSegmentedRing(
     ) {
 
         createRingSegment(
+
             container,
             cx,
             cy,
             radius,
+
             0,
             1,
+
             COLORS.neutral
         );
 
@@ -1805,12 +1778,15 @@ function drawSegmentedRing(
 
 
         createRingSegment(
+
             container,
             cx,
             cy,
             radius,
+
             start,
             fraction,
+
             segment.color
         );
 
@@ -1822,7 +1798,7 @@ function drawSegmentedRing(
 
 
 // ============================================================================
-// Einzelnes Ringsegment
+// EIN RINGSEGMENT
 // ============================================================================
 
 function createRingSegment(
@@ -1892,6 +1868,7 @@ function createRingSegment(
 
     circle.setAttribute(
         'stroke-dasharray',
+
         (
             circumference
             *
@@ -1906,6 +1883,7 @@ function createRingSegment(
 
     circle.setAttribute(
         'stroke-dashoffset',
+
         -(
             circumference
             *
@@ -1915,6 +1893,7 @@ function createRingSegment(
 
 
     circle.setAttribute(
+
         'transform',
 
         'rotate(-90 '
@@ -1936,7 +1915,7 @@ function createRingSegment(
 
 
 // ============================================================================
-// Energieflüsse
+// FLUSS-ZIELE
 // ============================================================================
 
 function updateFlowTargets()
@@ -1945,9 +1924,7 @@ function updateFlowTargets()
         state.values;
 
 
-    // ------------------------------------------------------------------------
     // PVA -> Haus
-    // ------------------------------------------------------------------------
 
     flows.pv.power =
         Math.max(
@@ -1970,19 +1947,7 @@ function updateFlowTargets()
         ];
 
 
-    // ------------------------------------------------------------------------
     // Netz
-    //
-    // Pfad ist Netz -> Haus definiert.
-    //
-    // Netzbezug:
-    // orange Richtung Haus.
-    //
-    // Einspeisung:
-    // grün Richtung Netz.
-    //
-    // Batterie -> Netz wird NICHT dargestellt.
-    // ------------------------------------------------------------------------
 
     if (
         v.gridState
@@ -2017,6 +1982,10 @@ function updateFlowTargets()
             -1;
 
 
+        /*
+         * Bei Einspeisung kommt die Energie aus PV.
+         */
+
         flows.grid.colors =
             [
                 COLORS.pv
@@ -2029,11 +1998,7 @@ function updateFlowTargets()
     }
 
 
-    // ------------------------------------------------------------------------
     // Verbraucher
-    //
-    // Die Farbe der Punkte entspricht der Quelle.
-    // ------------------------------------------------------------------------
 
     flows.consumer.power =
         Math.max(
@@ -2052,6 +2017,7 @@ function updateFlowTargets()
 
     flows.consumer.colors =
         createColorSequence(
+
             [
                 {
                     value:
@@ -2080,15 +2046,7 @@ function updateFlowTargets()
         );
 
 
-    // ------------------------------------------------------------------------
     // Batterie
-    //
-    // Laden:
-    // PV -> Batterie = grün
-    //
-    // Entladen:
-    // Batterie -> Haus = blau
-    // ------------------------------------------------------------------------
 
     if (
         v.batteryState
@@ -2103,6 +2061,10 @@ function updateFlowTargets()
         flows.battery.direction =
             1;
 
+
+        /*
+         * Batterie wird aus PV geladen.
+         */
 
         flows.battery.colors =
             [
@@ -2137,7 +2099,7 @@ function updateFlowTargets()
 
 
 // ============================================================================
-// Gemischte Farben
+// GEMISCHTE FARBEN
 // ============================================================================
 
 function createColorSequence(
@@ -2146,7 +2108,9 @@ function createColorSequence(
 {
     const valid =
         parts.filter(
+
             part =>
+
                 Number(
                     part.value
                 )
@@ -2156,7 +2120,9 @@ function createColorSequence(
 
 
     if (
-        valid.length === 0
+        valid.length
+        ===
+        0
     ) {
 
         return [
@@ -2167,24 +2133,21 @@ function createColorSequence(
 
     const total =
         valid.reduce(
+
             (
                 sum,
                 part
             ) =>
+
                 sum
                 +
                 Number(
                     part.value
                 ),
+
             0
         );
 
-
-    /*
-     * Virtuelle Farbplätze.
-     *
-     * Dadurch können auch kleinere Anteile sichtbar werden.
-     */
 
     const slots =
         12;
@@ -2196,6 +2159,7 @@ function createColorSequence(
 
     const counters =
         valid.map(
+
             part => ({
 
                 color:
@@ -2274,7 +2238,7 @@ function createColorSequence(
 
 
 // ============================================================================
-// Permanente Animation
+// PERMANENTE ANIMATION
 // ============================================================================
 
 function animate(now)
@@ -2292,10 +2256,6 @@ function animate(now)
     lastFrameTime =
         now;
 
-
-    /*
-     * Nach Tabwechsel verhindern wir einen grossen Positionssprung.
-     */
 
     delta =
         Math.min(
@@ -2335,7 +2295,7 @@ function animate(now)
 
 
 // ============================================================================
-// Einzelner Fluss
+// EINZELNER FLUSS
 // ============================================================================
 
 function animateFlow(
@@ -2368,7 +2328,9 @@ function animateFlow(
 
 
     if (
-        dotCount === 0
+        dotCount
+        ===
+        0
     ) {
 
         for (
@@ -2393,11 +2355,9 @@ function animateFlow(
 
 
     /*
-     * Wichtig:
+     * Phase bleibt erhalten.
      *
-     * Die Phase wird NIE durch einen Messwertupdate zurückgesetzt.
-     *
-     * Dadurch läuft die Animation kontinuierlich weiter.
+     * Messwertänderung startet die Animation nicht neu.
      */
 
     flow.phase +=
@@ -2430,9 +2390,13 @@ function animateFlow(
 
     const colorSequence =
         flow.colors.length
+
             ?
+
             flow.colors
+
             :
+
             [
                 COLORS.neutral
             ];
@@ -2465,10 +2429,6 @@ function animateFlow(
             '';
 
 
-        /*
-         * Punkte gleichmässig auf der Strecke verteilen.
-         */
-
         const offset =
             i
             /
@@ -2497,6 +2457,7 @@ function animateFlow(
 
         const point =
             flow.path.getPointAtLength(
+
                 pathLength
                 *
                 phase
@@ -2515,10 +2476,6 @@ function animateFlow(
         );
 
 
-        /*
-         * Farbe aus dem Quellenmix.
-         */
-
         const sequencePosition =
             Math.floor(
                 phase
@@ -2530,7 +2487,9 @@ function animateFlow(
 
 
         dot.setAttribute(
+
             'fill',
+
             colorSequence[
                 sequencePosition
             ]
@@ -2540,9 +2499,7 @@ function animateFlow(
 
 
 // ============================================================================
-// Punktanzahl
-//
-// bewusst näher an Symcon
+// PUNKTANZAHL
 // ============================================================================
 
 function getDotCount(
@@ -2602,7 +2559,7 @@ function getDotCount(
 
 
 // ============================================================================
-// Geschwindigkeit
+// GESCHWINDIGKEIT
 // ============================================================================
 
 function getSecondsPerPath(
@@ -2694,7 +2651,7 @@ function getSecondsPerPath(
 
 
 // ============================================================================
-// Batterie-Füllstand
+// BATTERIEFÜLLUNG
 // ============================================================================
 
 function updateBatteryFill()
@@ -2729,6 +2686,7 @@ function updateBatteryFill()
 
 
     fill.setAttribute(
+
         'width',
 
         (
@@ -2743,7 +2701,7 @@ function updateBatteryFill()
 
 
 // ============================================================================
-// Dominante Hausfarbe für Leistungswert
+// DOMINANTE QUELLENFARBE
 // ============================================================================
 
 function getDominantColor(
@@ -2797,6 +2755,7 @@ function getDominantColor(
             a,
             b
         ) =>
+
             b.value
             -
             a.value
@@ -2804,15 +2763,19 @@ function getDominantColor(
 
 
     return values[0].value > 0
+
         ?
+
         values[0].color
+
         :
+
         COLORS.neutral;
 }
 
 
 // ============================================================================
-// Wetter
+// WETTER
 // ============================================================================
 
 function getWeather(
@@ -2846,10 +2809,6 @@ function getWeather(
         0;
 
 
-    /*
-     * Reeller Regensensor hat Vorrang.
-     */
-
     if (
         rain
     ) {
@@ -2864,10 +2823,6 @@ function getWeather(
         };
     }
 
-
-    /*
-     * Gewitter
-     */
 
     if (
         id >= 200
@@ -2886,10 +2841,6 @@ function getWeather(
     }
 
 
-    /*
-     * Niesel / Regen
-     */
-
     if (
         id >= 300
         &&
@@ -2906,10 +2857,6 @@ function getWeather(
         };
     }
 
-
-    /*
-     * Schnee
-     */
 
     if (
         id >= 600
@@ -2928,10 +2875,6 @@ function getWeather(
     }
 
 
-    /*
-     * Nebel usw.
-     */
-
     if (
         id >= 700
         &&
@@ -2949,10 +2892,6 @@ function getWeather(
     }
 
 
-    /*
-     * Klar
-     */
-
     if (
         id === 800
     ) {
@@ -2966,6 +2905,7 @@ function getWeather(
         return {
 
             symbol:
+
                 night
                     ?
                     '🌙'
@@ -2973,6 +2913,7 @@ function getWeather(
                     '☀️',
 
             text:
+
                 night
                     ?
                     'Klar'
@@ -2981,10 +2922,6 @@ function getWeather(
         };
     }
 
-
-    /*
-     * Leicht / teilweise bewölkt
-     */
 
     if (
         id === 801
@@ -3007,10 +2944,6 @@ function getWeather(
     }
 
 
-    /*
-     * Stark bewölkt
-     */
-
     if (
         id === 803
         ||
@@ -3032,10 +2965,6 @@ function getWeather(
     }
 
 
-    /*
-     * Fallback
-     */
-
     return {
 
         symbol:
@@ -3052,7 +2981,7 @@ function getWeather(
 
 
 // ============================================================================
-// Leistung formatieren
+// LEISTUNG FORMATIEREN
 // ============================================================================
 
 function formatPower(
@@ -3102,7 +3031,7 @@ function formatPower(
 
 
 // ============================================================================
-// Netzinfo
+// NETZINFO
 // ============================================================================
 
 function formatGridInfo(
@@ -3159,17 +3088,21 @@ function formatGridInfo(
 
 
     return parts.length
+
         ?
+
         parts.join(
             ' · '
         )
+
         :
+
         '-';
 }
 
 
 // ============================================================================
-// Text setzen
+// TEXT SETZEN
 // ============================================================================
 
 function setText(
@@ -3194,7 +3127,7 @@ function setText(
 
 
 // ============================================================================
-// Initialisierung
+// START
 // ============================================================================
 
 document.addEventListener(
