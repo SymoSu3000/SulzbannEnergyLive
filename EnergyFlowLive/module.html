@@ -193,10 +193,7 @@
     }
 
 
-    /*
-     * Desktop:
-     * Leistungswerte bewusst ungefähr gleich gross wie die Titel.
-     */
+    /* Desktop bewusst ruhiger */
     .node-value {
 
         font-size:
@@ -297,9 +294,7 @@
     }
 
 
-    /*
-     * Wettersymbol etwas grösser als bisher.
-     */
+    /* Standard Wettersymbol */
     .weather-main {
 
         font-size:
@@ -310,6 +305,17 @@
 
         dominant-baseline:
             middle;
+    }
+
+
+    /*
+     * Der Mond wirkt optisch kleiner als Wolke/Sonne.
+     * Deshalb nur den Mond separat etwas grösser.
+     */
+    .weather-main.moon {
+
+        font-size:
+            52px;
     }
 
 
@@ -402,17 +408,10 @@
 
     /* ================================================================ */
     /* Mobile                                                           */
-    /*
-     * Nur die kleinen Zusatzinformationen werden grösser.
-     * Geometrie bleibt unverändert.
-     * ================================================================ */
+    /* ================================================================ */
 
     @media (max-width: 700px) {
 
-        /*
-         * Auf Mobile dürfen die Leistungswerte wieder etwas
-         * grösser sein als auf Desktop.
-         */
         .node-value {
 
             font-size:
@@ -464,13 +463,20 @@
             font-size:
                 46px;
         }
+
+
+        .weather-main.moon {
+
+            font-size:
+                55px;
+        }
     }
 
 
-    /*
-     * Sehr schmale Mobile-Ansicht:
-     * nicht weiter aufblasen.
-     */
+    /* ================================================================ */
+    /* Sehr schmales Mobile                                             */
+    /* ================================================================ */
+
     @media (max-width: 430px) {
 
         .node-sub {
@@ -491,6 +497,13 @@
 
             font-size:
                 21px;
+        }
+
+
+        .weather-main.moon {
+
+            font-size:
+                54px;
         }
     }
 
@@ -585,9 +598,14 @@
     </text>
 
 
+    <!--
+        Vorher x = 175
+        Jetzt etwas Richtung Mitte.
+    -->
+
     <text
         class="node-title"
-        x="175"
+        x="200"
         y="132"
         text-anchor="end"
     >
@@ -598,7 +616,7 @@
     <text
         id="pvValue"
         class="node-value pv-value"
-        x="175"
+        x="200"
         y="171"
         text-anchor="end"
     >
@@ -609,7 +627,7 @@
     <text
         id="pvTemp"
         class="node-sub"
-        x="175"
+        x="200"
         y="202"
         text-anchor="end"
     >
@@ -620,7 +638,7 @@
     <text
         id="weatherText"
         class="weather-text"
-        x="175"
+        x="200"
         y="231"
         text-anchor="end"
     >
@@ -676,9 +694,14 @@
     </g>
 
 
+    <!--
+        Vorher x = 825
+        Jetzt Richtung Mitte.
+    -->
+
     <text
         class="node-title"
-        x="825"
+        x="800"
         y="132"
     >
         Netz
@@ -688,7 +711,7 @@
     <text
         id="gridValue"
         class="node-value"
-        x="825"
+        x="800"
         y="171"
     >
         0 W
@@ -698,7 +721,7 @@
     <text
         id="gridMode"
         class="node-sub"
-        x="825"
+        x="800"
         y="202"
     >
         Ruhe
@@ -708,7 +731,7 @@
     <text
         id="gridInfo"
         class="node-sub-small"
-        x="825"
+        x="800"
         y="229"
     >
         -
@@ -809,7 +832,7 @@
 
     <text
         class="node-title"
-        x="175"
+        x="200"
         y="482"
         text-anchor="end"
     >
@@ -820,7 +843,7 @@
     <text
         id="consumerValue"
         class="node-value"
-        x="175"
+        x="200"
         y="521"
         text-anchor="end"
     >
@@ -898,7 +921,7 @@
 
     <text
         class="node-title"
-        x="825"
+        x="800"
         y="467"
     >
         Batterie
@@ -908,7 +931,7 @@
     <text
         id="batteryPower"
         class="node-value battery-value"
-        x="825"
+        x="800"
         y="506"
     >
         0 W
@@ -918,7 +941,7 @@
     <text
         id="batteryMode"
         class="node-sub"
-        x="825"
+        x="800"
         y="536"
     >
         Ruhe
@@ -928,7 +951,7 @@
     <text
         id="batteryInfo"
         class="node-sub-small"
-        x="825"
+        x="800"
         y="563"
     >
         SOC: -
@@ -941,11 +964,8 @@
     <!-- ================================================================ -->
 
     <g id="pvDots"></g>
-
     <g id="gridDots"></g>
-
     <g id="consumerDots"></g>
-
     <g id="batteryDots"></g>
 
 
@@ -1322,8 +1342,7 @@ function updateTexts()
         );
 
 
-    setText(
-        'weatherSymbol',
+    updateWeatherSymbol(
         weather.symbol
     );
 
@@ -1512,6 +1531,54 @@ function updateTexts()
 
 
     updateBatteryFill();
+}
+
+
+// ============================================================================
+// Wettersymbol setzen
+// ============================================================================
+
+function updateWeatherSymbol(
+    symbol
+)
+{
+    const element =
+        document.getElementById(
+            'weatherSymbol'
+        );
+
+
+    if (
+        !element
+    ) {
+
+        return;
+    }
+
+
+    element.textContent =
+        symbol;
+
+
+    /*
+     * Mond optisch etwas vergrössern.
+     * Alle anderen Wettericons behalten die normale Grösse.
+     */
+
+    if (
+        symbol === '🌙'
+    ) {
+
+        element.classList.add(
+            'moon'
+        );
+
+    } else {
+
+        element.classList.remove(
+            'moon'
+        );
+    }
 }
 
 
@@ -2434,7 +2501,7 @@ function animateFlow(
 
 
 // ============================================================================
-// Punktanzahl
+// Punktanzahl - UNVERÄNDERT
 // ============================================================================
 
 function getDotCount(
@@ -2494,7 +2561,7 @@ function getDotCount(
 
 
 // ============================================================================
-// Geschwindigkeit
+// Geschwindigkeit - UNVERÄNDERT
 // ============================================================================
 
 function getSecondsPerPath(
